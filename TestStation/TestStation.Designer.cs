@@ -40,8 +40,6 @@ namespace TestStation
             this.Name = "TestStation";
             this.Text = "Test Station";
             this.ResumeLayout(false);
-
-            Logger.Info("test");
         }
 
         #endregion

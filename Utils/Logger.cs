@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using log4net;
 
 [assembly: log4net.Config.XmlConfigurator(ConfigFile = "Logger.config", ConfigFileExtension = "config", Watch = true)]
@@ -11,10 +6,31 @@ namespace Utils
 {
     public class Logger
     {
-        public static void Info(string info)
+        protected ILog _log;
+        public Logger(Type type = null)
         {
-            ILog log = LogManager.GetLogger("TestLogger");//获取一个日志记录器
-            log.Warn(DateTime.Now.ToString() + ": login success");//写入一条新log
+            _log = (type == null) ? LogManager.GetLogger("DefaultLogger") : LogManager.GetLogger(type);
+        }
+        public Logger(string type)
+        {
+            _log = LogManager.GetLogger(type);
+        }
+
+        public virtual void Debug(string msg)
+        {
+            _log.Debug(msg);
+        }
+        public virtual void Info(string msg)
+        {
+            _log.Info(msg);
+        }
+        public virtual void Warn(string msg)
+        {
+            _log.Warn(msg);
+        }
+        public virtual void Error(string msg, Exception ex)
+        {
+            _log.Error(msg, ex);
         }
     }
 }

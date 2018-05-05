@@ -64,9 +64,6 @@
     <EmbeddedResource Include="TestStation.resx">
       <DependentUpon>TestStation.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="Logger.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -81,6 +78,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Hardware\Hardware.csproj">
+      <Project>{E94F00C8-7CFB-4B8C-998F-784DEB4AE480}</Project>
+      <Name>Hardware</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Utils\Utils.csproj">
       <Project>{ECCE0B02-0262-48D1-871D-6EB0440AF17F}</Project>
       <Name>Utils</Name>
