@@ -18,6 +18,9 @@ namespace Image
         public int ColStart;
         public int ColEnd;
 
+        public int[] Center = new int[2];
+        public int Radius;
+
         public Circle(int[][] array)
         {
             PixelValues = array;
@@ -27,9 +30,9 @@ namespace Image
             circle.ColMap = new int[circle.PixelValues[0].Length];
             circle.RowMap = new int[circle.PixelValues.Length];
 
-            for (int row = 0; row < circle.PixelValues.Length; row++)
+            for (int row = 0; row < circle.RowMap.Length; row++)
             {
-                for (int col = 0; col < circle.PixelValues.Length; col++)
+                for (int col = 0; col < circle.ColMap.Length; col++)
                 {
                     circle.ColMap[col] += circle.PixelValues[row][col];
                     circle.RowMap[row] += circle.PixelValues[row][col];
@@ -51,6 +54,13 @@ namespace Image
                     }
                 }
             }
+        }
+        public static void Calc(Circle circle)
+        {
+            circle.Radius = (circle.ColEnd - circle.ColStart) / 2;
+
+            circle.Center[0] = circle.ColStart + circle.Radius;
+            circle.Center[1] = circle.RowStart + circle.Radius;
         }
     }
 }
