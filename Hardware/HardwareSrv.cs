@@ -13,7 +13,7 @@ namespace Hardware
         public HardwareSrv()
         {
             Logger log = new Logger(typeof(HardwareSrv));
-            log.Debug("HardwareSrv Started");
+            log.Debug(string.Format("HardwareSrv(V{0}) Started", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString()));
         }
         public void Add(Equipment e)
         {

@@ -78,6 +78,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Database\Database.csproj">
+      <Project>{71A89709-FD59-4F40-A57E-AF4641426A99}</Project>
+      <Name>Database</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Hardware\Hardware.csproj">
       <Project>{E94F00C8-7CFB-4B8C-998F-784DEB4AE480}</Project>
       <Name>Hardware</Name>
