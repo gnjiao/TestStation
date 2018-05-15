@@ -45,9 +45,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Camera.cs" />
     <Compile Include="Equipment.cs" />
     <Compile Include="HardwareSrv.cs" />
-    <Compile Include="M8051.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

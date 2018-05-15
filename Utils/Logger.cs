@@ -28,7 +28,7 @@ namespace Utils
         {
             _log.Warn(msg);
         }
-        public virtual void Error(string msg, Exception ex)
+        public virtual void Error(string msg, Exception ex = null)
         {
             _log.Error(msg, ex);
         }

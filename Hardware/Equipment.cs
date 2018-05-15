@@ -42,10 +42,14 @@ namespace Hardware
                 _log.Info(CurrentCmd + " " + result.ToString());
             }
         }
+        virtual protected Result _execute(Command cmd)
+        {
+            return new Result("Ok");
+        }
         virtual public Result Execute(Command cmd)
         {
             PreExecute(cmd);
-            Result result = new Result("Ok");
+            Result result = _execute(cmd);
             PostExecute(result);
 
             return result;
@@ -83,10 +87,8 @@ namespace Hardware
             Type = "PowerSupplys";
             AssginLogger();
         }
-        public override Result Execute(Command cmd)
+        protected override Result _execute(Command cmd)
         {
-            PreExecute(cmd);
-
             Result result;
             if (PPort != null)
             {
@@ -104,7 +106,6 @@ namespace Hardware
                 result = new Result("Fail", "Port not set");
             }
 
-            PostExecute(result);
             return result;
         }
     }

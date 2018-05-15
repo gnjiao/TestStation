@@ -49,7 +49,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="M8051Test.cs" />
+    <Compile Include="EquipmentTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -59,6 +59,10 @@
     <ProjectReference Include="..\Hardware\Hardware.csproj">
       <Project>{e94f00c8-7cfb-4b8c-998f-784deb4ae480}</Project>
       <Name>Hardware</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utils\Utils.csproj">
+      <Project>{ECCE0B02-0262-48D1-871D-6EB0440AF17F}</Project>
+      <Name>Utils</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
