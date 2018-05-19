@@ -36,14 +36,14 @@ namespace Hardware
 
             _camera = new uc480.Camera();//Use only the empty constructor, the one with cameraID has a bug
 
-            if (_camera.Init() != uc480.Defines.Status.SUCCESS)
+            if ((statusRet = _camera.Init()) != uc480.Defines.Status.SUCCESS)
             {
-                _log.Error("Failed to initialize");
+                _log.Error("Failed to initialize(" + statusRet.ToString() + ")");
                 return new Result("Fail", "Failed to initialize");
             }
-            if (_camera.Memory.Allocate(out s32MemID, true) != uc480.Defines.Status.SUCCESS)
+            if ((statusRet = _camera.Memory.Allocate(out s32MemID, true)) != uc480.Defines.Status.SUCCESS)
             {
-                _log.Error("Allocate Memory failed");
+                _log.Error("Allocate Memory failed(" + statusRet.ToString() + ")");
                 return new Result("Fail", "Failed to allocate memory");
             }
 
