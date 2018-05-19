@@ -62,9 +62,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Image\Image.csproj">
+    <ProjectReference Include="..\Image\JbImage.csproj">
       <Project>{88e41cf6-cc56-49d7-b09d-e220f5727653}</Project>
-      <Name>Image</Name>
+      <Name>JbImage</Name>
     </ProjectReference>
     <ProjectReference Include="..\Utils\Utils.csproj">
       <Project>{ECCE0B02-0262-48D1-871D-6EB0440AF17F}</Project>

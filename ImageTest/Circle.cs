@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Image;
+using JbImage;
 using Utils;
 
 namespace ImageTest
