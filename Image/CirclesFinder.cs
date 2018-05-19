@@ -31,15 +31,19 @@ namespace Image
         {
             return (Start == l.Start && End == l.End);
         }
+        public bool LongerThan(Line l)
+        {
+            return Length > l.Length;
+        }
         public bool AdjacentTo(Line line)
         {
             return !((End < line.Start) || (Start > line.End));
         }
         public bool AddTo(Round round)
         {
-            if (AdjacentTo(round.Bottom))
+            if (round.Bottom == null || AdjacentTo(round.Bottom))
             {
-                round.Lines.Add(this);
+                round.Add(this);
                 return true;
             }
 
@@ -49,26 +53,66 @@ namespace Image
     public class Round
     {
         public List<Line> Lines = new List<Line>();
+        public void Add(Line l)
+        {
+            EndY = _rowNo;
+
+            Lines.Add(l);
+
+            if (MaxLenLine == null || l.LongerThan(MaxLenLine))
+            {
+                MaxLenLine = l;
+                MaxLenY = _rowNo;
+            }
+
+            IsLineAdded = true;
+            IsEnd = false;
+        }
+        public void StartScan(int rowNo)
+        {
+            _rowNo = rowNo;
+            IsLineAdded = false;
+        }
+        public void FinishScan()
+        {
+            IsEnd = !IsLineAdded;
+        }
+        #region statistic information
+        public int StartY;
+        public int EndY;
+        public int MaxLenY;
+        public Line MaxLenLine;
+        #endregion
+        #region running information
+        private int _rowNo;
         public Line Bottom
         {
             get
             {
-                return Lines[Lines.Count - 1];
+                if (Lines.Count > 0)
+                {
+                    return Lines[Lines.Count - 1];
+                }
+
+                return null;
             }
         }
-
         public bool IsLineAdded;
         public bool IsEnd;
+        #endregion
     }
     public class CirclesFinder
     {
         private int[][] _binArray;
-        public List<Round> Rounds = new List<Round>();
 
-        private List<Round> RunningRounds()
+        public List<Round> Rounds = new List<Round>();
+        private List<Round> RunningRounds
         {
-            return Rounds.FindAll(x => !x.IsEnd).ToList();
+            get {
+                return Rounds.FindAll(x => !x.IsEnd).ToList();
+            }
         }
+
         public CirclesFinder(int[][] binArray)
         {
             _binArray = binArray;
@@ -77,39 +121,38 @@ namespace Image
             {
                 List<Line> lines = FindLines(binArray[row]);
 
-                foreach (var round in RunningRounds())
+                foreach (var round in RunningRounds)
                 {
-                    round.IsLineAdded = false;
+                    round.StartScan(row);
                 }
 
                 foreach (var line in lines)
                 {
                     bool SeperatedLine = true;
 
-                    foreach (var round in RunningRounds())
+                    foreach (var round in RunningRounds)
                     {
                         if (line.AddTo(round))
                         {
                             SeperatedLine = false;
-                            round.IsLineAdded = true;
                         }
                     }
 
                     if (SeperatedLine)
                     {
                         Round newRound = new Round();
-                        newRound.Lines.Add(line);
-                        newRound.IsLineAdded = true;
+
+                        newRound.StartScan(row);
+                        newRound.StartY = row;
+
+                        line.AddTo(newRound);
                         Rounds.Add(newRound);
                     }
                 }
 
-                foreach (var round in RunningRounds())
+                foreach (var round in RunningRounds)
                 {
-                    if (round.IsLineAdded == false)
-                    {
-                        round.IsEnd = true;
-                    }
+                    round.FinishScan();
                 }
             }
         }

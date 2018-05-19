@@ -232,10 +232,24 @@ namespace ImageTest
             Assert.IsTrue(f.Rounds.Count == 3);
             Assert.IsTrue(f.Rounds[0].Lines.Count == 1);
             Assert.IsTrue(f.Rounds[0].Bottom.Equals(new Line(1)));
+            Assert.IsTrue(f.Rounds[0].StartY == 0);
+            Assert.IsTrue(f.Rounds[0].EndY == 0);
+            Assert.IsTrue(f.Rounds[0].MaxLenY == 0);
+            Assert.IsTrue(f.Rounds[0].MaxLenLine.Equals(new Line(1)));
+
             Assert.IsTrue(f.Rounds[1].Lines.Count == 1);
             Assert.IsTrue(f.Rounds[1].Bottom.Equals(new Line(0)));
+            Assert.IsTrue(f.Rounds[1].StartY == 1);
+            Assert.IsTrue(f.Rounds[1].EndY == 1);
+            Assert.IsTrue(f.Rounds[1].MaxLenY == 1);
+            Assert.IsTrue(f.Rounds[1].MaxLenLine.Equals(new Line(0)));
+
             Assert.IsTrue(f.Rounds[2].Lines.Count == 1);
             Assert.IsTrue(f.Rounds[2].Bottom.Equals(new Line(2)));
+            Assert.IsTrue(f.Rounds[2].StartY == 1);
+            Assert.IsTrue(f.Rounds[2].EndY == 1);
+            Assert.IsTrue(f.Rounds[2].MaxLenY == 1);
+            Assert.IsTrue(f.Rounds[2].MaxLenLine.Equals(new Line(2)));
 
             array = new int[][]
                 {
@@ -248,8 +262,17 @@ namespace ImageTest
             Assert.IsTrue(f.Rounds.Count == 2);
             Assert.IsTrue(f.Rounds[0].Lines.Count == 2);
             Assert.IsTrue(f.Rounds[0].Bottom.Equals(new Line(0)));
+            Assert.IsTrue(f.Rounds[0].StartY == 0);
+            Assert.IsTrue(f.Rounds[0].EndY == 1);
+            Assert.IsTrue(f.Rounds[0].MaxLenY == 0);
+            Assert.IsTrue(f.Rounds[0].MaxLenLine.Equals(new Line(0, 1)));
+
             Assert.IsTrue(f.Rounds[1].Lines.Count == 1);
             Assert.IsTrue(f.Rounds[1].Bottom.Equals(new Line(2)));
+            Assert.IsTrue(f.Rounds[1].StartY == 1);
+            Assert.IsTrue(f.Rounds[1].EndY == 1);
+            Assert.IsTrue(f.Rounds[1].MaxLenY == 1);
+            Assert.IsTrue(f.Rounds[1].MaxLenLine.Equals(new Line(2)));
 
             array = new int[][]
                 {
@@ -266,16 +289,46 @@ namespace ImageTest
             Assert.IsTrue(f.Rounds.Count == 6);
             Assert.IsTrue(f.Rounds[0].Lines.Count == 1);
             Assert.IsTrue(f.Rounds[0].Bottom.Equals(new Line(0, 1)));
+            Assert.IsTrue(f.Rounds[0].StartY == 0);
+            Assert.IsTrue(f.Rounds[0].EndY == 0);
+            Assert.IsTrue(f.Rounds[0].MaxLenY == 0);
+            Assert.IsTrue(f.Rounds[0].MaxLenLine.Equals(new Line(0, 1)));
+
             Assert.IsTrue(f.Rounds[1].Lines.Count == 3);
             Assert.IsTrue(f.Rounds[1].Bottom.Equals(new Line(3, 5)));
+            Assert.IsTrue(f.Rounds[1].StartY == 0);
+            Assert.IsTrue(f.Rounds[1].EndY == 2);
+            Assert.IsTrue(f.Rounds[1].MaxLenY == 0);
+            Assert.IsTrue(f.Rounds[1].MaxLenLine.Equals(new Line(3, 5)));
+
             Assert.IsTrue(f.Rounds[2].Lines.Count == 2);
             Assert.IsTrue(f.Rounds[2].Bottom.Equals(new Line(0, 1)));
+            Assert.IsTrue(f.Rounds[2].StartY == 2);
+            Assert.IsTrue(f.Rounds[2].EndY == 3);
+            Assert.IsTrue(f.Rounds[2].MaxLenY == 2);
+            Assert.IsTrue(f.Rounds[2].MaxLenLine.Equals(new Line(0, 1)));
+
             Assert.IsTrue(f.Rounds[3].Lines.Count == 2);
             Assert.IsTrue(f.Rounds[3].Bottom.Equals(new Line(4)));
+            Assert.IsTrue(f.Rounds[3].StartY == 4);
+            Assert.IsTrue(f.Rounds[3].EndY == 5);
+            Assert.IsTrue(f.Rounds[3].MaxLenY == 4);
+            Assert.IsTrue(f.Rounds[3].MaxLenLine.Equals(new Line(3, 5)));
+
             Assert.IsTrue(f.Rounds[4].Lines.Count == 1);
             Assert.IsTrue(f.Rounds[4].Bottom.Equals(new Line(0, 1)));
+            Assert.IsTrue(f.Rounds[4].StartY == 5);
+            Assert.IsTrue(f.Rounds[4].EndY == 5);
+            Assert.IsTrue(f.Rounds[4].MaxLenY == 5);
+            Assert.IsTrue(f.Rounds[4].MaxLenLine.Equals(new Line(0, 1)));
+
             Assert.IsTrue(f.Rounds[5].Lines.Count == 1);
             Assert.IsTrue(f.Rounds[5].Bottom.Equals(new Line(7)));
+            Assert.IsTrue(f.Rounds[5].StartY == 5);
+            Assert.IsTrue(f.Rounds[5].EndY == 5);
+            Assert.IsTrue(f.Rounds[5].MaxLenY == 5);
+            Assert.IsTrue(f.Rounds[5].MaxLenLine.Equals(new Line(7)));
+
         }
     }
 }
