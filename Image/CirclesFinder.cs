@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -52,6 +53,7 @@ namespace JbImage
     }
     public class Round
     {
+        public int Id;
         public List<Line> Lines = new List<Line>();
         public void Add(Line l)
         {
@@ -77,6 +79,32 @@ namespace JbImage
         {
             IsEnd = !IsLineAdded;
         }
+        #region image information
+        public int LeftTopX
+        {
+            get {
+                return MaxLenLine.Start;
+            }
+        }
+        public int LeftTopY
+        {
+            get {
+                return StartY;
+            }
+        }
+        public int X
+        {
+            get {
+                return MaxLenLine.Length;
+            }
+        }
+        public int Y
+        {
+            get {
+                return (EndY - StartY);
+            }
+        }
+        #endregion
         #region statistic information
         public int StartY;
         public int EndY;
@@ -103,7 +131,7 @@ namespace JbImage
     }
     public class CirclesFinder
     {
-        private int[][] _binArray;
+        private byte[][] _binArray;
 
         public List<Round> Rounds = new List<Round>();
         private List<Round> RunningRounds
@@ -113,7 +141,12 @@ namespace JbImage
             }
         }
 
-        public CirclesFinder(int[][] binArray)
+        public void Add(Round r)
+        {
+            r.Id = Rounds.Count + 1;
+            Rounds.Add(r);
+        }
+        public CirclesFinder(byte[][] binArray)
         {
             _binArray = binArray;
 
@@ -156,15 +189,25 @@ namespace JbImage
                 }
             }
         }
+        public void Draw(string path)
+        {
+            Bitmap b = new Bitmap(_binArray[0].Length, _binArray.Length);
+            Graphics g = Graphics.FromImage(b);
 
-        public static List<Line> FindLines(int[] binArray)
+            foreach (var r in Rounds)
+            {
+                g.DrawEllipse(new Pen(Color.Red), r.LeftTopX, r.LeftTopY, r.X, r.Y);
+            }
+            b.Save(path);
+        }
+        public static List<Line> FindLines(byte[] binArray)
         {
             List<Line> lines = new List<Line>();
 
             Line newLine = null;
             for (int i = 0; i < binArray.Length; i++)
             {
-                if (binArray[i] == 1)
+                if (binArray[i] > 0)/* white */
                 {
                     if (newLine == null)
                     {

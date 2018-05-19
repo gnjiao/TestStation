@@ -62,48 +62,48 @@ namespace ImageTest
         [TestMethod]
         public void TestLinesFinder_Length1()
         {
-            int[] array = new int[] { 0 };
+            byte[] array = new byte[] { 0 };
             List<Line> lines = CirclesFinder.FindLines(array);
             Assert.IsTrue(lines.Count == 0);
 
-            array = new int[] { 1 };
+            array = new byte[] { 1 };
             lines = CirclesFinder.FindLines(array);
             Assert.IsTrue(lines.Count == 1);
             Assert.IsTrue(lines[0].Start == 0);
             Assert.IsTrue(lines[0].End == 0);
             Assert.IsTrue(lines[0].Length == 1);
 
-            array = new int[] { 0, 1 };
+            array = new byte[] { 0, 1 };
             lines = CirclesFinder.FindLines(array);
             Assert.IsTrue(lines.Count == 1);
             Assert.IsTrue(lines[0].Start == 1);
             Assert.IsTrue(lines[0].End == 1);
             Assert.IsTrue(lines[0].Length == 1);
 
-            array = new int[] { 1, 0 };
+            array = new byte[] { 1, 0 };
             lines = CirclesFinder.FindLines(array);
             Assert.IsTrue(lines.Count == 1);
             Assert.IsTrue(lines[0].Start == 0);
             Assert.IsTrue(lines[0].End == 0);
             Assert.IsTrue(lines[0].Length == 1);
 
-            array = new int[] { 0, 0, 0 };
+            array = new byte[] { 0, 0, 0 };
             lines = CirclesFinder.FindLines(array);
             Assert.IsTrue(lines.Count == 0);
 
-            array = new int[] { 0, 0, 1 };
+            array = new byte[] { 0, 0, 1 };
             lines = CirclesFinder.FindLines(array);
             Assert.IsTrue(lines.Count == 1);
             Assert.IsTrue(lines[0].Start == 2);
             Assert.IsTrue(lines[0].End == 2);
 
-            array = new int[] { 0, 1, 0 };
+            array = new byte[] { 0, 1, 0 };
             lines = CirclesFinder.FindLines(array);
             Assert.IsTrue(lines.Count == 1);
             Assert.IsTrue(lines[0].Start == 1);
             Assert.IsTrue(lines[0].End == 1);
 
-            array = new int[] { 1, 0, 0 };
+            array = new byte[] { 1, 0, 0 };
             lines = CirclesFinder.FindLines(array);
             Assert.IsTrue(lines.Count == 1);
             Assert.IsTrue(lines[0].Start == 0);
@@ -112,21 +112,21 @@ namespace ImageTest
         [TestMethod]
         public void TestLinesFinder_Length2()
         {
-            int[] array = new int[] { 1,1 };
+            byte[] array = new byte[] { 1,1 };
             List<Line> lines = CirclesFinder.FindLines(array);
             Assert.IsTrue(lines.Count == 1);
             Assert.IsTrue(lines[0].Start == 0);
             Assert.IsTrue(lines[0].End == 1);
             Assert.IsTrue(lines[0].Length == 2);
 
-            array = new int[] { 0, 1, 1 };
+            array = new byte[] { 0, 1, 1 };
             lines = CirclesFinder.FindLines(array);
             Assert.IsTrue(lines.Count == 1);
             Assert.IsTrue(lines[0].Start == 1);
             Assert.IsTrue(lines[0].End == 2);
             Assert.IsTrue(lines[0].Length == 2);
 
-            array = new int[] { 1, 1, 0 };
+            array = new byte[] { 1, 1, 0 };
             lines = CirclesFinder.FindLines(array);
             Assert.IsTrue(lines.Count == 1);
             Assert.IsTrue(lines[0].Start == 0);
@@ -136,19 +136,19 @@ namespace ImageTest
         [TestMethod]
         public void TestLinesFinder_2Lines()
         {
-            int[] array = new int[] { 1, 0, 1 };
+            byte[] array = new byte[] { 1, 0, 1 };
             List<Line> lines = CirclesFinder.FindLines(array);
             Assert.IsTrue(lines.Count == 2);
             Assert.IsTrue(lines[0].Equals(new Line(0)));
             Assert.IsTrue(lines[1].Equals(new Line(2)));
 
-            array = new int[] { 1, 1, 0, 1 };
+            array = new byte[] { 1, 1, 0, 1 };
             lines = CirclesFinder.FindLines(array);
             Assert.IsTrue(lines.Count == 2);
             Assert.IsTrue(lines[0].Equals(new Line(0, 1)));
             Assert.IsTrue(lines[1].Equals(new Line(3)));
 
-            array = new int[] { 1, 0, 1, 1 };
+            array = new byte[] { 1, 0, 1, 1 };
             lines = CirclesFinder.FindLines(array);
             Assert.IsTrue(lines.Count == 2);
             Assert.IsTrue(lines[0].Equals(new Line(0)));
@@ -221,10 +221,10 @@ namespace ImageTest
         [TestMethod]
         public void TestRoundsFinder()
         {
-            int[][] array = new int[][]
+            byte[][] array = new byte[][]
                 {
-                    new int[] { 0, 1, 0 },
-                    new int[] { 1, 0, 1 },
+                    new byte[] { 0, 1, 0 },
+                    new byte[] { 1, 0, 1 },
                 };
 
             CirclesFinder f = new CirclesFinder(array);
@@ -251,10 +251,10 @@ namespace ImageTest
             Assert.IsTrue(f.Rounds[2].MaxLenY == 1);
             Assert.IsTrue(f.Rounds[2].MaxLenLine.Equals(new Line(2)));
 
-            array = new int[][]
+            array = new byte[][]
                 {
-                    new int[] { 1, 1, 0 },
-                    new int[] { 1, 0, 1 },
+                    new byte[] { 1, 1, 0 },
+                    new byte[] { 1, 0, 1 },
                 };
 
             f = new CirclesFinder(array);
@@ -274,14 +274,14 @@ namespace ImageTest
             Assert.IsTrue(f.Rounds[1].MaxLenY == 1);
             Assert.IsTrue(f.Rounds[1].MaxLenLine.Equals(new Line(2)));
 
-            array = new int[][]
+            array = new byte[][]
                 {
-                    new int[] { 1, 1, 0, 1, 1, 1, 0, 0 },
-                    new int[] { 0, 0, 0, 1, 1, 1, 0, 0 },
-                    new int[] { 1, 1, 0, 1, 1, 1, 0, 0 },
-                    new int[] { 1, 1, 0, 0, 0, 0, 0, 0 },
-                    new int[] { 0, 0, 0, 1, 1, 1, 0, 0 },
-                    new int[] { 1, 1, 0, 0, 1, 0, 0, 1 },
+                    new byte[] { 1, 1, 0, 1, 1, 1, 0, 0 },
+                    new byte[] { 0, 0, 0, 1, 1, 1, 0, 0 },
+                    new byte[] { 1, 1, 0, 1, 1, 1, 0, 0 },
+                    new byte[] { 1, 1, 0, 0, 0, 0, 0, 0 },
+                    new byte[] { 0, 0, 0, 1, 1, 1, 0, 0 },
+                    new byte[] { 1, 1, 0, 0, 1, 0, 0, 1 },
                 };
 
             f = new CirclesFinder(array);
