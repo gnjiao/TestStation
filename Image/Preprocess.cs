@@ -128,6 +128,10 @@ namespace JbImage
                     result[i][j] = rband[i, j];
                 }
             }
+#if false
+            _logger.Debug("Bitmap array:");
+            _logger.Debug(Utils.Array.ToString<byte>(result));
+#endif
             return result;
         }
     }

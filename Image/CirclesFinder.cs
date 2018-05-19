@@ -40,9 +40,14 @@ namespace JbImage
         {
             return !((End < line.Start) || (Start > line.End));
         }
+        public void Merge(Line line)
+        {
+            End = line.End;
+        }
         public bool AddTo(Round round)
         {
-            if (round.Bottom == null || AdjacentTo(round.Bottom))
+            if (round.Bottom == null || (!round.IsLineAdded && AdjacentTo(round.Bottom))
+                || (round.IsLineAdded && (round.Lines.Count - 2) >= 0 && AdjacentTo(round.Lines[round.Lines.Count - 2])))
             {
                 round.Add(this);
                 return true;
@@ -59,7 +64,15 @@ namespace JbImage
         {
             EndY = _rowNo;
 
-            Lines.Add(l);
+            if (!IsLineAdded)
+            {
+                Lines.Add(l);
+                IsLineAdded = true;
+            }
+            else
+            {
+                Bottom.Merge(l);
+            }
 
             if (MaxLenLine == null || l.LongerThan(MaxLenLine))
             {
@@ -67,7 +80,6 @@ namespace JbImage
                 MaxLenY = _rowNo;
             }
 
-            IsLineAdded = true;
             IsEnd = false;
         }
         public void StartScan(int rowNo)
@@ -168,6 +180,7 @@ namespace JbImage
                         if (line.AddTo(round))
                         {
                             SeperatedLine = false;
+                            break;/* a line will only add to one round */
                         }
                     }
 

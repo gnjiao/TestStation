@@ -9,21 +9,14 @@ namespace ImageTest
     public class ImageProcessorTest
     {
         [TestMethod]
-        public void LoadBmp()
-        {
-            string path = @"D:\work\TestStation\ImageTest\test\circle.bmp";
-            var imageFactory = new ImageFactory().Load(path);
-
-        }
-        [TestMethod]
         public void TestBinarize()
         {
-            string path = @"D:\work\TestStation\ImageTest\test\small.bmp";
+            string path = @"D:\work\TestStation\ImageTest\test\rawTrue.bmp";
             Image i = (Image)Preprocess.Binarize(path);
-            i.Save(@"D:\work\TestStation\ImageTest\test\smallBin.bmp");
+            i.Save(@"D:\work\TestStation\ImageTest\test\raw.bmp");
         }
         [TestMethod]
-        public void Test()
+        public void TestTransferBinarizedBmp()
         {
             string path = @"D:\work\TestStation\ImageTest\test\";
 
@@ -46,6 +39,10 @@ namespace ImageTest
             array = Preprocess.ToArray((Bitmap)Bitmap.FromFile(path + "smallxerror2.bmp"));
             c = new CirclesFinder(array);
             c.Draw(path + "smallxerror2Result.bmp");
+
+            array = Preprocess.ToArray((Bitmap)Bitmap.FromFile(path + "raw.bmp"));
+            c = new CirclesFinder(array);
+            c.Draw(path + "rawResult.bmp");
         }
     }
 }

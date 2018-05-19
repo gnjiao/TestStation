@@ -330,5 +330,47 @@ namespace ImageTest
             Assert.IsTrue(f.Rounds[5].MaxLenLine.Equals(new Line(7)));
 
         }
+        [TestMethod]
+        public void TestRoundsFinderSpecial()
+        {
+            byte[][] array = new byte[][]
+            {
+                new byte[] { 1, 0, 1 },
+                new byte[] { 1, 1, 1 },
+            };
+
+            CirclesFinder f = new CirclesFinder(array);
+
+            Assert.IsTrue(f.Rounds.Count == 2);
+            Assert.IsTrue(f.Rounds[0].Lines.Count == 2);
+            Assert.IsTrue(f.Rounds[0].Bottom.Equals(new Line(0, 2)));
+            Assert.IsTrue(f.Rounds[0].StartY == 0);
+            Assert.IsTrue(f.Rounds[0].EndY == 1);
+            Assert.IsTrue(f.Rounds[0].MaxLenY == 1);
+            Assert.IsTrue(f.Rounds[0].MaxLenLine.Equals(new Line(0, 2)));
+
+            Assert.IsTrue(f.Rounds[1].Lines.Count == 1);
+            Assert.IsTrue(f.Rounds[1].Bottom.Equals(new Line(2)));
+            Assert.IsTrue(f.Rounds[1].StartY == 0);
+            Assert.IsTrue(f.Rounds[1].EndY == 0);
+            Assert.IsTrue(f.Rounds[1].MaxLenY == 0);
+            Assert.IsTrue(f.Rounds[1].MaxLenLine.Equals(new Line(2)));
+
+            array = new byte[][]
+            {
+                new byte[] { 1, 1, 1 },
+                new byte[] { 1, 0, 1 },
+            };
+
+            f = new CirclesFinder(array);
+
+            Assert.IsTrue(f.Rounds.Count == 1);
+            Assert.IsTrue(f.Rounds[0].Lines.Count == 2);
+            Assert.IsTrue(f.Rounds[0].Bottom.Equals(new Line(0, 2)));
+            Assert.IsTrue(f.Rounds[0].StartY == 0);
+            Assert.IsTrue(f.Rounds[0].EndY == 1);
+            Assert.IsTrue(f.Rounds[0].MaxLenY == 0);
+            Assert.IsTrue(f.Rounds[0].MaxLenLine.Equals(new Line(0, 2)));
+        }
     }
 }
