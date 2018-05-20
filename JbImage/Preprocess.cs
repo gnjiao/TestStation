@@ -12,6 +12,26 @@ namespace JbImage
     public class Preprocess
     {
         static Logger _logger = new Logger("Image.Preprocess");
+
+        public static string FormatBmp(string path)
+        {
+            string file = Utils.String.FilePostfix(path, "-24b").Replace("jpg", "bmp");
+            string fileplus = Utils.String.FilePostfix(file, "-bin");
+
+            using (Bitmap source = new Bitmap(path))
+            {
+                using (Bitmap bmp = new Bitmap(source.Width, source.Height, PixelFormat.Format24bppRgb))
+                {
+                    Graphics.FromImage(bmp).DrawImage(source, new Rectangle(0, 0, bmp.Width, bmp.Height));
+                    bmp.Save(file, ImageFormat.Bmp);
+                }
+            }
+
+            Image i = (Image)Preprocess.Binarize(file);
+            i.Save(fileplus);
+
+            return fileplus;
+        }
         public static Bitmap Binarize(string path)
         {
             Bitmap bmpobj = (Bitmap)Bitmap.FromFile(path);

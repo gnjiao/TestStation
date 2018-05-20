@@ -62,8 +62,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Image\JbImage.csproj">
-      <Project>{88e41cf6-cc56-49d7-b09d-e220f5727653}</Project>
+    <ProjectReference Include="..\JbImage\JbImage.csproj">
+      <Project>{88E41CF6-CC56-49D7-B09D-E220F5727653}</Project>
       <Name>JbImage</Name>
     </ProjectReference>
     <ProjectReference Include="..\Utils\Utils.csproj">

@@ -1,4 +1,6 @@
-﻿using System;
+﻿//#define DETAIL_INFO
+
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -10,10 +12,11 @@ namespace JbImage
 {
     public class CirclesFinder
     {
+        private Logger _logger = new Logger("Image.CirclesFinder");
         #region initialize field
         private byte[][] _binArray;
         private Bitmap _rawImg;
-        public int Filter = 0;                /* filter rounds whose radius less than Filter */
+        public int RadiusFilter = 0;                /* filter rounds whose radius less than RadiusFilter */
         #endregion
 
         public List<Round> Rounds = new List<Round>();
@@ -27,8 +30,9 @@ namespace JbImage
         public CirclesFinder(string path)
         {
             _rawImg = (Bitmap)Bitmap.FromFile(path);
-            Filter = 5;
             _binArray = Preprocess.ToArray(_rawImg);
+
+            RadiusFilter = 5;
             Execute(_binArray);
         }
         public CirclesFinder(byte[][] binArray)
@@ -38,17 +42,13 @@ namespace JbImage
         }
         public void Execute(byte[][] binArray)
         {
-#if false
+#if DETAIL_INFO
             _logger.Debug("Bitmap array:");
             _logger.Debug(Utils.Array.ToString<byte>(result));
 #endif
             for (int row = 0; row < binArray.Length; row++)
             {
-                List<Line> lines = Line.FindLines(binArray[row]);
-                foreach (var line in lines)
-                {
-                    line.Y = row;
-                }
+                List<Line> lines = Line.FindLines(binArray[row], row);
 
                 foreach (var round in RunningRounds)
                 {
@@ -57,18 +57,18 @@ namespace JbImage
 
                 foreach (var line in lines)
                 {
-                    bool SeperatedLine = true;
+                    bool isSeperatedLine = true;
 
                     foreach (var round in RunningRounds)
                     {
                         if (line.AddTo(round))
                         {
-                            SeperatedLine = false;
+                            isSeperatedLine = false;
                             break;/* a line will only add to one round */
                         }
                     }
 
-                    if (SeperatedLine)
+                    if (isSeperatedLine)
                     {
                         Round newRound = new Round();
 
@@ -88,7 +88,7 @@ namespace JbImage
                 #region filter rounds cuased by unsmooth
                 for (int i = Rounds.Count - 1; i >= 0; i--)
                 {
-                    if (Rounds[i].IsEnd && Rounds[i].Lines.Count < Filter/*this should be minimum possible radius of the round*/)
+                    if (Rounds[i].IsEnd && Rounds[i].Lines.Count < RadiusFilter/*this should be minimum possible radius of the round*/)
                     {
                         Rounds.RemoveAt(i);
                     }
@@ -102,22 +102,25 @@ namespace JbImage
             }
         }
 
-        public void Draw(string path)
+        public Bitmap Draw(string path)
         {
-            Bitmap b = _rawImg!=null ? _rawImg : new Bitmap(_binArray[0].Length, _binArray.Length);
+            Bitmap b = (_rawImg!=null) ? _rawImg : new Bitmap(_binArray[0].Length, _binArray.Length);
             Graphics g = Graphics.FromImage(b);
 
             foreach (var r in Rounds)
             {
-                g.DrawEllipse(new Pen(Color.Red), r.ImgLeftTopX, r.ImgLeftTopY, r.ImgX, r.ImgY);
-                g.DrawString(r.Id.ToString(),new Font("黑体", 25, FontStyle.Regular), new SolidBrush(Color.Red),
+                g.DrawString(r.Id.ToString(),new Font("黑体", 25, FontStyle.Regular), new SolidBrush(Color.Pink),
                     TextPoint(r.Id, r.ImgLeftTopX, r.ImgLeftTopY, r.ImgX));
-#if false
-                Logger log = new Logger();
-                log.Debug(r.ToString());
+                g.DrawEllipse(new Pen(Color.Red), r.ImgLeftTopX, r.ImgLeftTopY, r.ImgX, r.ImgY);
+                g.DrawEllipse(new Pen(Color.Black), r.ImgLeftTopX + r.ImgX / 2, r.ImgLeftTopY + r.ImgY / 2, 1, 1);
+#if DETAIL_INFO
+                _logger.Debug(r.ToString());
 #endif
             }
+
             b.Save(path);
+
+            return b;
         }
         private PointF TextPoint(int num, int x, int y, int r)
         {

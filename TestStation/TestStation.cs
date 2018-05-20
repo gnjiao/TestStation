@@ -28,7 +28,6 @@ namespace TestStation
 
         private void BTN_Read_Click(object sender, EventArgs e)
         {
-                
         }
     }
 }

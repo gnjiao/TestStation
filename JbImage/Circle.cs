@@ -56,7 +56,7 @@ namespace JbImage
             return false;
         }
 
-        public static List<Line> FindLines(byte[] binArray)
+        public static List<Line> FindLines(byte[] binArray, int rowNo = 0)
         {
             List<Line> lines = new List<Line>();
 
@@ -68,6 +68,7 @@ namespace JbImage
                     if (newLine == null)
                     {
                         newLine = new Line(i);
+                        newLine.Y = rowNo;
                     }
                     else
                     {
