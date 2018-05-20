@@ -27,7 +27,7 @@ namespace JbImage
             }
         }
 
-        public CirclesFinder(string path)
+        public CirclesFinder(string path)/* 24-bit bmp file */
         {
             _rawImg = (Bitmap)Bitmap.FromFile(path);
             _binArray = Preprocess.ToArray(_rawImg);

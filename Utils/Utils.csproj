@@ -44,7 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Array.cs" />
-    <Compile Include="Common.cs" />
+    <Compile Include="CommandHandler.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Math.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -44,11 +44,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TestStation.cs">
+    <Compile Include="FormCameraCtrl.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TestStation.Designer.cs">
-      <DependentUpon>TestStation.cs</DependentUpon>
+    <Compile Include="FormCameraCtrl.Designer.cs">
+      <DependentUpon>FormCameraCtrl.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -61,8 +61,8 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="TestStation.resx">
-      <DependentUpon>TestStation.cs</DependentUpon>
+    <EmbeddedResource Include="FormCameraCtrl.resx">
+      <DependentUpon>FormCameraCtrl.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
