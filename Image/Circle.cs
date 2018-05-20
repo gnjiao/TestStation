@@ -54,6 +54,45 @@ namespace JbImage
 
             return false;
         }
+
+        public static List<Line> FindLines(byte[] binArray)
+        {
+            List<Line> lines = new List<Line>();
+
+            Line newLine = null;
+            for (int i = 0; i < binArray.Length; i++)
+            {
+                if (binArray[i] > 0)/* white */
+                {
+                    if (newLine == null)
+                    {
+                        newLine = new Line(i);
+                    }
+                    else
+                    {
+                        newLine.End = i;
+                    }
+                }
+                else
+                {
+                    if (newLine != null)
+                    {
+                        newLine.End = i - 1;
+                        lines.Add(newLine);
+                        newLine = null;
+                    }
+                }
+
+            }
+
+            if (newLine != null)
+            {
+                newLine.End = binArray.Length - 1;
+                lines.Add(newLine);
+            }
+
+            return lines;
+        }
     }
     public class Round
     {

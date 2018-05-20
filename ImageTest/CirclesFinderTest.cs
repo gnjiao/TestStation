@@ -63,48 +63,48 @@ namespace ImageTest
         public void TestLinesFinder_Length1()
         {
             byte[] array = new byte[] { 0 };
-            List<Line> lines = CirclesFinder.FindLines(array);
+            List<Line> lines = Line.FindLines(array);
             Assert.IsTrue(lines.Count == 0);
 
             array = new byte[] { 1 };
-            lines = CirclesFinder.FindLines(array);
+            lines = Line.FindLines(array);
             Assert.IsTrue(lines.Count == 1);
             Assert.IsTrue(lines[0].Start == 0);
             Assert.IsTrue(lines[0].End == 0);
             Assert.IsTrue(lines[0].Length == 1);
 
             array = new byte[] { 0, 1 };
-            lines = CirclesFinder.FindLines(array);
+            lines = Line.FindLines(array);
             Assert.IsTrue(lines.Count == 1);
             Assert.IsTrue(lines[0].Start == 1);
             Assert.IsTrue(lines[0].End == 1);
             Assert.IsTrue(lines[0].Length == 1);
 
             array = new byte[] { 1, 0 };
-            lines = CirclesFinder.FindLines(array);
+            lines = Line.FindLines(array);
             Assert.IsTrue(lines.Count == 1);
             Assert.IsTrue(lines[0].Start == 0);
             Assert.IsTrue(lines[0].End == 0);
             Assert.IsTrue(lines[0].Length == 1);
 
             array = new byte[] { 0, 0, 0 };
-            lines = CirclesFinder.FindLines(array);
+            lines = Line.FindLines(array);
             Assert.IsTrue(lines.Count == 0);
 
             array = new byte[] { 0, 0, 1 };
-            lines = CirclesFinder.FindLines(array);
+            lines = Line.FindLines(array);
             Assert.IsTrue(lines.Count == 1);
             Assert.IsTrue(lines[0].Start == 2);
             Assert.IsTrue(lines[0].End == 2);
 
             array = new byte[] { 0, 1, 0 };
-            lines = CirclesFinder.FindLines(array);
+            lines = Line.FindLines(array);
             Assert.IsTrue(lines.Count == 1);
             Assert.IsTrue(lines[0].Start == 1);
             Assert.IsTrue(lines[0].End == 1);
 
             array = new byte[] { 1, 0, 0 };
-            lines = CirclesFinder.FindLines(array);
+            lines = Line.FindLines(array);
             Assert.IsTrue(lines.Count == 1);
             Assert.IsTrue(lines[0].Start == 0);
             Assert.IsTrue(lines[0].End == 0);
@@ -113,21 +113,21 @@ namespace ImageTest
         public void TestLinesFinder_Length2()
         {
             byte[] array = new byte[] { 1,1 };
-            List<Line> lines = CirclesFinder.FindLines(array);
+            List<Line> lines = Line.FindLines(array);
             Assert.IsTrue(lines.Count == 1);
             Assert.IsTrue(lines[0].Start == 0);
             Assert.IsTrue(lines[0].End == 1);
             Assert.IsTrue(lines[0].Length == 2);
 
             array = new byte[] { 0, 1, 1 };
-            lines = CirclesFinder.FindLines(array);
+            lines = Line.FindLines(array);
             Assert.IsTrue(lines.Count == 1);
             Assert.IsTrue(lines[0].Start == 1);
             Assert.IsTrue(lines[0].End == 2);
             Assert.IsTrue(lines[0].Length == 2);
 
             array = new byte[] { 1, 1, 0 };
-            lines = CirclesFinder.FindLines(array);
+            lines = Line.FindLines(array);
             Assert.IsTrue(lines.Count == 1);
             Assert.IsTrue(lines[0].Start == 0);
             Assert.IsTrue(lines[0].End == 1);
@@ -137,19 +137,19 @@ namespace ImageTest
         public void TestLinesFinder_2Lines()
         {
             byte[] array = new byte[] { 1, 0, 1 };
-            List<Line> lines = CirclesFinder.FindLines(array);
+            List<Line> lines = Line.FindLines(array);
             Assert.IsTrue(lines.Count == 2);
             Assert.IsTrue(lines[0].Equals(new Line(0)));
             Assert.IsTrue(lines[1].Equals(new Line(2)));
 
             array = new byte[] { 1, 1, 0, 1 };
-            lines = CirclesFinder.FindLines(array);
+            lines = Line.FindLines(array);
             Assert.IsTrue(lines.Count == 2);
             Assert.IsTrue(lines[0].Equals(new Line(0, 1)));
             Assert.IsTrue(lines[1].Equals(new Line(3)));
 
             array = new byte[] { 1, 0, 1, 1 };
-            lines = CirclesFinder.FindLines(array);
+            lines = Line.FindLines(array);
             Assert.IsTrue(lines.Count == 2);
             Assert.IsTrue(lines[0].Equals(new Line(0)));
             Assert.IsTrue(lines[1].Equals(new Line(2, 3)));
