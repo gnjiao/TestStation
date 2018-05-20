@@ -20,6 +20,7 @@ namespace ImageTool
 
         private void BTN_Open_Click(object sender, EventArgs e)
         {
+            /* only jpg format is supported now */
             OpenFileDialog d = new OpenFileDialog();
             if (d.ShowDialog() == DialogResult.OK)
             {
@@ -33,7 +34,7 @@ namespace ImageTool
             string bmpFile = Preprocess.FormatBmp(TB_Filepath.Text);
 
             CirclesFinder f = new CirclesFinder(bmpFile);
-            TB_OutputPath.Text = Utils.String.FilePostfix(TB_Filepath.Text, "-result");
+            TB_OutputPath.Text = Utils.String.FilePostfix(TB_Filepath.Text, "-result").Replace(".jpg",".bmp");
 
             int width = PB_Result.Width;
             int height = PB_Result.Height;

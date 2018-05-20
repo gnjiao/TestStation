@@ -64,6 +64,7 @@
             this.TB_Filepath.ReadOnly = true;
             this.TB_Filepath.Size = new System.Drawing.Size(672, 28);
             this.TB_Filepath.TabIndex = 2;
+            this.TB_Filepath.Text = "D:\\work\\TestStation\\ImageTool\\Samples\\Sample2.jpg";
             // 
             // PB_Result
             // 
@@ -90,7 +91,7 @@
             this.label1.TabIndex = 5;
             this.label1.Text = "Preview";
             // 
-            // FormImgProcess
+            // FormImgTool
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -101,7 +102,7 @@
             this.Controls.Add(this.TB_Filepath);
             this.Controls.Add(this.BTN_Process);
             this.Controls.Add(this.BTN_Open);
-            this.Name = "FormImgProcess";
+            this.Name = "FormImgTool";
             this.Text = "Image Process";
             ((System.ComponentModel.ISupportInitialize)(this.PB_Result)).EndInit();
             this.ResumeLayout(false);
