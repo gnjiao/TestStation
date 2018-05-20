@@ -219,7 +219,7 @@ namespace ImageTest
             Assert.IsTrue(r.Bottom.Equals(l));
         }
         [TestMethod]
-        public void TestRoundsFinder()
+        public void CirclesFinderTest_Basic()
         {
             byte[][] array = new byte[][]
                 {
@@ -331,7 +331,7 @@ namespace ImageTest
 
         }
         [TestMethod]
-        public void TestRoundsFinderSpecial()
+        public void CirclesFinderTest_SmoothIssue()
         {
             byte[][] array = new byte[][]
             {

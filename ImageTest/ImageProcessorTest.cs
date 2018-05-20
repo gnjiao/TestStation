@@ -8,40 +8,35 @@ namespace ImageTest
     [TestClass]
     public class ImageProcessorTest
     {
+        [Ignore]/* this test takes too much time*/
         [TestMethod]
-        public void TestBinarize()
+        public void ProcessorTest_Binarize()
         {
             string path = @"D:\work\TestStation\ImageTest\test\rawTrue.bmp";
             Image i = (Image)Preprocess.Binarize(path);
             i.Save(@"D:\work\TestStation\ImageTest\test\raw.bmp");
         }
         [TestMethod]
-        public void TestTransferBinarizedBmp()
+        public void ProcessorTest_CirclesFinder()
         {
             string path = @"D:\work\TestStation\ImageTest\test\";
 
-            byte[][] array = Preprocess.ToArray((Bitmap)Bitmap.FromFile(path + "small1.bmp"));
-            CirclesFinder c = new CirclesFinder(array);
+            CirclesFinder c = new CirclesFinder(path + "small1.bmp");
             c.Draw(path + "small1Result.bmp");
 
-            array = Preprocess.ToArray((Bitmap)Bitmap.FromFile(path + "small3.bmp"));
-            c = new CirclesFinder(array);
+            c = new CirclesFinder(path + "small3.bmp");
             c.Draw(path + "small3Result.bmp");
 
-            array = Preprocess.ToArray((Bitmap)Bitmap.FromFile(path + "smallx.bmp"));
-            c = new CirclesFinder(array);
+            c = new CirclesFinder(path + "smallx.bmp");
             c.Draw(path + "smallxResult.bmp");
 
-            array = Preprocess.ToArray((Bitmap)Bitmap.FromFile(path + "smallxerror1.bmp"));
-            c = new CirclesFinder(array);
+            c = new CirclesFinder(path + "smallxerror1.bmp");
             c.Draw(path + "smallxerror1Result.bmp");
 
-            array = Preprocess.ToArray((Bitmap)Bitmap.FromFile(path + "smallxerror2.bmp"));
-            c = new CirclesFinder(array);
+            c = new CirclesFinder(path + "smallxerror2.bmp");
             c.Draw(path + "smallxerror2Result.bmp");
 
-            array = Preprocess.ToArray((Bitmap)Bitmap.FromFile(path + "raw.bmp"));
-            c = new CirclesFinder(array);
+            c = new CirclesFinder(path + "raw.bmp");
             c.Draw(path + "rawResult.bmp");
         }
     }

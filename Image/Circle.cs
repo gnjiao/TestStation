@@ -6,61 +6,142 @@ using System.Threading.Tasks;
 
 namespace JbImage
 {
-    public class Circle
+    public class Line
     {
-        public readonly int[][] PixelValues;
-
-        public int[] RowMap;
-        public int RowStart;
-        public int RowEnd;
-
-        public int[] ColMap;
-        public int ColStart;
-        public int ColEnd;
-
-        public int[] Center = new int[2];
-        public int Radius;
-
-        public Circle(int[][] array)
+        public int Start;
+        public int End;
+        public int Length
         {
-            PixelValues = array;
-        }
-        public static void Map(Circle circle)
-        {
-            circle.ColMap = new int[circle.PixelValues[0].Length];
-            circle.RowMap = new int[circle.PixelValues.Length];
-
-            for (int row = 0; row < circle.RowMap.Length; row++)
+            get
             {
-                for (int col = 0; col < circle.ColMap.Length; col++)
-                {
-                    circle.ColMap[col] += circle.PixelValues[row][col];
-                    circle.RowMap[row] += circle.PixelValues[row][col];
-
-                    if (circle.PixelValues[row][col] > 0)
-                    {
-                        if (circle.ColStart == 0)
-                        {
-                            circle.ColStart = col;
-                        }
-
-                        if (circle.RowStart == 0)
-                        {
-                            circle.RowStart = row;
-                        }
-
-                        circle.ColEnd = col;
-                        circle.RowEnd = col;
-                    }
-                }
+                return (End - Start + 1);
             }
         }
-        public static void Calc(Circle circle)
+        public Line(int start)
         {
-            circle.Radius = (circle.ColEnd - circle.ColStart) / 2;
-
-            circle.Center[0] = circle.ColStart + circle.Radius;
-            circle.Center[1] = circle.RowStart + circle.Radius;
+            Start = start;
+            End = start;
         }
+        public Line(int start, int end)
+        {
+            Start = start;
+            End = end;
+        }
+        public bool Equals(Line l)
+        {
+            return (Start == l.Start && End == l.End);
+        }
+        public bool LongerThan(Line l)
+        {
+            return Length > l.Length;
+        }
+        public bool AdjacentTo(Line line)
+        {
+            return !((End < line.Start) || (Start > line.End));
+        }
+        public void Merge(Line line)
+        {
+            End = line.End;
+        }
+        public bool AddTo(Round round)
+        {
+            if (round.Bottom == null || (!round.IsLineAdded && AdjacentTo(round.Bottom))
+                || (round.IsLineAdded && (round.Lines.Count - 2) >= 0 && AdjacentTo(round.Lines[round.Lines.Count - 2])))
+            {
+                round.Add(this);
+                return true;
+            }
+
+            return false;
+        }
+    }
+    public class Round
+    {
+        public int Id;
+        public List<Line> Lines = new List<Line>();
+        public void Add(Line l)
+        {
+            EndY = _rowNo;
+
+            if (!IsLineAdded)
+            {
+                Lines.Add(l);
+                IsLineAdded = true;
+            }
+            else
+            {
+                Bottom.Merge(l);
+            }
+
+            if (MaxLenLine == null || l.LongerThan(MaxLenLine))
+            {
+                MaxLenLine = l;
+                MaxLenY = _rowNo;
+            }
+
+            IsEnd = false;
+        }
+        public void StartScan(int rowNo)
+        {
+            _rowNo = rowNo;
+            IsLineAdded = false;
+        }
+        public void FinishScan()
+        {
+            IsEnd = !IsLineAdded;
+        }
+        #region image information
+        public int ImgLeftTopX
+        {
+            get
+            {
+                return MaxLenLine.Start;
+            }
+        }
+        public int ImgLeftTopY
+        {
+            get
+            {
+                return StartY;
+            }
+        }
+        public int ImgX
+        {
+            get
+            {
+                return MaxLenLine.Length;
+            }
+        }
+        public int ImgY
+        {
+            get
+            {
+                return (EndY - StartY);
+            }
+        }
+        #endregion
+        #region statistic information
+        public int StartY;
+        public int EndY;
+        public int MaxLenY;
+        public Line MaxLenLine;
+        #endregion
+        #region running information
+        private int _rowNo;
+        public Line Bottom
+        {
+            get
+            {
+                if (Lines.Count > 0)
+                {
+                    return Lines[Lines.Count - 1];
+                }
+
+                return null;
+            }
+        }
+        public bool IsLineAdded;
+        public bool IsEnd;
+        #endregion
     }
 }

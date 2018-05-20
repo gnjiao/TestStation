@@ -9,7 +9,7 @@ namespace HardwareTest
     public class EquipmentTest
     {
         [TestMethod]
-        public void BasicTest()
+        public void EquipmentTest_Basic()
         {
             Equipment e = new Equipment("0");
             e.Execute(new Command("PowerOn"));
@@ -39,7 +39,7 @@ namespace HardwareTest
             hardware.Add(e);
         }
         [TestMethod]
-        public void CameraTest()
+        public void EquipmentTest_Camera()
         {
             Camera c = new Camera("M8051");
             c.Execute(new Command("Open"));

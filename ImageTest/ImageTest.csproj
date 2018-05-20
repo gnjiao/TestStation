@@ -53,7 +53,7 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Circle.cs" />
+    <Compile Include="SingleCircleTest.cs" />
     <Compile Include="CirclesFinderTest.cs" />
     <Compile Include="ImageProcessorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
