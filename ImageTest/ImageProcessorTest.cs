@@ -8,6 +8,7 @@ namespace ImageTest
     [TestClass]
     public class ImageProcessorTest
     {
+        string path = @"D:\work\TestStation\ImageTest\test\";
         [Ignore]/* this test takes too much time*/
         [TestMethod]
         public void ProcessorTest_Binarize()
@@ -19,8 +20,6 @@ namespace ImageTest
         [TestMethod]
         public void ProcessorTest_CirclesFinder()
         {
-            string path = @"D:\work\TestStation\ImageTest\test\";
-
             CirclesFinder c = new CirclesFinder(path + "small1.bmp");
             c.Draw(path + "small1Result.bmp");
 
@@ -38,6 +37,14 @@ namespace ImageTest
 
             c = new CirclesFinder(path + "raw.bmp");
             c.Draw(path + "rawResult.bmp");
+        }
+        [TestMethod]
+        public void ProcessorTest_SpecialCase()
+        {
+            CirclesFinder c = new CirclesFinder(path + "raw1.bmp");
+            c.Draw(path + "raw1Result.bmp");
+            c = new CirclesFinder(path + "raw11.bmp");
+            c.Draw(path + "raw11Result.bmp");
         }
     }
 }

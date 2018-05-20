@@ -10,6 +10,7 @@ namespace JbImage
     {
         public int Start;
         public int End;
+        public int Y;
         public int Length
         {
             get
@@ -98,6 +99,7 @@ namespace JbImage
     {
         public int Id;
         public List<Line> Lines = new List<Line>();
+        #region operation
         public void Add(Line l)
         {
             EndY = _rowNo;
@@ -129,6 +131,7 @@ namespace JbImage
         {
             IsEnd = !IsLineAdded;
         }
+        #endregion
         #region image information
         public int ImgLeftTopX
         {
@@ -182,5 +185,18 @@ namespace JbImage
         public bool IsLineAdded;
         public bool IsEnd;
         #endregion
+        public override string ToString()
+        {
+            string output = "";
+
+            output += string.Format("ImgLeftTop: ({0},{1}), XLen: {2}, YLen: {3}",
+                ImgLeftTopX, ImgLeftTopY, ImgX, ImgY) + Environment.NewLine;
+            foreach (var line in Lines)
+            {
+                output += string.Format("({0},{1}) - ({2},{3})", line.Start, line.Y, line.End, line.Y) + Environment.NewLine;
+            }
+
+            return output;
+        }
     }
 }

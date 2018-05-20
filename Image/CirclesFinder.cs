@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Utils;
 
 namespace JbImage
 {
@@ -12,6 +13,7 @@ namespace JbImage
         #region initialize field
         private byte[][] _binArray;
         private Bitmap _rawImg;
+        public int Filter = 0;                /* filter rounds whose radius less than Filter */
         #endregion
 
         public List<Round> Rounds = new List<Round>();
@@ -25,6 +27,7 @@ namespace JbImage
         public CirclesFinder(string path)
         {
             _rawImg = (Bitmap)Bitmap.FromFile(path);
+            Filter = 5;
             _binArray = Preprocess.ToArray(_rawImg);
             Execute(_binArray);
         }
@@ -35,9 +38,17 @@ namespace JbImage
         }
         public void Execute(byte[][] binArray)
         {
+#if false
+            _logger.Debug("Bitmap array:");
+            _logger.Debug(Utils.Array.ToString<byte>(result));
+#endif
             for (int row = 0; row < binArray.Length; row++)
             {
                 List<Line> lines = Line.FindLines(binArray[row]);
+                foreach (var line in lines)
+                {
+                    line.Y = row;
+                }
 
                 foreach (var round in RunningRounds)
                 {
@@ -73,6 +84,21 @@ namespace JbImage
                 {
                     round.FinishScan();
                 }
+
+                #region filter rounds cuased by unsmooth
+                for (int i = Rounds.Count - 1; i >= 0; i--)
+                {
+                    if (Rounds[i].IsEnd && Rounds[i].Lines.Count < Filter/*this should be minimum possible radius of the round*/)
+                    {
+                        Rounds.RemoveAt(i);
+                    }
+                }
+                #endregion
+            }
+            /* reassign id */
+            for (int i = 0; i < Rounds.Count; i++)
+            {
+                Rounds[i].Id = i + 1;
             }
         }
 
@@ -86,6 +112,10 @@ namespace JbImage
                 g.DrawEllipse(new Pen(Color.Red), r.ImgLeftTopX, r.ImgLeftTopY, r.ImgX, r.ImgY);
                 g.DrawString(r.Id.ToString(),new Font("黑体", 25, FontStyle.Regular), new SolidBrush(Color.Red),
                     TextPoint(r.Id, r.ImgLeftTopX, r.ImgLeftTopY, r.ImgX));
+#if false
+                Logger log = new Logger();
+                log.Debug(r.ToString());
+#endif
             }
             b.Save(path);
         }
@@ -107,7 +137,6 @@ namespace JbImage
 
         public void Add(Round r)
         {
-            r.Id = Rounds.Count + 1;
             Rounds.Add(r);
         }
     }

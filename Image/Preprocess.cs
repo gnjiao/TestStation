@@ -125,13 +125,9 @@ namespace JbImage
 
                 for (int j = 0; j < img.Width; j++)
                 {
-                    result[i][j] = rband[i, j];
+                    result[i][j] = (byte)((rband[i, j] == 255) ? 1 : 0);
                 }
             }
-#if false
-            _logger.Debug("Bitmap array:");
-            _logger.Debug(Utils.Array.ToString<byte>(result));
-#endif
             return result;
         }
     }
