@@ -31,7 +31,7 @@ namespace ImageTool
 
         private void BTN_Process_Click(object sender, EventArgs e)
         {
-            string bmpFile = Preprocess.FormatBmp(TB_Filepath.Text);
+            string bmpFile = ImgProcess.FormatBmp(TB_Filepath.Text);
 
             CirclesFinder f = new CirclesFinder(bmpFile);
             TB_OutputPath.Text = Utils.String.FilePostfix(TB_Filepath.Text, "-result").Replace(".jpg",".bmp");
@@ -42,6 +42,25 @@ namespace ImageTool
             Bitmap b = f.Draw(TB_OutputPath.Text);
             b = new Bitmap(b, width, height);
             PB_Result.Image = b;
+
+            ImgProcess.Count(f.Rounds);
+            string txtFile = TB_OutputPath.Text.Replace(".bmp", ".txt");
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(txtFile, true))
+            {
+                file.Write(string.Format("{0} {1} {2} {3} {4}",
+                    "ID",
+                    "LengthOnX", "DeviationOnX",
+                    "Weight", "DeviationOnWeight") + Environment.NewLine);
+
+                foreach (var round in f.Rounds)
+                {
+                    file.Write(string.Format("{0} {1} {2} {3} {4}", 
+                        round.Id.ToString("D3"), 
+                        round.MaxLenLine.Length, round.LenDiff.ToString("F4"),
+                        round.Weight.ToString(), round.WeightDiff.ToString("F4")));//直接追加文件末尾，不换行
+                    file.Write(Environment.NewLine);
+                }
+            }
         }
     }
 }

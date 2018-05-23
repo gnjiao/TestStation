@@ -1,18 +1,23 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Drawing.Imaging;
 using Utils;
 
 namespace JbImage
 {
-    public class Preprocess
+    public class ImgProcess
     {
         static Logger _logger = new Logger("Image.Preprocess");
 
+        public static int[][] pixelsValue;
         public static string FormatBmp(string path)
         {
             string file = Utils.String.FilePostfix(path, "-24b").Replace("jpg", "bmp");
             string fileplus = Utils.String.FilePostfix(file, "-bin");
 
+            _logger.Info("Start FormatBmp");
+
+            _logger.Info("Convert to BMP");
             using (Bitmap source = new Bitmap(path))
             {
                 using (Bitmap bmp = new Bitmap(source.Width, source.Height, PixelFormat.Format24bppRgb))
@@ -22,30 +27,35 @@ namespace JbImage
                 }
             }
 
-            Image i = (Image)Preprocess.Binarize(file);
+            Image i = (Image)ImgProcess.Binarize(file);
             i.Save(fileplus);
+            _logger.Info("End FormatBmp");
 
             return fileplus;
         }
         public static Bitmap Binarize(string path)
         {
-            Bitmap bmpobj = (Bitmap)Bitmap.FromFile(path);
             _logger.Info("load file " + path);
-            ToGrey(bmpobj);
+            Bitmap bmpobj = (Bitmap)Bitmap.FromFile(path);
             _logger.Info("gray " + path);
-            Thresholding(bmpobj);
+            ToGrey(bmpobj);
             _logger.Info("threshholding " + path);
+            Thresholding(bmpobj);
 
             return bmpobj;
         }
         static void ToGrey(Bitmap img1)
         {
+            pixelsValue = new int[img1.Width][];
             for (int i = 0; i < img1.Width; i++)
             {
+                pixelsValue[i] = new int[img1.Height];
+
                 for (int j = 0; j < img1.Height; j++)
                 {
                     Color pixelColor = img1.GetPixel(i, j);
                     int grey = (int)(0.299 * pixelColor.R + 0.587 * pixelColor.G + 0.114 * pixelColor.B);
+                    pixelsValue[i][j] = grey;
                     Color newColor = Color.FromArgb(grey, grey, grey);
                     img1.SetPixel(i, j, newColor);
                 }
@@ -144,6 +154,39 @@ namespace JbImage
                 }
             }
             return result;
+        }
+        public static void Count(List<Round> rounds)
+        {
+            _logger.Info("Start Count");
+
+            int sumWeight = 0;
+            int sumLen = 0;
+            foreach (var round in rounds)
+            {
+                int count = 0;
+
+                for (int x = round.MaxLenLine.Start; x <= round.MaxLenLine.End; x++)
+                {
+                    for (int y = round.StartY; y <= round.EndY; y++)
+                    {
+                        count += pixelsValue[x][y];
+                    }
+                }
+
+                round.Weight = count;
+                sumWeight += count;
+                sumLen += round.MaxLenLine.Length;
+            }
+
+            double averageWeight = (double)sumWeight / rounds.Count;
+            double averageLen = (double)sumLen / rounds.Count;
+            foreach (var round in rounds)
+            {
+                round.WeightDiff = (double)(round.Weight - averageWeight) / averageWeight;
+                round.LenDiff = (double)(round.MaxLenLine.Length - averageLen) / averageLen;
+            }
+
+            _logger.Info("End Count");
         }
     }
 }

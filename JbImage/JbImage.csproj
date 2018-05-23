@@ -49,7 +49,7 @@
     <Compile Include="Circle.cs" />
     <Compile Include="SingleCircle.cs" />
     <Compile Include="CirclesFinder.cs" />
-    <Compile Include="Preprocess.cs" />
+    <Compile Include="ImgProcess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
