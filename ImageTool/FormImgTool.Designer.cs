@@ -64,7 +64,7 @@
             this.TB_Filepath.ReadOnly = true;
             this.TB_Filepath.Size = new System.Drawing.Size(672, 28);
             this.TB_Filepath.TabIndex = 2;
-            this.TB_Filepath.Text = "D:\\work\\TestStation\\ImageTool\\Samples\\Sample2.jpg";
+            this.TB_Filepath.Text = "D:\\work\\TestStation\\ImageTool\\Samples\\Test.jpg";
             // 
             // PB_Result
             // 

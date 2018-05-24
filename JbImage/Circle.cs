@@ -168,7 +168,8 @@ namespace JbImage
         public int EndY;
         public int MaxLenY;
         public Line MaxLenLine;
-        public double LenDiff;
+        public double LenXDiff;
+        public double LenYDiff;
         public int Weight;
         public double WeightDiff;
         #endregion

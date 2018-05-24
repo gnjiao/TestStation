@@ -160,7 +160,8 @@ namespace JbImage
             _logger.Info("Start Count");
 
             int sumWeight = 0;
-            int sumLen = 0;
+            int sumLenX = 0;
+            int sumLenY = 0;
             foreach (var round in rounds)
             {
                 int count = 0;
@@ -175,15 +176,18 @@ namespace JbImage
 
                 round.Weight = count;
                 sumWeight += count;
-                sumLen += round.MaxLenLine.Length;
+                sumLenX += round.MaxLenLine.Length;
+                sumLenY += round.EndY - round.StartY;
             }
 
             double averageWeight = (double)sumWeight / rounds.Count;
-            double averageLen = (double)sumLen / rounds.Count;
+            double averageLenX = (double)sumLenX / rounds.Count;
+            double averageLenY = (double)sumLenY / rounds.Count;
             foreach (var round in rounds)
             {
                 round.WeightDiff = (double)(round.Weight - averageWeight) / averageWeight;
-                round.LenDiff = (double)(round.MaxLenLine.Length - averageLen) / averageLen;
+                round.LenXDiff = (double)(round.MaxLenLine.Length - averageLenX) / averageLenX;
+                round.LenYDiff = (double)(round.EndY - round.StartY) / averageLenY;
             }
 
             _logger.Info("End Count");

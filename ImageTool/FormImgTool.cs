@@ -47,19 +47,25 @@ namespace ImageTool
             string txtFile = TB_OutputPath.Text.Replace(".bmp", ".txt");
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(txtFile, true))
             {
-                file.Write(string.Format("{0} {1} {2} {3} {4}",
+                file.Write(string.Format("{0} {1} {2} {3} {4} {5} {6}",
                     "ID",
                     "LengthOnX", "DeviationOnX",
+                    "LengthOnY", "DeviationOnY",
                     "Weight", "DeviationOnWeight") + Environment.NewLine);
 
                 foreach (var round in f.Rounds)
                 {
-                    file.Write(string.Format("{0} {1} {2} {3} {4}", 
+                    file.Write(string.Format("{0} {1} {2} {3} {4} {5} {6}", 
                         round.Id.ToString("D3"), 
-                        round.MaxLenLine.Length, round.LenDiff.ToString("F4"),
-                        round.Weight.ToString(), round.WeightDiff.ToString("F4")));//直接追加文件末尾，不换行
+                        round.MaxLenLine.Length, round.LenXDiff.ToString("F4"),
+                        round.EndY - round.StartY, round.LenYDiff.ToString("F4"),
+                        round.Weight.ToString(), round.WeightDiff.ToString("F4")));
                     file.Write(Environment.NewLine);
                 }
+
+                double stdEv = Utils.Math.StdEv(f.Rounds.Select(x => x.Weight).ToList());
+                file.Write(string.Format("StdEv of Weight: {0}", stdEv));
+                file.Write(Environment.NewLine);
             }
         }
     }

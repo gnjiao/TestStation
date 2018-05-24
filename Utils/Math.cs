@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+
 namespace Utils
 {
     public class Math
@@ -18,6 +20,23 @@ namespace Utils
         public static double Atan(double value)
         {
             return Math.Angle(System.Math.Atan(value));
+        }
+        public static double StdEv(List<int> values)
+        {
+            double average = 0;
+            foreach (var value in values)
+            {
+                average += value;
+            }
+            average /= values.Count;
+
+            double deviationSum = 0;
+            foreach (var value in values)
+            {
+                deviationSum += ((double)value - average)*((double)value - average);
+            }
+            return System.Math.Sqrt(deviationSum / (values.Count - 1));
+
         }
     }
 }
