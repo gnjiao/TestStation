@@ -35,8 +35,8 @@ namespace Utils
             {
                 deviationSum += ((double)value - average)*((double)value - average);
             }
-            return System.Math.Sqrt(deviationSum / (values.Count - 1));
 
+            return System.Math.Sqrt(deviationSum / (values.Count - 1));
         }
     }
 }

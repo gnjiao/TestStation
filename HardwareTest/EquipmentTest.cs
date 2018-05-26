@@ -35,7 +35,7 @@ namespace HardwareTest
             ps.Execute(new Command("PowerOn"));
             ps.Execute(new Command("PowerOff"));
 
-            HardwareSrv hardware = new HardwareSrv();
+            HardwareSrv hardware = HardwareSrv.GetInstance();
             hardware.Add(e);
         }
         [TestMethod]

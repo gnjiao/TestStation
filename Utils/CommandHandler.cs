@@ -30,10 +30,12 @@ namespace Utils
     {
         public string Id;
         public string Desc;
-        public Result(string id, string desc = null)
+        public object Param;
+        public Result(string id, string desc = null, object param = null)
         {
             Id = id;
             Desc = desc;
+            Param = param;
         }
         public override string ToString()
         {
@@ -54,7 +56,6 @@ namespace Utils
         {
             Type = "CommandHandler";
             Name = param as string;
-
             AssginLogger();
         }
         protected void AssginLogger()

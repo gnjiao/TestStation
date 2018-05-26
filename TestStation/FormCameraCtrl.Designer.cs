@@ -73,6 +73,7 @@ namespace TestStation
             this.Controls.Add(this.BTN_Read);
             this.Name = "FormCameraCtrl";
             this.Text = "Camera Control";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormCameraCtrl_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 

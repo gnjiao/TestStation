@@ -40,7 +40,7 @@ namespace TestStation
         public StageIdle() : base("Idle")
         {
         }
-        public override Result Execute(Command cmd)
+        protected override Result _execute(Command cmd)
         {
             return new Result("Ok");
         }
