@@ -28,15 +28,11 @@ namespace TestStation
             Type = "Stage";
             AssignLogger();
         }
-        protected override Result _execute(Command cmd)
-        {
-            return CurStage.Execute(cmd);
-        }
         public virtual Result OnEvent(Event t)
         {
-            return _execute(new StageCommand(t));
+            return CurStage.OnEvent(t);
         }
-        public abstract void SetStage(string stageName);
+        public abstract Result SetStage(string stageName);
     }
     public class StageParam
     {
@@ -72,11 +68,10 @@ namespace TestStation
             switch (cmd.Id)
             {
                 case "EquipmentOk":
-                    Owner.SetStage("Ready");
-                    break;
+                    return Owner.SetStage("Ready");
             }
 
-            return new Result("Ok");
+            return new Result("CommandError", "Command do not support", cmd);
         }
     }
     public class StageReady : Stage
@@ -84,9 +79,17 @@ namespace TestStation
         public StageReady(StageOwner owner) : base(new StageParam("Ready", owner))
         {
         }
-        public override Result Execute(Command cmd)
+        protected override Result _execute(Command cmd)
         {
-            return new Result("Ok");
+            switch (cmd.Id)
+            {
+                case "EquipmentFail":
+                    return Owner.SetStage("Idle");
+                case "AddDut":
+                    return Owner.SetStage("Loaded");
+            }
+
+            return new Result("CommandError", "Command do not support", cmd);
         }
     }
     public class StageLoaded : Stage
@@ -94,9 +97,15 @@ namespace TestStation
         public StageLoaded(StageOwner owner) : base(new StageParam("Loaded", owner))
         {
         }
-        public override Result Execute(Command cmd)
+        protected override Result _execute(Command cmd)
         {
-            return new Result("Ok");
+            switch (cmd.Id)
+            {
+                case "StartTest":
+                    return Owner.SetStage("Testing");
+            }
+
+            return new Result("CommandError", "Command do not support", cmd);
         }
     }
     public class StageTesting : Stage
@@ -104,9 +113,17 @@ namespace TestStation
         public StageTesting(StageOwner owner) : base(new StageParam("Testing", owner))
         {
         }
-        public override Result Execute(Command cmd)
+        protected override Result _execute(Command cmd)
         {
-            return new Result("Ok");
+            switch (cmd.Id)
+            {
+                case "TestPass":
+                    return Owner.SetStage("TestPass");
+                case "TestFail":
+                    return Owner.SetStage("TestFail");
+            }
+
+            return new Result("CommandError", "Command do not support", cmd);
         }
     }
     public class StageTestPass : Stage
@@ -114,9 +131,9 @@ namespace TestStation
         public StageTestPass(StageOwner owner) : base(new StageParam("TestPass", owner))
         {
         }
-        public override Result Execute(Command cmd)
+        protected override Result _execute(Command cmd)
         {
-            return new Result("Ok");
+            return new Result("CommandError", "Command do not support", cmd);
         }
     }
     public class StageTestFail : Stage
@@ -124,9 +141,9 @@ namespace TestStation
         public StageTestFail(StageOwner owner) : base(new StageParam("TestFail", owner))
         {
         }
-        public override Result Execute(Command cmd)
+        protected override Result _execute(Command cmd)
         {
-            return new Result("Ok");
+            return new Result("CommandError", "Command do not support", cmd);
         }
     }
 }

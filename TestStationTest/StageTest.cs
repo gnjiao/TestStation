@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TestStation;
 using System.Collections.Generic;
+using Utils;
 
 namespace TestStationTest
 {
@@ -21,9 +22,10 @@ namespace TestStationTest
             };
             CurStage = Stages["Idle"];
         }
-        public override void SetStage(string name)
+        public override Result SetStage(string name)
         {
             CurStage = Stages[name];
+            return new Result("Ok");
         }
     }
     [TestClass]
@@ -37,6 +39,57 @@ namespace TestStationTest
 
             o.OnEvent(new Event("EquipmentOk"));
             Assert.IsTrue(o.CurStage.Name == "Ready");
+        }
+        [TestMethod]
+        public void TestStage_StageReady_ToIdle()
+        {
+            StageOwner o = new TestStageOwner("TestStation");
+            Assert.IsTrue(o.CurStage.Name == "Idle");
+            o.OnEvent(new Event("EquipmentOk"));
+
+            o.OnEvent(new Event("EquipmentFail"));
+            Assert.IsTrue(o.CurStage.Name == "Idle");
+        }
+        [TestMethod]
+        public void TestStage_StageReady_ToLoaded()
+        {
+            StageOwner o = new TestStageOwner("TestStation");
+            Assert.IsTrue(o.CurStage.Name == "Idle");
+            o.OnEvent(new Event("EquipmentOk"));
+            o.OnEvent(new Event("AddDut", null/*DUT*/));
+            Assert.IsTrue(o.CurStage.Name == "Loaded");
+        }
+        [TestMethod]
+        public void TestStage_StageLoaded_ToTesting()
+        {
+            StageOwner o = new TestStageOwner("TestStation");
+            Assert.IsTrue(o.CurStage.Name == "Idle");
+            o.OnEvent(new Event("EquipmentOk"));
+            o.OnEvent(new Event("AddDut", null/*DUT*/));
+            o.OnEvent(new Event("StartTest"));
+            Assert.IsTrue(o.CurStage.Name == "Testing");
+        }
+        [TestMethod]
+        public void TestStage_StageTesting_ToTestPass()
+        {
+            StageOwner o = new TestStageOwner("TestStation");
+            Assert.IsTrue(o.CurStage.Name == "Idle");
+            o.OnEvent(new Event("EquipmentOk"));
+            o.OnEvent(new Event("AddDut", null/*DUT*/));
+            o.OnEvent(new Event("StartTest"));
+            o.OnEvent(new Event("TestPass"));
+            Assert.IsTrue(o.CurStage.Name == "TestPass");
+        }
+        [TestMethod]
+        public void TestStage_StageTesting_ToTestFail()
+        {
+            StageOwner o = new TestStageOwner("TestStation");
+            Assert.IsTrue(o.CurStage.Name == "Idle");
+            o.OnEvent(new Event("EquipmentOk"));
+            o.OnEvent(new Event("AddDut", null/*DUT*/));
+            o.OnEvent(new Event("StartTest"));
+            o.OnEvent(new Event("TestFail"));
+            Assert.IsTrue(o.CurStage.Name == "TestFail");
         }
     }
 }
