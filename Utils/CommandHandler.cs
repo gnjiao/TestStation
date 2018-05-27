@@ -50,15 +50,15 @@ namespace Utils
     public class CommandHandler
     {
         protected Logger _log;
-        protected string Type;
-        protected string Name;
+        public string Type;
+        public string Name;
         public CommandHandler(object param)
         {
             Type = "CommandHandler";
             Name = param as string;
-            AssginLogger();
+            AssignLogger();
         }
-        protected void AssginLogger()
+        protected void AssignLogger()
         {
             _log = new Logger(string.Format("{0}({1})", Type, Name));
         }

@@ -55,7 +55,7 @@ namespace TestStation
             // 
             // BTN_Calculate
             // 
-            this.BTN_Calculate.Location = new System.Drawing.Point(12, 49);
+            this.BTN_Calculate.Location = new System.Drawing.Point(12, 415);
             this.BTN_Calculate.Name = "BTN_Calculate";
             this.BTN_Calculate.Size = new System.Drawing.Size(128, 23);
             this.BTN_Calculate.TabIndex = 3;

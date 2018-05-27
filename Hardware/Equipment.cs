@@ -8,7 +8,7 @@ namespace Hardware
         public Equipment(object param) : base(param)
         {
             Type = "Equipment";
-            AssginLogger();
+            AssignLogger();
         }
     }
     public class Port : Equipment
@@ -16,7 +16,7 @@ namespace Hardware
         public Port(object param) : base(param)
         {
             Type = "Port";
-            AssginLogger();
+            AssignLogger();
         }
         virtual public Result Send(string bytes)
         {
@@ -32,7 +32,7 @@ namespace Hardware
         public PowerSupply(object param) : base(param)
         {
             Type = "PowerSupplys";
-            AssginLogger();
+            AssignLogger();
         }
         protected override Result _execute(Command cmd)
         {

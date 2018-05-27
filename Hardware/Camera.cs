@@ -8,7 +8,7 @@ namespace Hardware
         public Camera(object param) : base(param)
         {
             Type = "Camera";
-            AssginLogger();
+            AssignLogger();
         }
         protected override Result _execute(Command cmd)
         {

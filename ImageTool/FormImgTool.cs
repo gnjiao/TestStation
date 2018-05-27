@@ -63,8 +63,12 @@ namespace ImageTool
                     file.Write(Environment.NewLine);
                 }
 
-                double stdEv = Utils.Math.StdEv(f.Rounds.Select(x => x.Weight).ToList());
-                file.Write(string.Format("StdEv of Weight: {0}", stdEv));
+                double radiusStdEv = Utils.Math.StdEv(f.Rounds.Select(x => x.MaxLenLine.Length).ToList());
+                file.Write(string.Format("StdEv of Radius: {0}", radiusStdEv));
+                file.Write(Environment.NewLine);
+
+                double weightStdEv = Utils.Math.StdEv(f.Rounds.Select(x => x.Weight).ToList());
+                file.Write(string.Format("StdEv of Weight: {0}", weightStdEv));
                 file.Write(Environment.NewLine);
             }
         }
