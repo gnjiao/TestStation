@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageTool", "ImageTool\Imag
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestStationTest", "TestStationTest\TestStationTest.csproj", "{E4A79D19-C5D5-46A3-9EB9-8B4FD08217BA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Config", "Config\Config.csproj", "{B738223C-5A33-499A-8FCF-6D1A71C3F35D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,10 @@ Global
 		{E4A79D19-C5D5-46A3-9EB9-8B4FD08217BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4A79D19-C5D5-46A3-9EB9-8B4FD08217BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4A79D19-C5D5-46A3-9EB9-8B4FD08217BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B738223C-5A33-499A-8FCF-6D1A71C3F35D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B738223C-5A33-499A-8FCF-6D1A71C3F35D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B738223C-5A33-499A-8FCF-6D1A71C3F35D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B738223C-5A33-499A-8FCF-6D1A71C3F35D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

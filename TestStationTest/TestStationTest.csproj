@@ -69,6 +69,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Hardware\Hardware.csproj">
+      <Project>{E94F00C8-7CFB-4B8C-998F-784DEB4AE480}</Project>
+      <Name>Hardware</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TestStation\TestStation.csproj">
       <Project>{D577EF31-7C0F-4695-A82E-146E3AA9A4DE}</Project>
       <Name>TestStation</Name>

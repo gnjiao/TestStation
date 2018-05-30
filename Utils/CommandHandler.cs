@@ -63,27 +63,20 @@ namespace Utils
             _log = new Logger(string.Format("{0}({1})", Type, Name));
         }
         private Command _currentCmd;
-        protected string CurrentCmd
-        {
-            get
-            {
-                return string.Format("{0}({1}) {2}", Type, Name, _currentCmd);
-            }
-        }
         virtual protected void PreExecute(Command cmd)
         {
             _currentCmd = cmd;
-            _log.Info(CurrentCmd);
+            _log.Info(_currentCmd.ToString());
         }
         virtual protected void PostExecute(Result result)
         {
             if (result.Id != "Ok")
             {
-                _log.Warn(CurrentCmd + " " + result.ToString());
+                _log.Warn(_currentCmd.ToString() + " " + result.ToString());
             }
             else if (!string.IsNullOrEmpty(result.Desc))
             {
-                _log.Info(CurrentCmd + " " + result.ToString());
+                _log.Info(_currentCmd.ToString() + " " + result.ToString());
             }
         }
         virtual protected Result _execute(Command cmd)

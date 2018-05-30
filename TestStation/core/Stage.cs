@@ -117,6 +117,8 @@ namespace TestStation
         {
             switch (cmd.Id)
             {
+                case "Pause":
+                    return Owner.SetStage("Pause");
                 case "TestPass":
                     return Owner.SetStage("TestPass");
                 case "TestFail":
@@ -133,6 +135,11 @@ namespace TestStation
         }
         protected override Result _execute(Command cmd)
         {
+            switch (cmd.Id)
+            {
+                case "RemoveDut":
+                    return Owner.SetStage("Ready");
+            }
             return new Result("CommandError", "Command do not support", cmd);
         }
     }
@@ -143,6 +150,32 @@ namespace TestStation
         }
         protected override Result _execute(Command cmd)
         {
+            switch (cmd.Id)
+            {
+                case "RemoveDut":
+                    return Owner.SetStage("Ready");
+                case "Recover":
+                    return Owner.SetStage("Ready");
+            }
+            return new Result("CommandError", "Command do not support", cmd);
+        }
+    }
+    public class StagePause : Stage
+    {
+        public StagePause(StageOwner owner) : base(new StageParam("Pause", owner))
+        {
+        }
+        protected override Result _execute(Command cmd)
+        {
+            switch (cmd.Id)
+            {
+                case "RemoveDut":
+                    return Owner.SetStage("Ready");
+                case "Recover":
+                    return Owner.SetStage("Ready");
+                case "Resume":
+                    return Owner.SetStage("Testing");
+            }
             return new Result("CommandError", "Command do not support", cmd);
         }
     }

@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TestStation;
 using System.Collections.Generic;
 using Utils;
+using Hardware;
 
 namespace TestStationTest
 {
@@ -16,9 +17,11 @@ namespace TestStationTest
             Stages = new Dictionary<string, Stage>() {
                 { "Idle", new StageIdle(this) },
                 { "Ready", new StageReady(this) },
+                { "Loaded", new StageLoaded(this) },
                 { "Testing", new StageTesting(this) },
                 { "TestPass", new StageTestPass(this) },
                 { "TestFail", new StageTestFail(this) },
+                { "Pause", new StagePause(this) },
             };
             CurStage = Stages["Idle"];
         }
@@ -29,7 +32,7 @@ namespace TestStationTest
         }
     }
     [TestClass]
-    public class StageTest
+    public class StageTransferTest
     {
         [TestMethod]
         public void TestStage_StageIdle_ToReady()
@@ -90,6 +93,63 @@ namespace TestStationTest
             o.OnEvent(new Event("StartTest"));
             o.OnEvent(new Event("TestFail"));
             Assert.IsTrue(o.CurStage.Name == "TestFail");
+        }
+        [TestMethod]
+        public void TestStage_StageTesting_ToPause()
+        {
+            StageOwner o = new TestStageOwner("TestStation");
+            Assert.IsTrue(o.CurStage.Name == "Idle");
+            o.OnEvent(new Event("EquipmentOk"));
+            o.OnEvent(new Event("AddDut", null/*DUT*/));
+            o.OnEvent(new Event("StartTest"));
+            o.OnEvent(new Event("Pause"));
+            Assert.IsTrue(o.CurStage.Name == "Pause");
+        }
+        [TestMethod]
+        public void TestStage_StageTestPass_ToReady()
+        {
+            StageOwner o = new TestStageOwner("TestStation");
+            Assert.IsTrue(o.CurStage.Name == "Idle");
+            o.OnEvent(new Event("EquipmentOk"));
+            o.OnEvent(new Event("AddDut", null/*DUT*/));
+            o.OnEvent(new Event("StartTest"));
+            o.OnEvent(new Event("TestPass"));
+            o.OnEvent(new Event("RemoveDut"));
+            Assert.IsTrue(o.CurStage.Name == "Ready");
+        }
+        [TestMethod]
+        public void TestStage_StageTestFail_ToLoaded()
+        {
+            StageOwner o = new TestStageOwner("TestStation");
+            Assert.IsTrue(o.CurStage.Name == "Idle");
+            o.OnEvent(new Event("EquipmentOk"));
+            o.OnEvent(new Event("AddDut", null/*DUT*/));
+            o.OnEvent(new Event("StartTest"));
+            o.OnEvent(new Event("TestFail"));
+            o.OnEvent(new Event("Recover"));
+            Assert.IsTrue(o.CurStage.Name == "Loaded");
+        }
+        [TestMethod]
+        public void TestStage_StageTestFail_ToReady()
+        {
+            StageOwner o = new TestStageOwner("TestStation");
+            Assert.IsTrue(o.CurStage.Name == "Idle");
+            o.OnEvent(new Event("EquipmentOk"));
+            o.OnEvent(new Event("AddDut", null/*DUT*/));
+            o.OnEvent(new Event("StartTest"));
+            o.OnEvent(new Event("TestFail"));
+            o.OnEvent(new Event("RemoveDut"));
+            Assert.IsTrue(o.CurStage.Name == "Ready");
+        }
+    }
+    [TestClass]
+    public class StageControlEquipmentTest
+    {
+        [TestMethod]
+        public void StageIdle()
+        {
+            StageOwner o = new TestStageOwner("TestStation");
+            Camera c = new Camera("M8051");
         }
     }
 }
