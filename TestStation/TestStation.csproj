@@ -8,11 +8,12 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>TestStation</RootNamespace>
     <AssemblyName>TestStation</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -61,6 +62,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="ui\FormCameraCtrl.resx">
       <DependentUpon>FormCameraCtrl.cs</DependentUpon>
@@ -86,6 +88,10 @@
     <ProjectReference Include="..\Hardware\Hardware.csproj">
       <Project>{E94F00C8-7CFB-4B8C-998F-784DEB4AE480}</Project>
       <Name>Hardware</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JbImage\JbImage.csproj">
+      <Project>{88e41cf6-cc56-49d7-b09d-e220f5727653}</Project>
+      <Name>JbImage</Name>
     </ProjectReference>
     <ProjectReference Include="..\Utils\Utils.csproj">
       <Project>{ECCE0B02-0262-48D1-871D-6EB0440AF17F}</Project>
