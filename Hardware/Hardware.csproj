@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -40,8 +41,33 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="uc480DotNet">
-      <HintPath>..\ExtLibs\M8051\uc480DotNet.dll</HintPath>
+    <Reference Include="Thorlabs.TSI.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\ThorLabsLib\Thorlabs.TSI.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Thorlabs.TSI.CoreInterfaces, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\ThorLabsLib\Thorlabs.TSI.CoreInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Thorlabs.TSI.ImageData, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\ThorLabsLib\Thorlabs.TSI.ImageData.dll</HintPath>
+    </Reference>
+    <Reference Include="Thorlabs.TSI.TLCamera, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\ThorLabsLib\Thorlabs.TSI.TLCamera.dll</HintPath>
+    </Reference>
+    <Reference Include="Thorlabs.TSI.TLCameraInterfaces, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\ThorLabsLib\Thorlabs.TSI.TLCameraInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="thorlabs_tsi_camera_sdk1_cli, Version=1.0.6470.30339, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\ThorLabsLib\thorlabs_tsi_camera_sdk1_cli.dll</HintPath>
+    </Reference>
+    <Reference Include="thorlabs_tsi_core_cli, Version=1.0.6470.30339, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\ThorLabsLib\thorlabs_tsi_core_cli.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -57,9 +83,90 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="uc480_64.dll">
+    <ContentWithTargetPath Include="ThorLabsLib\tsi_log.cfg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+      <TargetPath>tsi_log.cfg</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="ThorLabsLib\edt_camera_link.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <TargetPath>edt_camera_link.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="ThorLabsLib\fenrir.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <TargetPath>fenrir.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="ThorLabsLib\pdvlib.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <TargetPath>pdvlib.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="ThorLabsLib\pleora_ebus.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <TargetPath>pleora_ebus.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="ThorLabsLib\Thorlabs.TSI.Core.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <TargetPath>Thorlabs.TSI.Core.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="ThorLabsLib\Thorlabs.TSI.CoreInterfaces.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <TargetPath>Thorlabs.TSI.CoreInterfaces.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="ThorLabsLib\Thorlabs.TSI.ImageData.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <TargetPath>Thorlabs.TSI.ImageData.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="ThorLabsLib\Thorlabs.TSI.TLCamera.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <TargetPath>Thorlabs.TSI.TLCamera.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="ThorLabsLib\Thorlabs.TSI.TLCameraInterfaces.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <TargetPath>Thorlabs.TSI.TLCameraInterfaces.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="ThorLabsLib\thorlabs_tsi_camera_sdk.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <TargetPath>thorlabs_tsi_camera_sdk.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="ThorLabsLib\thorlabs_tsi_camera_sdk1_cli.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <TargetPath>thorlabs_tsi_camera_sdk1_cli.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="ThorLabsLib\thorlabs_tsi_core_cli.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <TargetPath>thorlabs_tsi_core_cli.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="ThorLabsLib\thorlabs_tsi_cs_camera_device.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <TargetPath>thorlabs_tsi_cs_camera_device.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="ThorLabsLib\thorlabs_tsi_usb_driver.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <TargetPath>thorlabs_tsi_usb_driver.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="ThorLabsLib\thorlabs_tsi_usb_hotplug_monitor.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <TargetPath>thorlabs_tsi_usb_hotplug_monitor.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="ThorLabsLib\thorlabs_unified_sdk_kernel.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <TargetPath>thorlabs_unified_sdk_kernel.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="ThorLabsLib\thorlabs_unified_sdk_main.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <TargetPath>thorlabs_unified_sdk_main.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="ThorLabsLib\tsi_logx.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <TargetPath>tsi_logx.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="ThorLabsLib\tsi_sdk.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <TargetPath>tsi_sdk.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="ThorLabsLib\tsi_usb.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <TargetPath>tsi_usb.dll</TargetPath>
+    </ContentWithTargetPath>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

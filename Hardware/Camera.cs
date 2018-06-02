@@ -1,4 +1,9 @@
 ﻿using System;
+using System.Drawing;
+using System.Linq;
+using System.Timers;
+using Thorlabs.TSI.TLCamera;
+using Thorlabs.TSI.TLCameraInterfaces;
 using Utils;
 
 namespace Hardware
@@ -10,6 +15,7 @@ namespace Hardware
             Type = "Camera";
             AssignLogger();
         }
+
         protected override Result _execute(Command cmd)
         {
             switch (cmd.Id)
@@ -25,72 +31,97 @@ namespace Hardware
             }
         }
 
-        private uc480.Camera _camera;
-        IntPtr displayHandle = IntPtr.Zero;
-        private bool bLive = false;
-
+        private readonly Timer _timer = new Timer();
+        private Bitmap _latestDisplayBitmap;
+        private ITLCameraSDK _tlCameraSDK;
+        private ITLCamera _tlCamera;
         private Result Open()
         {
-            uc480.Defines.Status statusRet = 0;
-            Int32 s32MemID;
+            this._tlCameraSDK = TLCameraSDK.OpenTLCameraSDK();
+            var serialNumbers = this._tlCameraSDK.DiscoverAvailableCameras();
 
-            _camera = new uc480.Camera();//Use only the empty constructor, the one with cameraID has a bug
-
-            if ((statusRet = _camera.Init()) != uc480.Defines.Status.SUCCESS)
+            if (serialNumbers.Count > 0)
             {
-                _log.Error("Failed to initialize(" + statusRet.ToString() + ")");
-                return new Result("Fail", "Failed to initialize");
+                this._tlCamera = this._tlCameraSDK.OpenCamera(serialNumbers.First(), false);
+
+                this._tlCamera.ExposureTime_us = 50000;
+                if (this._tlCamera.GainRange.Maximum > 0)
+                {
+                    this._tlCamera.Gain = 90;
+                }
+                if (this._tlCamera.BlackLevelRange.Maximum > 0)
+                {
+                    this._tlCamera.BlackLevel = 48;
+                }
+
+                this._tlCamera.OperationMode = OperationMode.SoftwareTriggered;
+
+                this._tlCamera.Arm();
+
+                this._tlCamera.IssueSoftwareTrigger();
+
+                this._timer.Interval = 50;
+                this._timer.AutoReset = true;
+                this._timer.Elapsed += this.DispatcherTimerUpdateUI_Tick;
+                this._timer.Start();
+
+                return new Result("Ok");
             }
-            if ((statusRet = _camera.Memory.Allocate(out s32MemID, true)) != uc480.Defines.Status.SUCCESS)
+            else
             {
-                _log.Error("Allocate Memory failed(" + statusRet.ToString() + ")");
-                return new Result("Fail", "Failed to allocate memory");
+                return new Result("Fail");
             }
-
-            #region Start Live Video
-            //statusRet = _camera.Acquisition.Capture();
-            //if (statusRet != uc480.Defines.Status.SUCCESS)
-            //{
-            //      _log.Error("Allocate Memory failed");
-            //}
-            //else
-            //{
-            //    bLive = true;
-            //}
-            #endregion
-
-            _camera.EventFrame += onFrameEvent;
-
-            return new Result("Ok");
         }
-        private void onFrameEvent(object sender, EventArgs e)
+
+        private void DispatcherTimerUpdateUI_Tick(object sender, EventArgs e)
         {
-            uc480.Camera camera = sender as uc480.Camera;
+            if (this._tlCamera != null)
+            {
+                // Check if a frame is available
+                if (this._tlCamera.NumberOfQueuedFrames > 0)
+                {
+                    var frame = this._tlCamera.GetPendingFrameOrNull();
+                    if (frame != null)
+                    {
+                        if (this._latestDisplayBitmap != null)
+                        {
+                            this._latestDisplayBitmap.Dispose();
+                            this._latestDisplayBitmap = null;
+                        }
 
-            Int32 s32MemID;
-            camera.Memory.GetActive(out s32MemID);
-            camera.Memory.Lock(s32MemID);
-
-            camera.Display.Render(s32MemID, displayHandle, uc480.Defines.DisplayRenderMode.FitToWindow);
-
-            camera.Memory.Unlock(s32MemID);
+                        this._latestDisplayBitmap = frame.ImageDataUShort1D.ToBitmap_Format24bppRgb();
+                        //this.pictureBoxLiveImage.Invalidate();
+                    }
+                }
+            }
         }
 
         private Result Close()
         {
-            _camera.Exit();
+            if (this._timer != null)
+            {
+                this._timer.Stop();
+            }
+
+            if (this._tlCameraSDK != null && this._tlCamera != null)
+            {
+                if (this._tlCamera.IsArmed)
+                {
+                    this._tlCamera.Disarm();
+                }
+
+                this._tlCamera.Dispose();
+                this._tlCamera = null;
+
+                this._tlCameraSDK.Dispose();
+                this._tlCameraSDK = null;
+            }
+
             return new Result("Ok");
         }
         private Result Read()
         {
-            uc480.Defines.Status result = _camera.Acquisition.Freeze();
-            if (result == uc480.Defines.Status.SUCCESS)
-            {
-                bLive = false;
-                return new Result("Ok");
-            }
-
-            return new Result("Fail", result.ToString());
+            return new Result("Fail");
         }
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Utils;
 using Hardware;
+using System.Threading;
 
 namespace HardwareTest
 {
@@ -43,6 +44,7 @@ namespace HardwareTest
         {
             Camera c = new Camera("M8051");
             c.Execute(new Command("Open"));
+            Thread.Sleep(60 * 1000);
             c.Execute(new Command("Read"));
             c.Execute(new Command("Close"));
         }
