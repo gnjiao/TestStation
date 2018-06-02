@@ -44,8 +44,9 @@ namespace HardwareTest
         {
             Camera c = new Camera("M8051");
             c.Execute(new Command("Open"));
-            Thread.Sleep(60 * 1000);
-            c.Execute(new Command("Read"));
+            Thread.Sleep(3 * 1000);
+            var result = c.Execute(new Command("Read", new Dictionary<string, string> { { "Type", "Raw" } }));
+            result = c.Execute(new Command("Read", new Dictionary<string, string> { { "Type", "Bmp" } }));
             c.Execute(new Command("Close"));
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Timers;
@@ -25,16 +26,13 @@ namespace Hardware
                 case "Close":
                     return Close();
                 case "Read":
-                    return Read();
+                    return Read(cmd.Param);
+                case "Set":
                 default:
                     return new Result("Command doesn't support");
             }
         }
 
-        private readonly Timer _timer = new Timer();
-        private Bitmap _latestDisplayBitmap;
-        private ITLCameraSDK _tlCameraSDK;
-        private ITLCamera _tlCamera;
         private Result Open()
         {
             this._tlCameraSDK = TLCameraSDK.OpenTLCameraSDK();
@@ -55,9 +53,7 @@ namespace Hardware
                 }
 
                 this._tlCamera.OperationMode = OperationMode.SoftwareTriggered;
-
                 this._tlCamera.Arm();
-
                 this._tlCamera.IssueSoftwareTrigger();
 
                 this._timer.Interval = 50;
@@ -77,31 +73,35 @@ namespace Hardware
         {
             if (this._tlCamera != null)
             {
-                // Check if a frame is available
                 if (this._tlCamera.NumberOfQueuedFrames > 0)
                 {
                     var frame = this._tlCamera.GetPendingFrameOrNull();
-                    if (frame != null)
+                    if (frame != null && _latestFrame==null)
                     {
-                        if (this._latestDisplayBitmap != null)
-                        {
-                            this._latestDisplayBitmap.Dispose();
-                            this._latestDisplayBitmap = null;
-                        }
-
-                        this._latestDisplayBitmap = frame.ImageDataUShort1D.ToBitmap_Format24bppRgb();
-                        //this.pictureBoxLiveImage.Invalidate();
+                        _latestFrame = frame;
                     }
                 }
             }
         }
 
+        private Result Read(Dictionary<string, string> param)
+        {
+            string type = param["Type"];
+
+            switch (type)
+            {
+                case "Bmp":
+                    return new Result("Ok", "Bmp", _latestFrame.ImageDataUShort1D.ToBitmap_Format24bppRgb());
+                case "Raw":
+                    return new Result("Ok", "Raw", _latestFrame.ImageDataUShort1D.ImageData_monoOrBGR);
+            }
+
+            return new Result("Fail");
+        }
+
         private Result Close()
         {
-            if (this._timer != null)
-            {
-                this._timer.Stop();
-            }
+            this._timer?.Stop();
 
             if (this._tlCameraSDK != null && this._tlCamera != null)
             {
@@ -119,9 +119,11 @@ namespace Hardware
 
             return new Result("Ok");
         }
-        private Result Read()
-        {
-            return new Result("Fail");
-        }
+
+        private readonly Timer _timer = new Timer();
+        private Bitmap _latestDisplayBitmap;
+        private ITLCameraSDK _tlCameraSDK;
+        private ITLCamera _tlCamera;
+        private Frame _latestFrame;
     }
 }
