@@ -39,6 +39,7 @@ namespace HardwareTest
             HardwareSrv hardware = HardwareSrv.GetInstance();
             hardware.Add(e);
         }
+        [Ignore]/*Need connect M8051*/
         [TestMethod]
         public void EquipmentTest_Camera()
         {

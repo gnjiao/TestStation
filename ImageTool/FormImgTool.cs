@@ -29,7 +29,7 @@ namespace ImageTool
         {
             string bmpFile = ImgProcess.FormatBmp(TB_Filepath.Text);
 
-            CirclesFinder f = new CirclesFinder(bmpFile);
+            CirclesFinder f = new CirclesFinder((Bitmap)Bitmap.FromFile(bmpFile));
             TB_OutputPath.Text = Utils.String.FilePostfix(TB_Filepath.Text, "-result").Replace(".jpg",".bmp");
 
             int width = PB_Result.Width;

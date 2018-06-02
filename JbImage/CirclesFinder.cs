@@ -35,14 +35,6 @@ namespace JbImage
             RadiusFilter = 5;
             Execute(_binArray);
         }
-        public CirclesFinder(string path)/* 24-bit bmp file */
-        {
-            _rawImg = (Bitmap)Bitmap.FromFile(path);
-            _binArray = ImgProcess.ToArray(_rawImg);
-
-            RadiusFilter = 5;
-            Execute(_binArray);
-        }
         public CirclesFinder(byte[][] binArray)
         {
             _binArray = binArray;

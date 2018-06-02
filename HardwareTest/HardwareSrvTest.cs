@@ -59,7 +59,7 @@ namespace HardwareTest
         // public void MyTestCleanup() { }
         //
         #endregion
-
+        [Ignore]/*Need connect M8051*/
         [TestMethod]
         public void CommandDispatch()
         {

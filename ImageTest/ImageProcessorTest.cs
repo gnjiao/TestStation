@@ -19,7 +19,7 @@ namespace ImageTest
         [TestMethod]
         public void ProcessorTest_CirclesFinder()
         {
-            CirclesFinder c = new CirclesFinder(path + "Sample2-24b-bin.bmp");
+            CirclesFinder c = new CirclesFinder((Bitmap)Bitmap.FromFile(path + "Sample2-24b-bin.bmp"));
             c.Draw(path + "Sample2-result.bmp");
         }
         [TestMethod]
