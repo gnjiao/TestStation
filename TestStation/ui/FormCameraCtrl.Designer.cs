@@ -87,7 +87,7 @@ namespace TestStation
             // 
             // BTN_Close
             // 
-            this.BTN_Close.Location = new System.Drawing.Point(12, 142);
+            this.BTN_Close.Location = new System.Drawing.Point(12, 141);
             this.BTN_Close.Name = "BTN_Close";
             this.BTN_Close.Size = new System.Drawing.Size(128, 38);
             this.BTN_Close.TabIndex = 6;

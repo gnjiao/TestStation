@@ -40,6 +40,11 @@ namespace JbImage
             _binArray = binArray;
             Execute(_binArray);
         }
+
+        private void Add(Round r)
+        {
+            Rounds.Add(r);
+        }
         public void Execute(byte[][] binArray)
         {
 #if DETAIL_INFO
@@ -112,7 +117,7 @@ namespace JbImage
                 g.DrawString(r.Id.ToString(),new Font("黑体", 25, FontStyle.Regular), new SolidBrush(Color.Pink),
                     TextPoint(r.Id, r.ImgLeftTopX, r.ImgLeftTopY, r.ImgX));
                 g.DrawEllipse(new Pen(Color.Red), r.ImgLeftTopX, r.ImgLeftTopY, r.ImgX, r.ImgY);
-                g.DrawEllipse(new Pen(Color.Black), r.ImgLeftTopX + r.ImgX / 2, r.ImgLeftTopY + r.ImgY / 2, 1, 1);
+                g.DrawEllipse(new Pen(Color.Black), r.CenterX, r.CenterY, 1, 1);
 #if DETAIL_INFO
                 _logger.Debug(r.ToString());
 #endif
@@ -136,11 +141,6 @@ namespace JbImage
             {
                 return new PointF((float)(x), (float)(y + r / 8));
             }
-        }
-
-        public void Add(Round r)
-        {
-            Rounds.Add(r);
         }
     }
 }

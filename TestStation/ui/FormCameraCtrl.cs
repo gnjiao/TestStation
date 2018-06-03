@@ -64,16 +64,16 @@ namespace TestStation
             ImgProcess.Count(f.Rounds);
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(resultTxt, true))
             {
-                file.Write(string.Format("{0} {1} {2} {3} {4} {5} {6}",
-                    "ID",
+                file.Write(string.Format("{0} {1} {2} {3} {4} {5} {6} {7} {8}",
+                    "ID", "X", "Y",
                     "LengthOnX", "DeviationOnX",
                     "LengthOnY", "DeviationOnY",
                     "Weight", "DeviationOnWeight") + Environment.NewLine);
 
                 foreach (var round in f.Rounds)
                 {
-                    file.Write(string.Format("{0} {1} {2} {3} {4} {5} {6}",
-                        round.Id.ToString("D3"),
+                    file.Write(string.Format("{0} {1} {2} {3} {4} {5} {6} {7} {8}",
+                        round.Id.ToString("D3"), round.CenterX, round.CenterY,
                         round.MaxLenLine.Length, round.LenXDiff.ToString("F4"),
                         round.EndY - round.StartY, round.LenYDiff.ToString("F4"),
                         round.Weight.ToString(), round.WeightDiff.ToString("F4")));

@@ -5,11 +5,11 @@ using System.Drawing;
 
 namespace ImageTest
 {
+    [Ignore]/* this test takes too much time*/
     [TestClass]
     public class ImageProcessorTest
     {
         string path = @"D:\work\TestStation\ImageTest\Samples\";
-        [Ignore]/* this test takes too much time*/
         [TestMethod]
         public void ProcessorTest_Binarize()
         {

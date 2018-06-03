@@ -131,9 +131,26 @@ namespace JbImage
         public void FinishScan()
         {
             IsEnd = !IsLineAdded;
+            if (IsEnd)
+            {
+            }
         }
         #endregion
         #region image information
+        public int CenterX
+        {
+            get
+            {
+                return ImgLeftTopX + ImgX / 2;
+            }
+        }
+        public int CenterY
+        {
+            get
+            {
+                return ImgLeftTopY + ImgY / 2;
+            }
+        }
         public int ImgLeftTopX
         {
             get
