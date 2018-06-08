@@ -36,6 +36,9 @@ namespace TestStation
             this.BTN_Open = new System.Windows.Forms.Button();
             this.PB_Preview = new System.Windows.Forms.PictureBox();
             this.BTN_Close = new System.Windows.Forms.Button();
+            this.BTN_SetBin = new System.Windows.Forms.Button();
+            this.CB_SetRoi = new System.Windows.Forms.CheckBox();
+            this.CB_Color = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.PB_Preview)).BeginInit();
             this.SuspendLayout();
             // 
@@ -79,11 +82,15 @@ namespace TestStation
             // 
             // PB_Preview
             // 
+            this.PB_Preview.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.PB_Preview.Location = new System.Drawing.Point(146, 12);
             this.PB_Preview.Name = "PB_Preview";
             this.PB_Preview.Size = new System.Drawing.Size(587, 426);
             this.PB_Preview.TabIndex = 5;
             this.PB_Preview.TabStop = false;
+            this.PB_Preview.MouseDown += new System.Windows.Forms.MouseEventHandler(this.PB_Preview_MouseDown);
+            this.PB_Preview.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PB_Preview_MouseMove);
+            this.PB_Preview.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PB_Preview_MouseUp);
             // 
             // BTN_Close
             // 
@@ -95,11 +102,47 @@ namespace TestStation
             this.BTN_Close.UseVisualStyleBackColor = true;
             this.BTN_Close.Click += new System.EventHandler(this.BTN_Close_Click);
             // 
+            // BTN_SetBin
+            // 
+            this.BTN_SetBin.Location = new System.Drawing.Point(12, 400);
+            this.BTN_SetBin.Name = "BTN_SetBin";
+            this.BTN_SetBin.Size = new System.Drawing.Size(128, 38);
+            this.BTN_SetBin.TabIndex = 8;
+            this.BTN_SetBin.Text = "Set Bin";
+            this.BTN_SetBin.UseVisualStyleBackColor = true;
+            this.BTN_SetBin.Click += new System.EventHandler(this.BTN_SetBin_Click);
+            // 
+            // CB_SetRoi
+            // 
+            this.CB_SetRoi.Appearance = System.Windows.Forms.Appearance.Button;
+            this.CB_SetRoi.Location = new System.Drawing.Point(12, 355);
+            this.CB_SetRoi.Name = "CB_SetRoi";
+            this.CB_SetRoi.Size = new System.Drawing.Size(128, 38);
+            this.CB_SetRoi.TabIndex = 9;
+            this.CB_SetRoi.Text = "Set Roi";
+            this.CB_SetRoi.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.CB_SetRoi.UseVisualStyleBackColor = true;
+            this.CB_SetRoi.CheckedChanged += new System.EventHandler(this.CB_SetRoi_CheckedChanged);
+            // 
+            // CB_Color
+            // 
+            this.CB_Color.AutoSize = true;
+            this.CB_Color.Location = new System.Drawing.Point(12, 319);
+            this.CB_Color.Name = "CB_Color";
+            this.CB_Color.Size = new System.Drawing.Size(79, 22);
+            this.CB_Color.TabIndex = 10;
+            this.CB_Color.Text = "Color";
+            this.CB_Color.UseVisualStyleBackColor = true;
+            this.CB_Color.CheckedChanged += new System.EventHandler(this.CB_Color_CheckedChanged);
+            // 
             // FormCameraCtrl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.CB_Color);
+            this.Controls.Add(this.CB_SetRoi);
+            this.Controls.Add(this.BTN_SetBin);
             this.Controls.Add(this.BTN_Close);
             this.Controls.Add(this.PB_Preview);
             this.Controls.Add(this.BTN_Open);
@@ -123,6 +166,9 @@ namespace TestStation
         private System.Windows.Forms.Button BTN_Open;
         private System.Windows.Forms.PictureBox PB_Preview;
         private System.Windows.Forms.Button BTN_Close;
+        private System.Windows.Forms.Button BTN_SetBin;
+        private System.Windows.Forms.CheckBox CB_SetRoi;
+        private System.Windows.Forms.CheckBox CB_Color;
     }
 }
 
