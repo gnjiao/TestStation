@@ -28,6 +28,9 @@ namespace TestStation
 
             HardwareSrv.GetInstance().Add(new Camera("M8051"));
             _camera = HardwareSrv.GetInstance().Get("Camera") as Camera;
+
+            EmguIntfs.Test();
+            Application.Exit();
         }
 
         private string _filePath = @"./../../Samples/Test-24b.bmp";

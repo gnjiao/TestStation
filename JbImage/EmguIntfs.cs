@@ -15,47 +15,126 @@ namespace JbImage
 {
     public class EmguIntfs
     {
-        public static void Test()
+        //basic transform
+        public static UMat ToUMat(Image<Gray, Byte> image)
         {
-            const string testImage = @"D:\work\TestStation\ImageTool\Samples\Sample2.jpg";
-
-            StringBuilder msgBuilder = new StringBuilder("Performance: ");
-            //Load the image from file and resize it for display
-            Image<Bgr, Byte> img = new Image<Bgr, byte>(testImage);
-            //.Resize(400, 400, Emgu.CV.CvEnum.Inter.Linear, true);
-
-            //Convert the image to grayscale and filter out the noise
+            return image.ToUMat();
+        }
+        public static Image<Gray, Byte> ToImage(UMat uimage)
+        {
+            return uimage.ToImage<Gray, Byte>();
+        }
+        //image functions
+        public static Image<Bgr, Byte> Load(string path)
+        {
+            return new Image<Bgr, Byte>(path);
+        }
+        public static Image<Bgr, Byte> Resize(Image<Bgr, Byte> image, int x, int y)
+        {
+            return image.Resize(x, y, Emgu.CV.CvEnum.Inter.Linear, true);
+        }
+        public static UMat Grayed(Image<Bgr, Byte> image)
+        {
             UMat uimage = new UMat();
-            CvInvoke.CvtColor(img, uimage, ColorConversion.Bgr2Gray);
-
-            //use image pyr to remove noise
+            CvInvoke.CvtColor(image, uimage, ColorConversion.Bgr2Gray);
+            return uimage;
+        }
+        public static Image<Gray, Byte> EdgeDetect(Image<Gray, Byte> uimage)
+        {
+            Image<Gray, Byte> edge = new Image<Gray, Byte>(uimage.Cols, uimage.Rows);
+            CvInvoke.Canny(uimage, edge, 90, 180);
+            return edge;
+        }
+        public static Image<Gray, Byte> PyrRemoveNoise(Image<Gray, Byte> uimage)
+        {
             UMat pyrDown = new UMat();
             CvInvoke.PyrDown(uimage, pyrDown);
             CvInvoke.PyrUp(pyrDown, uimage);
-            Image<Gray, Byte> gray = img.Convert<Gray, Byte>().PyrDown().PyrUp();
+            return uimage;
+        }
+        public static Image<Gray, float> Sharpen(Image<Gray, Byte> image)
+        {
+            float[,] k = { {0, 1, 0},
+                        {1, -4, 1},
+                        {0, 1, 0}};
+            ConvolutionKernelF kernel = new ConvolutionKernelF(k);
 
-            Image<Gray, byte> edge = new Image<Gray, byte>(uimage.Cols, uimage.Rows);
-            CvInvoke.Canny(uimage, edge, 90, 180);
-            edge.Save(@"d:\edge.jpg");
+            image.SetRandUniform(new MCvScalar(0.0), new MCvScalar(255.0));
+            Image<Gray, float> laplace = image.Laplace(1);
+            Image<Gray, float> output = image * kernel;
+
+            return output;
+        }
+        public static Image<Gray, Byte> BilateralFilter(Image<Gray, Byte> grayImage)
+        {
+            var threshImage = grayImage.CopyBlank();
+            CvInvoke.BilateralFilter(grayImage, threshImage, 25, 25 * 2, 25 / 2);
+            return threshImage;
+        }
+        public static Image<Gray, Byte> Binarize(Image<Gray, Byte> grayImage)
+        {
+            var threshImage = grayImage.CopyBlank();
+            CvInvoke.Threshold(grayImage, threshImage, 30, 255, ThresholdType.Binary);
+            return threshImage;
+        }
+        public static int CountPixels(Image<Gray, Byte> img, CircleF circle)
+        {
+            double centerX = circle.Center.X;
+            double centerY = circle.Center.Y;
+            double r = circle.Radius;
+            int sum = 0;
+
+            for (int x = (int)System.Math.Floor(centerX - r); x < (int)System.Math.Ceiling(centerX + r); x++)
+            {
+                for (int y = (int)System.Math.Floor(centerY - r); y < (int)System.Math.Ceiling(centerY + r); y++)
+                {
+                    sum += img.Data[y, x, 0];
+                }
+            }
+
+            return sum;
+        }
+        const string testImage = @"D:\work\TestStation\ImageTool\Samples\Sample3.jpg";
+        const string resultPath = @"D:\";
+        public static void TestBinarize()
+        {
+            string testName = System.Reflection.MethodBase.GetCurrentMethod().Name;
+            StringBuilder msgBuilder = new StringBuilder("Performance: ");
+            Image<Gray, Byte> image;
 
             Stopwatch watch = Stopwatch.StartNew();
-            double cannyThreshold = 180;
-            double circleAccumulatorThreshold = 120;
-            //CircleF[] circles = CvInvoke.HoughCircles(uimage, HoughType.Gradient, 2.0, 20.0, cannyThreshold, circleAccumulatorThreshold, 5);
-            CircleF[] circles = CvInvoke.HoughCircles(uimage, HoughType.Gradient, 2, 20, 180, 15, 18, 22);
+            Image<Bgr, Byte> img = Load(testImage);
+            UMat uimage = Grayed(img);
+
+            image = Binarize(ToImage(uimage));
+
+            CircleF[] circles = CvInvoke.HoughCircles(image, HoughType.Gradient, 2, 40, 180, 13, 18, 22);
 
             watch.Stop();
-            msgBuilder.Append(string.Format("Hough circles - {0} ms; ", watch.ElapsedMilliseconds));
+            msgBuilder.Append(string.Format("{0} Hough circles - {1} ms; ", testName, watch.ElapsedMilliseconds));
 
-            //draw circles
-            Mat circleImage = new Mat(testImage);
-            //Mat circleImage = new Mat(img.Size, DepthType.Cv8U, 3);
-            //circleImage.SetTo(new MCvScalar(0));
-            foreach (CircleF circle in circles)
-                CvInvoke.Circle(circleImage, Point.Round(circle.Center), (int)circle.Radius, new Bgr(Color.Brown).MCvScalar, 2);
-            circleImage.Save(@"d:\circles.jpg");
+            Mat circleImage = img.Mat;
+            for(int i = 0; i<circles.Length; i++)
+            {
+                CvInvoke.Circle(circleImage, Point.Round(circles[i].Center), (int)circles[i].Radius, new Bgr(Color.Red).MCvScalar, 2);
+                CvInvoke.PutText(circleImage, i.ToString("D3"), new Point((int)circles[i].Center.X, (int)circles[i].Center.Y), Emgu.CV.CvEnum.FontFace.HersheyScriptComplex, 1, new MCvScalar(255, 255, 0), 1);
+            }
+            circleImage.Save(resultPath + testName + ".jpg");
 
             (new Logger()).Debug(msgBuilder.ToString());
+
+            msgBuilder = new StringBuilder("Circles: " + Environment.NewLine);
+            int[] lights = new int[circles.Length];
+            for (int i = 0; i < circles.Length; i++)
+            {
+                lights[i] = CountPixels(ToImage(uimage), circles[i]);
+                msgBuilder.Append(string.Format("{0} {1}", i.ToString("D3"), lights[i]) + Environment.NewLine);
+            }
+            (new Logger()).Debug(msgBuilder.ToString());
+        }
+        public static void Test()
+        {
+            TestBinarize();
         }
     }
 }
