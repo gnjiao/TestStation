@@ -24,13 +24,12 @@ namespace ImageTool
                 TB_Filepath.Text = d.FileName;
             }
         }
-
-        private void BTN_Process_Click(object sender, EventArgs e)
+        private void ProcessWithCirclesFinder()
         {
             string bmpFile = ImgProcess.FormatBmp(TB_Filepath.Text);
 
             CirclesFinder f = new CirclesFinder((Bitmap)Bitmap.FromFile(bmpFile));
-            TB_OutputPath.Text = Utils.String.FilePostfix(TB_Filepath.Text, "-result").Replace(".jpg",".bmp");
+            TB_OutputPath.Text = Utils.String.FilePostfix(TB_Filepath.Text, "-result").Replace(".jpg", ".bmp");
 
             int width = PB_Result.Width;
             int height = PB_Result.Height;
@@ -44,14 +43,14 @@ namespace ImageTool
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(txtFile, true))
             {
                 file.Write(string.Format("{0} {1} {2} {3} {4} {5} {6} {7} {8}",
-                    "ID","X","Y",
+                    "ID", "X", "Y",
                     "LengthOnX", "DeviationOnX",
                     "LengthOnY", "DeviationOnY",
                     "Weight", "DeviationOnWeight") + Environment.NewLine);
 
                 foreach (var round in f.Rounds)
                 {
-                    file.Write(string.Format("{0} {1} {2} {3} {4} {5} {6} {7} {8}", 
+                    file.Write(string.Format("{0} {1} {2} {3} {4} {5} {6} {7} {8}",
                         round.Id.ToString("D3"), round.CenterX, round.CenterY,
                         round.MaxLenLine.Length, round.LenXDiff.ToString("F4"),
                         round.EndY - round.StartY, round.LenYDiff.ToString("F4"),
@@ -66,6 +65,20 @@ namespace ImageTool
                 double weightStdEv = Utils.Math.StdEv(f.Rounds.Select(x => x.Weight).ToList());
                 file.Write(string.Format("StdEv of Weight: {0}", weightStdEv));
                 file.Write(Environment.NewLine);
+            }
+        }
+        private void ProcessWithEmgu()
+        {
+        }
+        private void BTN_Process_Click(object sender, EventArgs e)
+        {
+            if (CB_UseEmgu.Checked)
+            {
+                ProcessWithEmgu();
+            }
+            else
+            {
+                ProcessWithCirclesFinder();
             }
         }
     }

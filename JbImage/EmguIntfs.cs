@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -100,14 +101,12 @@ namespace JbImage
         {
             string testName = System.Reflection.MethodBase.GetCurrentMethod().Name;
             StringBuilder msgBuilder = new StringBuilder("Performance: ");
-            Image<Gray, Byte> image;
 
             Stopwatch watch = Stopwatch.StartNew();
             Image<Bgr, Byte> img = Load(testImage);
             UMat uimage = Grayed(img);
 
-            image = Binarize(ToImage(uimage));
-
+            Image<Gray, Byte> image = Binarize(ToImage(uimage));
             CircleF[] circles = CvInvoke.HoughCircles(image, HoughType.Gradient, 2, 40, 180, 13, 18, 22);
 
             watch.Stop();
@@ -134,7 +133,59 @@ namespace JbImage
         }
         public static void Test()
         {
-            TestBinarize();
+        }
+    }
+    public class EmguCircleImage
+    {
+        private string _imgPath;
+        private Image<Bgr, Byte> _rawImg;
+        private UMat _grayedUmat;
+        public CircleF[] Circles;
+
+        public EmguCircleImage(string path)
+        {
+            string testName = System.Reflection.MethodBase.GetCurrentMethod().Name;
+            StringBuilder msgBuilder = new StringBuilder("Performance: ");
+            Image<Gray, Byte> image;
+
+            Stopwatch watch = Stopwatch.StartNew();
+            _imgPath = path;
+            _rawImg = EmguIntfs.Load(path);
+            _grayedUmat = EmguIntfs.Grayed(_rawImg);
+
+            image = EmguIntfs.Binarize(EmguIntfs.ToImage(_grayedUmat));
+            Circles = CvInvoke.HoughCircles(image, HoughType.Gradient, 2, 40, 180, 13, 18, 22);
+
+            watch.Stop();
+            msgBuilder.Append(string.Format("{0} Hough circles - {1} ms; ", testName, watch.ElapsedMilliseconds));
+            (new Logger()).Debug(msgBuilder.ToString());
+        }
+        public Bitmap Draw()
+        {
+            Mat circleImage = _rawImg.Mat;
+            for (int i = 0; i < Circles.Length; i++)
+            {
+                CvInvoke.Circle(circleImage, Point.Round(Circles[i].Center), (int)Circles[i].Radius, new Bgr(Color.Red).MCvScalar, 2);
+                CvInvoke.PutText(circleImage, i.ToString("D3"), new Point((int)Circles[i].Center.X, (int)Circles[i].Center.Y), Emgu.CV.CvEnum.FontFace.HersheyScriptComplex, 1, new MCvScalar(255, 255, 0), 1);
+            }
+            circleImage.Save(Utils.String.FilePostfix(_imgPath, "-result"));
+
+            return circleImage.Bitmap;
+        }
+        public void Count()
+        {
+            StringBuilder msgBuilder = new StringBuilder("Circles: " + Environment.NewLine);
+            int[] lights = new int[Circles.Length];
+            for (int i = 0; i < Circles.Length; i++)
+            {
+                lights[i] = EmguIntfs.CountPixels(EmguIntfs.ToImage(_grayedUmat), Circles[i]);
+                msgBuilder.Append(string.Format("{0} {1}", i.ToString("D3"), lights[i]) + Environment.NewLine);
+            }
+            (new Logger()).Debug(msgBuilder.ToString());
+        }
+        public string StatisticInfo()
+        {
+            return "";
         }
     }
 }

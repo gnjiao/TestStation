@@ -28,9 +28,6 @@ namespace TestStation
 
             HardwareSrv.GetInstance().Add(new Camera("M8051"));
             _camera = HardwareSrv.GetInstance().Get("Camera") as Camera;
-
-            EmguIntfs.Test();
-            Application.Exit();
         }
 
         private string _filePath = @"./../../Samples/Test-24b.bmp";
@@ -46,8 +43,7 @@ namespace TestStation
             _filePath = @"data/" + "Img-" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".bmp";
             img.Save(_filePath, ImageFormat.Bmp);
         }
-
-        private void BTN_Calculate_Click(object sender, EventArgs e)
+        private void ProcessWithCircleFinder()
         {
             //var rawData = _camera.Execute(new Command("Read", new Dictionary<string, string> { { "Type", "Raw" } })).Param as Bitmap;
 
@@ -92,6 +88,21 @@ namespace TestStation
                 file.Write(Environment.NewLine);
             }
         }
+        private void ProcessWithEmgu()
+        {
+            if (_loadedImg == null)
+            {
+                _loadedImg = _filePath;
+            }
+
+            EmguCircleImage image = new EmguCircleImage(_loadedImg);
+            PB_Preview.Image = new Bitmap(image.Draw(), PB_Preview.Width, PB_Preview.Height);
+            image.Count();
+        }
+        private void BTN_Calculate_Click(object sender, EventArgs e)
+        {
+            ProcessWithEmgu();
+        }
 
         private void FormCameraCtrl_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -102,12 +113,21 @@ namespace TestStation
         {
             _camera.Execute(new Command("Open"));
         }
-
+        string _loadedImg;
+        private void BTN_Load_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog d = new OpenFileDialog();
+            if (d.ShowDialog() == DialogResult.OK)
+            {
+                _loadedImg = d.FileName;
+                PB_Preview.Image = new Bitmap(new Bitmap(_loadedImg), PB_Preview.Width, PB_Preview.Height);
+            }
+        }
         private void BTN_Close_Click(object sender, EventArgs e)
         {
             Close();
         }
-
+        #region camera configuration
         private bool _roiRectDraw = false;
         private void CB_SetRoi_CheckedChanged(object sender, EventArgs e)
         {
@@ -134,7 +154,7 @@ namespace TestStation
             _camera.Execute(new Command("Config", 
                 new Dictionary<string, string> { { "IsColorOperationEnabled", CB_Color.Checked.ToString() } }));
         }
-
+        #endregion
         #region ROI DRAW
         private Rectangle m_MouseRect = Rectangle.Empty;
         public delegate void SelectRectangel(object sneder, Rectangle e);

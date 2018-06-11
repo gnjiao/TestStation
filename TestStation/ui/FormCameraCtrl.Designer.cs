@@ -39,6 +39,7 @@ namespace TestStation
             this.BTN_SetBin = new System.Windows.Forms.Button();
             this.CB_SetRoi = new System.Windows.Forms.CheckBox();
             this.CB_Color = new System.Windows.Forms.CheckBox();
+            this.BTN_Load = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.PB_Preview)).BeginInit();
             this.SuspendLayout();
             // 
@@ -62,7 +63,7 @@ namespace TestStation
             // 
             // BTN_Calculate
             // 
-            this.BTN_Calculate.Location = new System.Drawing.Point(12, 98);
+            this.BTN_Calculate.Location = new System.Drawing.Point(12, 140);
             this.BTN_Calculate.Name = "BTN_Calculate";
             this.BTN_Calculate.Size = new System.Drawing.Size(128, 38);
             this.BTN_Calculate.TabIndex = 3;
@@ -94,7 +95,7 @@ namespace TestStation
             // 
             // BTN_Close
             // 
-            this.BTN_Close.Location = new System.Drawing.Point(12, 141);
+            this.BTN_Close.Location = new System.Drawing.Point(12, 184);
             this.BTN_Close.Name = "BTN_Close";
             this.BTN_Close.Size = new System.Drawing.Size(128, 38);
             this.BTN_Close.TabIndex = 6;
@@ -135,11 +136,22 @@ namespace TestStation
             this.CB_Color.UseVisualStyleBackColor = true;
             this.CB_Color.CheckedChanged += new System.EventHandler(this.CB_Color_CheckedChanged);
             // 
+            // BTN_Load
+            // 
+            this.BTN_Load.Location = new System.Drawing.Point(12, 98);
+            this.BTN_Load.Name = "BTN_Load";
+            this.BTN_Load.Size = new System.Drawing.Size(128, 36);
+            this.BTN_Load.TabIndex = 11;
+            this.BTN_Load.Text = "Load";
+            this.BTN_Load.UseVisualStyleBackColor = true;
+            this.BTN_Load.Click += new System.EventHandler(this.BTN_Load_Click);
+            // 
             // FormCameraCtrl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.BTN_Load);
             this.Controls.Add(this.CB_Color);
             this.Controls.Add(this.CB_SetRoi);
             this.Controls.Add(this.BTN_SetBin);
@@ -169,6 +181,7 @@ namespace TestStation
         private System.Windows.Forms.Button BTN_SetBin;
         private System.Windows.Forms.CheckBox CB_SetRoi;
         private System.Windows.Forms.CheckBox CB_Color;
+        private System.Windows.Forms.Button BTN_Load;
     }
 }
 

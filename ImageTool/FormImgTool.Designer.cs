@@ -34,6 +34,7 @@
             this.PB_Result = new System.Windows.Forms.PictureBox();
             this.TB_OutputPath = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.CB_UseEmgu = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.PB_Result)).BeginInit();
             this.SuspendLayout();
             // 
@@ -49,7 +50,7 @@
             // 
             // BTN_Process
             // 
-            this.BTN_Process.Location = new System.Drawing.Point(12, 48);
+            this.BTN_Process.Location = new System.Drawing.Point(60, 48);
             this.BTN_Process.Name = "BTN_Process";
             this.BTN_Process.Size = new System.Drawing.Size(88, 30);
             this.BTN_Process.TabIndex = 1;
@@ -76,10 +77,10 @@
             // 
             // TB_OutputPath
             // 
-            this.TB_OutputPath.Location = new System.Drawing.Point(116, 48);
+            this.TB_OutputPath.Location = new System.Drawing.Point(157, 48);
             this.TB_OutputPath.Name = "TB_OutputPath";
             this.TB_OutputPath.ReadOnly = true;
-            this.TB_OutputPath.Size = new System.Drawing.Size(672, 28);
+            this.TB_OutputPath.Size = new System.Drawing.Size(631, 28);
             this.TB_OutputPath.TabIndex = 4;
             // 
             // label1
@@ -91,11 +92,23 @@
             this.label1.TabIndex = 5;
             this.label1.Text = "Preview";
             // 
+            // CB_UseEmgu
+            // 
+            this.CB_UseEmgu.AutoSize = true;
+            this.CB_UseEmgu.Checked = true;
+            this.CB_UseEmgu.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.CB_UseEmgu.Location = new System.Drawing.Point(24, 53);
+            this.CB_UseEmgu.Name = "CB_UseEmgu";
+            this.CB_UseEmgu.Size = new System.Drawing.Size(22, 21);
+            this.CB_UseEmgu.TabIndex = 6;
+            this.CB_UseEmgu.UseVisualStyleBackColor = true;
+            // 
             // FormImgTool
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 587);
+            this.Controls.Add(this.CB_UseEmgu);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.TB_OutputPath);
             this.Controls.Add(this.PB_Result);
@@ -118,6 +131,7 @@
         private System.Windows.Forms.PictureBox PB_Result;
         private System.Windows.Forms.TextBox TB_OutputPath;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox CB_UseEmgu;
     }
 }
 
