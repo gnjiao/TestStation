@@ -158,6 +158,8 @@ namespace JbImage
             image = EmguIntfs.Binarize(EmguIntfs.ToImage(_grayedUmat));
             Circles = CvInvoke.HoughCircles(image, HoughType.Gradient, 2, 40, 180, 13, 18, 22);
 
+            Sort();
+
             watch.Stop();
             msgBuilder.Append(string.Format("{0} Hough circles - {1} ms; ", testName, watch.ElapsedMilliseconds));
             _log.Debug(msgBuilder.ToString());
@@ -173,6 +175,25 @@ namespace JbImage
             circleImage.Save(Utils.String.FilePostfix(_imgPath, "-result"));
 
             return circleImage.Bitmap;
+        }
+        public void Sort()
+        {
+            List<CircleF> temp = Circles.ToList();
+            temp.Sort((c1,c2) => {
+                if (c1.Center.Y < c2.Center.Y)
+                {
+                    return -1;
+                }
+                else if (c1.Center.Y == c2.Center.Y && c1.Center.X < c2.Center.X)
+                {
+                    return -1;
+                }
+                else
+                {
+                    return 1;
+                }
+            });
+            Circles = temp.ToArray();
         }
         public void Count()
         {
