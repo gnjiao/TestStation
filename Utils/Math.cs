@@ -21,7 +21,7 @@ namespace Utils
         {
             return Math.Angle(System.Math.Atan(value));
         }
-        public static double StdEv(List<int> values)
+        public static double StdEv(List<double> values)
         {
             double average = 0;
             foreach (var value in values)

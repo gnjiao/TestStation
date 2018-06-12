@@ -14,6 +14,7 @@ namespace TestStation
 {
     public partial class FormCameraCtrl : Form
     {
+        private Logger _log = new Logger(typeof(FormCameraCtrl));
         DatabaseSrv _database;
         Camera _camera;
 
@@ -25,9 +26,6 @@ namespace TestStation
             log.Debug(string.Format("TestStation(V{0}) Started", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString()));
 
             _database = DatabaseSrv.GetInstance();
-
-            HardwareSrv.GetInstance().Add(new Camera("M8051"));
-            _camera = HardwareSrv.GetInstance().Get("Camera") as Camera;
         }
 
         private string _filePath = @"./../../Samples/Test-24b.bmp";
@@ -35,6 +33,11 @@ namespace TestStation
         private List<Bitmap> _imgs = new List<Bitmap>();
         private void BTN_Read_Click(object sender, EventArgs e)
         {
+            if (_camera == null)
+            {
+                BTN_Open_Click(sender, e);
+            }
+
             Bitmap img = _camera.Execute(new Command("Read", new Dictionary<string, string> { { "Type", "Bmp"} })).Param as Bitmap;
             PB_Preview.Image = img;
 
@@ -79,11 +82,11 @@ namespace TestStation
                     file.Write(Environment.NewLine);
                 }
 
-                double radiusStdEv = Utils.Math.StdEv(f.Rounds.Select(x => x.MaxLenLine.Length).ToList());
+                double radiusStdEv = Utils.Math.StdEv(f.Rounds.Select(x => (double)x.MaxLenLine.Length).ToList());
                 file.Write(string.Format("StdEv of Radius: {0}", radiusStdEv));
                 file.Write(Environment.NewLine);
 
-                double weightStdEv = Utils.Math.StdEv(f.Rounds.Select(x => x.Weight).ToList());
+                double weightStdEv = Utils.Math.StdEv(f.Rounds.Select(x => (double)x.Weight).ToList());
                 file.Write(string.Format("StdEv of Weight: {0}", weightStdEv));
                 file.Write(Environment.NewLine);
             }
@@ -95,9 +98,11 @@ namespace TestStation
                 _loadedImg = _filePath;
             }
 
+            _log.Info("ProcessWithEgmu " + _loadedImg);
             EmguCircleImage image = new EmguCircleImage(_loadedImg);
             PB_Preview.Image = new Bitmap(image.Draw(), PB_Preview.Width, PB_Preview.Height);
             image.Count();
+            _log.Info(Utils.String.Flatten(image.StatisticInfo()));
         }
         private void BTN_Calculate_Click(object sender, EventArgs e)
         {
@@ -106,11 +111,13 @@ namespace TestStation
 
         private void FormCameraCtrl_FormClosing(object sender, FormClosingEventArgs e)
         {
-            _camera.Execute(new Command("Close"));
+            _camera?.Execute(new Command("Close"));
         }
 
         private void BTN_Open_Click(object sender, EventArgs e)
         {
+            HardwareSrv.GetInstance().Add(new Camera("M8051"));
+            _camera = HardwareSrv.GetInstance().Get("Camera") as Camera;
             _camera.Execute(new Command("Open"));
         }
         string _loadedImg;

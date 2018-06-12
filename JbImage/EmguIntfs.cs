@@ -137,10 +137,12 @@ namespace JbImage
     }
     public class EmguCircleImage
     {
+        private Logger _log = new Logger(typeof(EmguCircleImage));
         private string _imgPath;
         private Image<Bgr, Byte> _rawImg;
         private UMat _grayedUmat;
         public CircleF[] Circles;
+        public int[] Lights;
 
         public EmguCircleImage(string path)
         {
@@ -158,7 +160,7 @@ namespace JbImage
 
             watch.Stop();
             msgBuilder.Append(string.Format("{0} Hough circles - {1} ms; ", testName, watch.ElapsedMilliseconds));
-            (new Logger()).Debug(msgBuilder.ToString());
+            _log.Debug(msgBuilder.ToString());
         }
         public Bitmap Draw()
         {
@@ -175,17 +177,26 @@ namespace JbImage
         public void Count()
         {
             StringBuilder msgBuilder = new StringBuilder("Circles: " + Environment.NewLine);
-            int[] lights = new int[Circles.Length];
+            Lights = new int[Circles.Length];
             for (int i = 0; i < Circles.Length; i++)
             {
-                lights[i] = EmguIntfs.CountPixels(EmguIntfs.ToImage(_grayedUmat), Circles[i]);
-                msgBuilder.Append(string.Format("{0} {1}", i.ToString("D3"), lights[i]) + Environment.NewLine);
+                Lights[i] = EmguIntfs.CountPixels(EmguIntfs.ToImage(_grayedUmat), Circles[i]);
+                msgBuilder.Append(string.Format("{0} {1}", i.ToString("D3"), Lights[i]) + Environment.NewLine);
             }
-            (new Logger()).Debug(msgBuilder.ToString());
+            _log.Debug(msgBuilder.ToString());
         }
-        public string StatisticInfo()
+        public Dictionary<string, string> StatisticInfo()
         {
-            return "";
+            Dictionary<string, string> info = new Dictionary<string, string>();
+
+            info["MaxRadius"] = Circles.ToList().Max(circle => circle.Radius).ToString();
+            info["MinRadius"] = Circles.ToList().Min(circle => circle.Radius).ToString();
+            info["StdEvRadius"] = Utils.Math.StdEv(Circles.ToList().Select(x => (double)x.Radius).ToList()).ToString();
+            info["MaxLight"] = Lights.ToList().Max().ToString();
+            info["MinLight"] = Lights.ToList().Min().ToString();
+            info["StdEvLight"] = Utils.Math.StdEv(Lights.ToList().Select(x => (double)x).ToList()).ToString();
+
+            return info;
         }
     }
 }
