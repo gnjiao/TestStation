@@ -16,7 +16,7 @@ namespace TestStation
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FormCameraCtrl());
+            Application.Run(new CameraCtrlForm());
         }
     }
 }
