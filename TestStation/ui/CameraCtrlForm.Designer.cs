@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.UC_CameraCtrl = new TestStation.CameraCtrlUC();
             this.PB_Preview = new System.Windows.Forms.PictureBox();
+            this.UC_CameraCtrl = new TestStation.CameraCtrlUC();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PB_Preview)).BeginInit();
             this.SuspendLayout();
@@ -50,14 +50,6 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(800, 450);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
-            // UC_CameraCtrl
-            // 
-            this.UC_CameraCtrl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.UC_CameraCtrl.Location = new System.Drawing.Point(3, 3);
-            this.UC_CameraCtrl.Name = "UC_CameraCtrl";
-            this.UC_CameraCtrl.Size = new System.Drawing.Size(142, 444);
-            this.UC_CameraCtrl.TabIndex = 0;
-            // 
             // PB_Preview
             // 
             this.PB_Preview.BackColor = System.Drawing.SystemColors.ActiveCaption;
@@ -68,6 +60,14 @@
             this.PB_Preview.TabIndex = 6;
             this.PB_Preview.TabStop = false;
             // 
+            // UC_CameraCtrl
+            // 
+            this.UC_CameraCtrl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.UC_CameraCtrl.Location = new System.Drawing.Point(3, 3);
+            this.UC_CameraCtrl.Name = "UC_CameraCtrl";
+            this.UC_CameraCtrl.Size = new System.Drawing.Size(142, 444);
+            this.UC_CameraCtrl.TabIndex = 0;
+            // 
             // CameraCtrlForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
@@ -75,7 +75,7 @@
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "CameraCtrlForm";
-            this.Text = "CameraCtrlForm";
+            this.Text = "Camera Ctrl Form";
             this.tableLayoutPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.PB_Preview)).EndInit();
             this.ResumeLayout(false);

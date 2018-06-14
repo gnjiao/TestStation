@@ -64,7 +64,15 @@ namespace TestStation
             _log.Info("ProcessWithEgmu " + _loadedImg);
             EmguCircleImage image = new EmguCircleImage(_loadedImg);
             image.Count();
-            _log.Info(Utils.String.Flatten(image.StatisticInfo()));
+            Dictionary<string, string> statInfo = image.StatisticInfo();
+            _log.Info(Utils.String.Flatten(statInfo));
+
+            LB_CircleInfo.Text = "";
+            foreach (var k in statInfo.Keys)
+            {
+                LB_CircleInfo.Text += $"{k}: " + Environment.NewLine;
+                LB_CircleInfo.Text += $"    { statInfo[k]}" + Environment.NewLine;
+            }
 
             Observer?.Invoke(image.Draw());
         }

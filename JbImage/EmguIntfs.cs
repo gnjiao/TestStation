@@ -212,10 +212,10 @@ namespace JbImage
 
             info["MaxRadius"] = Circles.ToList().Max(circle => circle.Radius).ToString();
             info["MinRadius"] = Circles.ToList().Min(circle => circle.Radius).ToString();
-            info["StdEvRadius"] = Utils.Math.StdEv(Circles.ToList().Select(x => (double)x.Radius).ToList()).ToString();
+            info["StdEvRadius"] = Utils.Math.StdEv(Circles.ToList().Select(x => (double)x.Radius).ToList()).ToString("F3");
             info["MaxLight"] = Lights.ToList().Max().ToString();
             info["MinLight"] = Lights.ToList().Min().ToString();
-            info["StdEvLight"] = Utils.Math.StdEv(Lights.ToList().Select(x => (double)x).ToList()).ToString();
+            info["StdEvLight"] = Utils.Math.StdEv(Lights.ToList().Select(x => (double)x).ToList()).ToString("F3");
 
             return info;
         }

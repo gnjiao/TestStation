@@ -37,6 +37,10 @@
             this.CB_Color = new System.Windows.Forms.CheckBox();
             this.BTN_Load = new System.Windows.Forms.Button();
             this.BTN_ResetRoi = new System.Windows.Forms.Button();
+            this.TBP_Infomation = new System.Windows.Forms.TableLayoutPanel();
+            this.LB_CircleInfo = new System.Windows.Forms.Label();
+            this.LB_RoiInfo = new System.Windows.Forms.Label();
+            this.TBP_Infomation.SuspendLayout();
             this.SuspendLayout();
             // 
             // BTN_Read
@@ -140,10 +144,46 @@
             this.BTN_ResetRoi.Text = "Reset";
             this.BTN_ResetRoi.UseVisualStyleBackColor = true;
             // 
+            // TBP_Infomation
+            // 
+            this.TBP_Infomation.ColumnCount = 1;
+            this.TBP_Infomation.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.TBP_Infomation.Controls.Add(this.LB_RoiInfo, 0, 1);
+            this.TBP_Infomation.Controls.Add(this.LB_CircleInfo, 0, 0);
+            this.TBP_Infomation.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TBP_Infomation.Location = new System.Drawing.Point(0, 185);
+            this.TBP_Infomation.Name = "TBP_Infomation";
+            this.TBP_Infomation.RowCount = 2;
+            this.TBP_Infomation.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.TBP_Infomation.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.TBP_Infomation.Size = new System.Drawing.Size(147, 137);
+            this.TBP_Infomation.TabIndex = 13;
+            // 
+            // LB_CircleInfo
+            // 
+            this.LB_CircleInfo.AutoSize = true;
+            this.LB_CircleInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_CircleInfo.Location = new System.Drawing.Point(3, 0);
+            this.LB_CircleInfo.Name = "LB_CircleInfo";
+            this.LB_CircleInfo.Size = new System.Drawing.Size(141, 68);
+            this.LB_CircleInfo.TabIndex = 0;
+            this.LB_CircleInfo.Text = "CircleInfo";
+            // 
+            // LB_RoiInfo
+            // 
+            this.LB_RoiInfo.AutoSize = true;
+            this.LB_RoiInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LB_RoiInfo.Location = new System.Drawing.Point(3, 68);
+            this.LB_RoiInfo.Name = "LB_RoiInfo";
+            this.LB_RoiInfo.Size = new System.Drawing.Size(141, 69);
+            this.LB_RoiInfo.TabIndex = 1;
+            this.LB_RoiInfo.Text = "RoiInfo";
+            // 
             // CameraCtrlUC
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.TBP_Infomation);
             this.Controls.Add(this.CB_Color);
             this.Controls.Add(this.CB_SetRoi);
             this.Controls.Add(this.BTN_SetBin);
@@ -155,6 +195,8 @@
             this.Controls.Add(this.BTN_Open);
             this.Name = "CameraCtrlUC";
             this.Size = new System.Drawing.Size(147, 458);
+            this.TBP_Infomation.ResumeLayout(false);
+            this.TBP_Infomation.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -171,5 +213,8 @@
         private System.Windows.Forms.CheckBox CB_Color;
         private System.Windows.Forms.Button BTN_Load;
         private System.Windows.Forms.Button BTN_ResetRoi;
+        private System.Windows.Forms.TableLayoutPanel TBP_Infomation;
+        private System.Windows.Forms.Label LB_RoiInfo;
+        private System.Windows.Forms.Label LB_CircleInfo;
     }
 }
