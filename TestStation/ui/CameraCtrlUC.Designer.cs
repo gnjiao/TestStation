@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.BTN_Read = new System.Windows.Forms.Button();
             this.BTN_Calculate = new System.Windows.Forms.Button();
             this.BTN_Open = new System.Windows.Forms.Button();
@@ -40,6 +41,7 @@
             this.TBP_Infomation = new System.Windows.Forms.TableLayoutPanel();
             this.LB_CircleInfo = new System.Windows.Forms.Label();
             this.LB_RoiInfo = new System.Windows.Forms.Label();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.TBP_Infomation.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -90,6 +92,7 @@
             // BTN_SetBin
             // 
             this.BTN_SetBin.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.BTN_SetBin.Enabled = false;
             this.BTN_SetBin.Location = new System.Drawing.Point(0, 382);
             this.BTN_SetBin.Name = "BTN_SetBin";
             this.BTN_SetBin.Size = new System.Drawing.Size(147, 38);
@@ -102,6 +105,7 @@
             // 
             this.CB_SetRoi.Appearance = System.Windows.Forms.Appearance.Button;
             this.CB_SetRoi.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.CB_SetRoi.Enabled = false;
             this.CB_SetRoi.Location = new System.Drawing.Point(0, 344);
             this.CB_SetRoi.Name = "CB_SetRoi";
             this.CB_SetRoi.Size = new System.Drawing.Size(147, 38);
@@ -115,6 +119,7 @@
             // 
             this.CB_Color.AutoSize = true;
             this.CB_Color.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.CB_Color.Enabled = false;
             this.CB_Color.Location = new System.Drawing.Point(0, 322);
             this.CB_Color.Name = "CB_Color";
             this.CB_Color.Size = new System.Drawing.Size(147, 22);
@@ -137,6 +142,7 @@
             // BTN_ResetRoi
             // 
             this.BTN_ResetRoi.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.BTN_ResetRoi.Enabled = false;
             this.BTN_ResetRoi.Location = new System.Drawing.Point(0, 420);
             this.BTN_ResetRoi.Name = "BTN_ResetRoi";
             this.BTN_ResetRoi.Size = new System.Drawing.Size(147, 38);
@@ -147,7 +153,7 @@
             // TBP_Infomation
             // 
             this.TBP_Infomation.ColumnCount = 1;
-            this.TBP_Infomation.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.TBP_Infomation.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.TBP_Infomation.Controls.Add(this.LB_RoiInfo, 0, 1);
             this.TBP_Infomation.Controls.Add(this.LB_CircleInfo, 0, 0);
             this.TBP_Infomation.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -156,6 +162,7 @@
             this.TBP_Infomation.RowCount = 2;
             this.TBP_Infomation.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.TBP_Infomation.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.TBP_Infomation.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TBP_Infomation.Size = new System.Drawing.Size(147, 137);
             this.TBP_Infomation.TabIndex = 13;
             // 
@@ -216,5 +223,6 @@
         private System.Windows.Forms.TableLayoutPanel TBP_Infomation;
         private System.Windows.Forms.Label LB_RoiInfo;
         private System.Windows.Forms.Label LB_CircleInfo;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }

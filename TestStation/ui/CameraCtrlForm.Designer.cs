@@ -76,6 +76,7 @@
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "CameraCtrlForm";
             this.Text = "Camera Ctrl Form";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.tableLayoutPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.PB_Preview)).EndInit();
             this.ResumeLayout(false);

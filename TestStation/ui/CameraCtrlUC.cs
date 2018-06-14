@@ -24,10 +24,10 @@ namespace TestStation
         private Logger _log = new Logger(typeof(CameraCtrlUC));
         DatabaseSrv _database;
         public Camera _camera;
-
         public CameraCtrlUC()
         {
             InitializeComponent();
+            InitializeHelpInfo();
 
             Logger log = new Logger("TestStation");
             log.Debug(string.Format("TestStation(V{0}) Started", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString()));
@@ -129,6 +129,19 @@ namespace TestStation
                 new Dictionary<string, string> { { "IsColorOperationEnabled", CB_Color.Checked.ToString() } }));
         }
         #endregion
+        private void InitializeHelpInfo()
+        {
+            toolTip1.SetToolTip(BTN_Open, "Initialize the camera");
+            toolTip1.SetToolTip(BTN_Read, "Capture an image via the camera");
+            toolTip1.SetToolTip(BTN_Load, "Load an exsiting image for calculation");
+            toolTip1.SetToolTip(BTN_Calculate, "Calculate the read or loaded image");
+            toolTip1.SetToolTip(BTN_Close, "Close the camera");
+
+            toolTip1.SetToolTip(CB_Color, "Camera color mode: color or monochrome");
+            toolTip1.SetToolTip(CB_SetRoi, "Camera range of interesting");
+            toolTip1.SetToolTip(BTN_SetBin, "Camera sample rate");
+            toolTip1.SetToolTip(BTN_ResetRoi, "Reset camera configuration");
+        }
         private void ProcessWithCircleFinder()
         {
             //var rawData = _camera.Execute(new Command("Read", new Dictionary<string, string> { { "Type", "Raw" } })).Param as Bitmap;
