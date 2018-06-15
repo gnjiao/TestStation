@@ -59,6 +59,9 @@
             this.PB_Preview.Size = new System.Drawing.Size(646, 444);
             this.PB_Preview.TabIndex = 6;
             this.PB_Preview.TabStop = false;
+            this.PB_Preview.MouseDown += new System.Windows.Forms.MouseEventHandler(this.PB_Preview_MouseDown);
+            this.PB_Preview.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PB_Preview_MouseMove);
+            this.PB_Preview.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PB_Preview_MouseUp);
             // 
             // UC_CameraCtrl
             // 

@@ -43,7 +43,7 @@ namespace HardwareTest
         [TestMethod]
         public void EquipmentTest_Camera()
         {
-            Camera c = new Camera("M8051");
+            Camera c = new M8051("M8051");
             c.Execute(new Command("Open"));
             Thread.Sleep(3 * 1000);
             var result = c.Execute(new Command("Read", new Dictionary<string, string> { { "Type", "Raw" } }));
