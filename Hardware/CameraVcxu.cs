@@ -13,7 +13,138 @@ namespace Hardware
             Type = "Camera";
             AssignLogger();
         }
+        protected override Result Read(Dictionary<string, string> param)
+        {
+            return new Result("Ok");
+        }
+        protected override Result Config(Dictionary<string, string> param)
+        {
+            return new Result("Ok");
+        }
         protected override Result Open()
+        {
+            #region system
+            BGAPI2.SystemList.Instance.Refresh();
+
+            BGAPI2.System usbSystem = null;
+            foreach (KeyValuePair<string, BGAPI2.System> kv in BGAPI2.SystemList.Instance)
+            {
+                if (kv.Value.TLType == "U3V")
+                {
+                    usbSystem = kv.Value;
+                }
+            }
+            if (usbSystem == null)
+            {
+                return new Result("Fail", "Failed to get usb system");
+            }
+            #endregion
+            #region interface
+            usbSystem.Open();
+            usbSystem.Interfaces.Refresh(100);
+
+            BGAPI2.Interface usbInterface = null;
+            foreach (KeyValuePair<string, BGAPI2.Interface> kv in usbSystem.Interfaces)
+            {
+                if (kv.Value.TLType == "U3V")
+                {
+                    usbInterface = kv.Value;
+                }
+            }
+            if (usbInterface == null)
+            {
+                usbSystem.Close();
+                return new Result("Fail", "Failed to get usb interface");
+            }
+            #endregion
+            #region device
+            usbInterface.Open();
+            usbInterface.Devices.Refresh(100);
+
+            BGAPI2.Device usbDevice = null;
+            foreach (KeyValuePair<string, BGAPI2.Device> kv in usbInterface.Devices)
+            {
+                if (kv.Value.TLType == "U3V")
+                {
+                    usbDevice = kv.Value;
+                }
+            }
+            if (usbDevice == null)
+            {
+                usbInterface.Close();
+                usbSystem.Close();
+                return new Result("Fail", "Failed to find usb device");
+            }
+            else if (usbInterface.Devices.Count > 1)
+            {
+                _log.Warn("More than 1 usb devices found");
+            }
+            #endregion
+            #region datastream
+            usbDevice.Open();
+            usbDevice.RemoteNodeList["TriggerMode"].Value = "Off";
+            usbDevice.DataStreams.Refresh();
+
+            BGAPI2.DataStream ds = usbDevice.DataStreams["Stream0"];
+            ds.Open();
+            BGAPI2.BufferList bufList = ds.BufferList;
+            for (int i = 0; i < 4; i++)
+            {
+                bufList.Add(new BGAPI2.Buffer());
+            }
+            foreach (KeyValuePair<string, BGAPI2.Buffer> buf in bufList)
+            {
+                buf.Value.QueueBuffer();
+            }
+            #endregion
+
+            ds.StartAcquisition();
+            usbDevice.RemoteNodeList["AcquisitionStart"].Execute();
+
+            BGAPI2.Buffer mBufferFilled = null;
+            for (int i = 0; i < 12; i++)
+            {
+                mBufferFilled = ds.GetFilledBuffer(1000); // image polling timeout 1000 msec
+                if (mBufferFilled == null)
+                {
+                    System.Console.Write("Error: Buffer Timeout after 1000 msec\r\n");
+                }
+                else if (mBufferFilled.IsIncomplete == true)
+                {
+                    System.Console.Write("Error: Image is incomplete\r\n");
+                    // queue buffer again
+                    mBufferFilled.QueueBuffer();
+                }
+                else
+                {
+                    System.Console.Write(" Image {0, 5:d} received in memory address {1:X}\r\n", mBufferFilled.FrameID, (ulong)mBufferFilled.MemPtr);
+                    // queue buffer again
+                    mBufferFilled.QueueBuffer();
+                }
+            }
+
+
+            usbDevice.RemoteNodeList["AcquisitionAbort"].Execute();
+            usbDevice.RemoteNodeList["AcquisitionStop"].Execute();
+            ds.StopAcquisition();
+            bufList.DiscardAllBuffers();
+            while (bufList.Count > 0)
+            {
+                bufList.RevokeBuffer((BGAPI2.Buffer)bufList.Values.First());
+            }
+
+            ds.Close();
+            usbDevice.Close();
+            usbInterface.Close();
+            usbSystem.Close();
+
+            return new Result("Ok");
+        }
+        protected override Result Close()
+        {
+            return new Result("Ok");
+        }
+        private void DbgScanAll()
         {
             //DECLARATIONS OF VARIABLES
             BGAPI2.SystemList systemList = null;
@@ -211,7 +342,6 @@ namespace Hardware
                 System.Console.Write(" No System found \r\n");
                 System.Console.Write(" Input any number to close the program:\r\n");
                 Console.Read();
-                return new Result("Fail", $"ErrorCode: {returnCode}");
             }
             else
             {
@@ -225,7 +355,6 @@ namespace Hardware
                 System.Console.Write("\r\nEnd\r\nInput any number to close the program:\r\n");
                 Console.Read();
                 mSystem.Close();
-                return new Result("Fail", $"ErrorCode: {returnCode}");
             }
             else
             {
@@ -345,7 +474,6 @@ namespace Hardware
                 Console.Read();
                 mInterface.Close();
                 mSystem.Close();
-                return new Result("Fail", $"ErrorCode: {returnCode}");
             }
             else
             {
@@ -435,7 +563,6 @@ namespace Hardware
                 mDevice.Close();
                 mInterface.Close();
                 mSystem.Close();
-                return new Result("Fail", $"ErrorCode: {returnCode}");
             }
             else
             {
@@ -676,20 +803,6 @@ namespace Hardware
             System.Console.Write("\r\nEnd\r\n\r\n");
             System.Console.Write("Input any number to close the program:\r\n");
             Console.Read();
-
-            return new Result("Fail", $"ErrorCode: {returnCode}");
-        }
-        protected override Result Read(Dictionary<string, string> param)
-        {
-            return new Result("Ok");
-        }
-        protected override Result Config(Dictionary<string, string> param)
-        {
-            return new Result("Ok");
-        }
-        protected override Result Close()
-        {
-            return new Result("Ok");
         }
     }
 }
