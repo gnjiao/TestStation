@@ -123,7 +123,7 @@ namespace TestStation
             }
             else
             {
-                _camera.Execute(new Command("Config",
+                _camera?.Execute(new Command("Config",
                     new Dictionary<string, string> { { "RoiOriginX", "0" }, { "RoiOriginY", "0" },
                     { "RoiWidth", "1" }, { "RoiHeight", "1" } }));
             }
@@ -131,14 +131,20 @@ namespace TestStation
 
         private void BTN_SetBin_Click(object sender, EventArgs e)
         {
-            _camera.Execute(new Command("Config",
+            _camera?.Execute(new Command("Config",
                 new Dictionary<string, string> { { "BinX", "2" }, { "BinY", "2" } }));
         }
 
         private void CB_Color_CheckedChanged(object sender, EventArgs e)
         {
-            _camera.Execute(new Command("Config", 
+            _camera?.Execute(new Command("Config", 
                 new Dictionary<string, string> { { "IsColorOperationEnabled", CB_Color.Checked.ToString() } }));
+        }
+        public void SetRoi(double xoffset, double yoffset, double width, double height)/* all parameters are determined via percentage */
+        {
+            _camera?.Execute(new Command("Config",
+                new Dictionary<string, string> { { "RoiOriginX", "0" }, { "RoiOriginY", "0" },
+                    { "RoiWidth", "1" }, { "RoiHeight", "1" } }));
         }
         #endregion
         private void InitializeHelpInfo()

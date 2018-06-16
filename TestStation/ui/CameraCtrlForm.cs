@@ -15,12 +15,23 @@ namespace TestStation
         public CameraCtrlForm()
         {
             InitializeComponent();
+
             UC_CameraCtrl.Observer += LoadImg;
+            SetRectangle = SetRoi;
         }
         private void LoadImg(object img)
         {
             Bitmap resize = new Bitmap(img as Bitmap, PB_Preview.Width, PB_Preview.Height);
             PB_Preview.Image = resize;
+        }
+        private void SetRoi(object sender, Rectangle rect)
+        {
+            PictureBox pb = sender as PictureBox;
+            Point start = pb.PointToScreen(pb.Location);
+
+            double xoffset = (rect.Location.X > start.X) ? (double)(rect.Location.X - start.X) / pb.Width : 0;
+            double yoffset = (rect.Location.Y > start.Y) ? (double)(rect.Location.Y - start.Y) / pb.Height : 0;
+            UC_CameraCtrl.SetRoi(xoffset, yoffset, (double)rect.Width/pb.Width, (double)rect.Height/pb.Height);
         }
         #region ROI DRAW
         private Rectangle m_MouseRect = Rectangle.Empty;
