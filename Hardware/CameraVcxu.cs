@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using BGAPI2;
 using Utils;
@@ -8,6 +9,8 @@ namespace Hardware
 {
     public class Vcxu : Camera
     {
+        private readonly int BUF_NUM = 4;
+
         public Vcxu(object param) : base(param)
         {
             Type = "Camera";
@@ -15,133 +18,140 @@ namespace Hardware
         }
         protected override Result Read(Dictionary<string, string> param)
         {
-            return new Result("Ok");
+            BGAPI2.Buffer image = _usbDataStream.GetFilledBuffer(1000); // image polling timeout 1000 msec
+
+            if (image == null)
+            {
+                return new Result("Fail", "No image received");
+            }
+            else if (image.IsIncomplete == true)
+            {
+                image.QueueBuffer();
+                return new Result("Fail", "Image is not completed");
+            }
+            else
+            {
+                _lastImage?.Release();
+
+                _lastImage = _imgProcessor.CreateImage((uint)image.Width, (uint)image.Height, (string)image.PixelFormat, image.MemPtr, (ulong)image.MemSize);
+                Bitmap b = _lastImage.CreateBitmap();
+
+                image.QueueBuffer();
+                return new Result("Ok", "", b);
+            }
         }
         protected override Result Config(Dictionary<string, string> param)
         {
             return new Result("Ok");
         }
+
+        private BGAPI2.System _usbSystem = null;
+        private BGAPI2.Interface _usbInterface = null;
+        private BGAPI2.Device _usbDevice = null;
+        private BGAPI2.DataStream _usbDataStream = null;
+        private BGAPI2.BufferList _bufList = null;
+
+        private BGAPI2.ImageProcessor _imgProcessor = null;
+        private BGAPI2.Image _lastImage = null;
+
         protected override Result Open()
         {
             #region system
             BGAPI2.SystemList.Instance.Refresh();
 
-            BGAPI2.System usbSystem = null;
             foreach (KeyValuePair<string, BGAPI2.System> kv in BGAPI2.SystemList.Instance)
             {
                 if (kv.Value.TLType == "U3V")
                 {
-                    usbSystem = kv.Value;
+                    _usbSystem = kv.Value;
+                    break;
                 }
             }
-            if (usbSystem == null)
+            if (_usbSystem == null)
             {
                 return new Result("Fail", "Failed to get usb system");
             }
             #endregion
             #region interface
-            usbSystem.Open();
-            usbSystem.Interfaces.Refresh(100);
+            _usbSystem.Open();
+            _usbSystem.Interfaces.Refresh(100);
 
-            BGAPI2.Interface usbInterface = null;
-            foreach (KeyValuePair<string, BGAPI2.Interface> kv in usbSystem.Interfaces)
+            foreach (KeyValuePair<string, BGAPI2.Interface> kv in _usbSystem.Interfaces)
             {
                 if (kv.Value.TLType == "U3V")
                 {
-                    usbInterface = kv.Value;
+                    _usbInterface = kv.Value;
+                    break;
                 }
             }
-            if (usbInterface == null)
+            if (_usbInterface == null)
             {
-                usbSystem.Close();
+                _usbSystem.Close();
                 return new Result("Fail", "Failed to get usb interface");
             }
             #endregion
             #region device
-            usbInterface.Open();
-            usbInterface.Devices.Refresh(100);
+            _usbInterface.Open();
+            _usbInterface.Devices.Refresh(100);
 
-            BGAPI2.Device usbDevice = null;
-            foreach (KeyValuePair<string, BGAPI2.Device> kv in usbInterface.Devices)
+            foreach (KeyValuePair<string, BGAPI2.Device> kv in _usbInterface.Devices)
             {
                 if (kv.Value.TLType == "U3V")
                 {
-                    usbDevice = kv.Value;
+                    _usbDevice = kv.Value;
+                    break;
                 }
             }
-            if (usbDevice == null)
+            if (_usbDevice == null)
             {
-                usbInterface.Close();
-                usbSystem.Close();
+                _usbInterface.Close();
+                _usbSystem.Close();
                 return new Result("Fail", "Failed to find usb device");
             }
-            else if (usbInterface.Devices.Count > 1)
+            else if (_usbInterface.Devices.Count > 1)
             {
                 _log.Warn("More than 1 usb devices found");
             }
             #endregion
             #region datastream
-            usbDevice.Open();
-            usbDevice.RemoteNodeList["TriggerMode"].Value = "Off";
-            usbDevice.DataStreams.Refresh();
+            _usbDevice.Open();
+            _usbDevice.RemoteNodeList["TriggerMode"].Value = "Off";
+            _usbDevice.DataStreams.Refresh();
 
-            BGAPI2.DataStream ds = usbDevice.DataStreams["Stream0"];
-            ds.Open();
-            BGAPI2.BufferList bufList = ds.BufferList;
-            for (int i = 0; i < 4; i++)
+            _usbDataStream = _usbDevice.DataStreams["Stream0"];
+            _usbDataStream.Open();
+            _bufList = _usbDataStream.BufferList;
+            for (int i = 0; i < BUF_NUM; i++)
             {
-                bufList.Add(new BGAPI2.Buffer());
+                _bufList.Add(new BGAPI2.Buffer());
             }
-            foreach (KeyValuePair<string, BGAPI2.Buffer> buf in bufList)
+            foreach (KeyValuePair<string, BGAPI2.Buffer> buf in _bufList)
             {
                 buf.Value.QueueBuffer();
             }
             #endregion
 
-            ds.StartAcquisition();
-            usbDevice.RemoteNodeList["AcquisitionStart"].Execute();
-
-            BGAPI2.Buffer mBufferFilled = null;
-            for (int i = 0; i < 12; i++)
-            {
-                mBufferFilled = ds.GetFilledBuffer(1000); // image polling timeout 1000 msec
-                if (mBufferFilled == null)
-                {
-                    System.Console.Write("Error: Buffer Timeout after 1000 msec\r\n");
-                }
-                else if (mBufferFilled.IsIncomplete == true)
-                {
-                    System.Console.Write("Error: Image is incomplete\r\n");
-                    // queue buffer again
-                    mBufferFilled.QueueBuffer();
-                }
-                else
-                {
-                    System.Console.Write(" Image {0, 5:d} received in memory address {1:X}\r\n", mBufferFilled.FrameID, (ulong)mBufferFilled.MemPtr);
-                    // queue buffer again
-                    mBufferFilled.QueueBuffer();
-                }
-            }
-
-
-            usbDevice.RemoteNodeList["AcquisitionAbort"].Execute();
-            usbDevice.RemoteNodeList["AcquisitionStop"].Execute();
-            ds.StopAcquisition();
-            bufList.DiscardAllBuffers();
-            while (bufList.Count > 0)
-            {
-                bufList.RevokeBuffer((BGAPI2.Buffer)bufList.Values.First());
-            }
-
-            ds.Close();
-            usbDevice.Close();
-            usbInterface.Close();
-            usbSystem.Close();
+            _usbDataStream.StartAcquisition();
+            _usbDevice.RemoteNodeList["AcquisitionStart"].Execute();
 
             return new Result("Ok");
         }
         protected override Result Close()
         {
+            _usbDevice?.RemoteNodeList["AcquisitionAbort"].Execute();
+            _usbDevice?.RemoteNodeList["AcquisitionStop"].Execute();
+            _usbDataStream?.StopAcquisition();
+            _bufList?.DiscardAllBuffers();
+            while (_bufList!=null && _bufList.Count > 0)
+            {
+                _bufList.RevokeBuffer((BGAPI2.Buffer)_bufList.Values.First());
+            }
+
+            _usbDataStream?.Close();
+            _usbDevice?.Close();
+            _usbInterface?.Close();
+            _usbSystem?.Close();
+
             return new Result("Ok");
         }
         private void DbgScanAll()
