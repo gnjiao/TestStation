@@ -28,6 +28,7 @@ namespace TestStation
         {
             InitializeComponent();
             InitializeHelpInfo();
+            CMB_CameraType.SelectedIndex = 0;
 
             Logger log = new Logger("TestStation");
             log.Debug(string.Format("TestStation(V{0}) Started", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString()));
@@ -83,8 +84,19 @@ namespace TestStation
 
         private void BTN_Open_Click(object sender, EventArgs e)
         {
-            HardwareSrv.GetInstance().Add(new M8051("M8051"));
-            _camera = HardwareSrv.GetInstance().Get("M8051") as Camera;
+            switch (CMB_CameraType.Text)
+            {
+                case "Type A":
+                    HardwareSrv.GetInstance().Add(new M8051("Camera"));
+                    break;
+                case "Type B":
+                    HardwareSrv.GetInstance().Add(new Vcxu("Camera"));
+                    break;
+                default:
+                    MessageBox.Show("Please choose a valid camera type");
+                    return;
+            }
+            _camera = HardwareSrv.GetInstance().Get("Camera") as Camera;
             _camera.Execute(new Command("Open"));
         }
         string _loadedImg;

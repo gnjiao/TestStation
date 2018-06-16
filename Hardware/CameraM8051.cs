@@ -13,7 +13,7 @@ namespace Hardware
     {
         public M8051(object param) : base(param)
         {
-            Type = "M8051";
+            Type = "Camera";
             AssignLogger();
         }
 

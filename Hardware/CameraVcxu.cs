@@ -6,11 +6,11 @@ using Utils;
 
 namespace Hardware
 {
-    class Vcxu : Camera
+    public class Vcxu : Camera
     {
         public Vcxu(object param) : base(param)
         {
-            Type = "Vcxu";
+            Type = "Camera";
             AssignLogger();
         }
         protected override Result Open()
