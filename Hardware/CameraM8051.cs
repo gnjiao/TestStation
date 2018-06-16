@@ -97,16 +97,16 @@ namespace Hardware
                     #endregion
                     #region ROIAndBin Config
                     case "RoiOriginX":
-                        value.ROIOriginX_pixels = UInt32.Parse(param[key]);
+                        value.ROIOriginX_pixels += (uint)(double.Parse(param[key]) * value.ROIWidth_pixels);
                         break;
                     case "RoiOriginY":
-                        value.ROIOriginY_pixels = UInt32.Parse(param[key]);
+                        value.ROIOriginY_pixels += (uint)(double.Parse(param[key]) * value.ROIWidth_pixels);
                         break;
                     case "RoiWidth":
-                        value.ROIWidth_pixels = UInt32.Parse(param[key]);
+                        value.ROIWidth_pixels = (uint)(double.Parse(param[key]) * value.ROIWidth_pixels);
                         break;
                     case "RoiHeight":
-                        value.ROIHeight_pixels = UInt32.Parse(param[key]);
+                        value.ROIHeight_pixels = (uint)(double.Parse(param[key]) * value.ROIHeight_pixels);
                         break;
                     case "BinX":
                         value.BinX = UInt32.Parse(param[key]);

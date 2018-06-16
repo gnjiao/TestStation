@@ -46,13 +46,11 @@ namespace TestStation
                 BTN_Open_Click(sender, e);
             }
 
-            Bitmap img = _camera.Execute(new Command("Read", new Dictionary<string, string> { { "Type", "Bmp"} })).Param as Bitmap;
+            Bitmap img = _camera.Execute(new Command("Read", new Dictionary<string, string> { { "Type", "Bmp" } })).Param as Bitmap;
 
             _imgs.Add(img);
-
             _filePath = @"data/" + "Img-" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".bmp";
             img.Save(_filePath, ImageFormat.Bmp);
-
             Observer?.Invoke(img);
         }
         private void ProcessWithEmgu()
@@ -97,7 +95,16 @@ namespace TestStation
                     return;
             }
             _camera = HardwareSrv.GetInstance().Get("Camera") as Camera;
-            _camera.Execute(new Command("Open"));
+
+            try
+            {
+                _camera.Execute(new Command("Open"));
+            }
+            catch (Exception ex)
+            {
+                _log.Error("Failed to open the camera", ex);
+                MessageBox.Show("Failed to open the camera");
+            }
         }
         string _loadedImg;
         private void BTN_Load_Click(object sender, EventArgs e)
@@ -143,8 +150,8 @@ namespace TestStation
         public void SetRoi(double xoffset, double yoffset, double width, double height)/* all parameters are determined via percentage */
         {
             _camera?.Execute(new Command("Config",
-                new Dictionary<string, string> { { "RoiOriginX", "0" }, { "RoiOriginY", "0" },
-                    { "RoiWidth", "1" }, { "RoiHeight", "1" } }));
+                new Dictionary<string, string> { { "RoiOriginX", xoffset.ToString("F2") }, { "RoiOriginY", yoffset.ToString("F2") },
+                    { "RoiWidth", width.ToString("F2") }, { "RoiHeight", height.ToString("F2") } }));
         }
         #endregion
         private void InitializeHelpInfo()
@@ -160,6 +167,7 @@ namespace TestStation
             toolTip1.SetToolTip(BTN_SetBin, "Camera sample rate");
             toolTip1.SetToolTip(BTN_ResetRoi, "Reset camera configuration");
         }
+        /* to be obsoleted */
         private void ProcessWithCircleFinder()
         {
             //var rawData = _camera.Execute(new Command("Read", new Dictionary<string, string> { { "Type", "Raw" } })).Param as Bitmap;
