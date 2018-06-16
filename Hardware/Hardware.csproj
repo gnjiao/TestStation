@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="bgapi2_genicam_dotnet">
+      <HintPath>BaumerLib\bgapi2_genicam_dotnet.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -169,6 +172,46 @@
     <ContentWithTargetPath Include="ThorLabsLib\tsi_usb.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <TargetPath>tsi_usb.dll</TargetPath>
+    </ContentWithTargetPath>
+  </ItemGroup>
+  <ItemGroup>
+    <ContentWithTargetPath Include="BaumerLib\bgapi2_genicam.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>bgapi2_genicam.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="BaumerLib\bgapi2_genicam_dotnet.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>bgapi2_genicam_dotnet.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="BaumerLib\bgapi2_img.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>bgapi2_img.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="BaumerLib\BO_GigEFilterDrv.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>BO_GigEFilterDrv.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="BaumerLib\bsysgige.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>bsysgige.xml</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="BaumerLib\bsysusb.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>bsysusb.xml</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="BaumerLib\MathParser.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>MathParser.dll</TargetPath>
+    </ContentWithTargetPath>
+  </ItemGroup>
+  <ItemGroup>
+    <ContentWithTargetPath Include="BaumerLib\bgapi2_gige.cti">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>bgapi2_gige.cti</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="BaumerLib\bgapi2_usb.cti">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>bgapi2_usb.cti</TargetPath>
     </ContentWithTargetPath>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -84,7 +84,7 @@ namespace TestStation
         private void BTN_Open_Click(object sender, EventArgs e)
         {
             HardwareSrv.GetInstance().Add(new M8051("M8051"));
-            _camera = HardwareSrv.GetInstance().Get("Camera") as Camera;
+            _camera = HardwareSrv.GetInstance().Get("M8051") as Camera;
             _camera.Execute(new Command("Open"));
         }
         string _loadedImg;

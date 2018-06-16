@@ -149,7 +149,7 @@ namespace TestStationTest
         public void StageIdle()
         {
             StageOwner o = new TestStageOwner("TestStation");
-            Camera c = new Camera("M8051");
+            Camera c = new M8051("M8051");
         }
     }
 }

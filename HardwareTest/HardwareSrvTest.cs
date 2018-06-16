@@ -64,7 +64,7 @@ namespace HardwareTest
         public void CommandDispatch()
         {
             HardwareSrv srv = HardwareSrv.GetInstance();
-            srv.Add(new Camera("M8051"));
+            srv.Add(new M8051("M8051"));
             srv.Execute(new HardwareCommand("Camera", "M8051", "Open"));
         }
     }
