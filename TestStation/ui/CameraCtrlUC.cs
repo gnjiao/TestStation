@@ -1,15 +1,15 @@
-﻿using Database;
+﻿
+#define REAL_CAMERA
+
+using Database;
 using Hardware;
 using JbImage;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Utils;
 
@@ -38,30 +38,34 @@ namespace TestStation
 
         private string _filePath = @"./../../Samples/Test-24b.bmp";
 
-        private List<Bitmap> _imgs = new List<Bitmap>();
+        private List<double> _distances = new List<double>();
+        private List<EmguCircleImage> _imgs = new List<EmguCircleImage>();
+
         private void BTN_Read_Click(object sender, EventArgs e)
         {
+#if REAL_CAMERA
             if (_camera == null)
             {
                 BTN_Open_Click(sender, e);
             }
-
             Bitmap img = _camera.Execute(new Command("Read", new Dictionary<string, string> { { "Type", "Bmp" } })).Param as Bitmap;
+#else
+            Bitmap img = new Bitmap(10, 10);
+#endif
 
-            _imgs.Add(img);
-            _filePath = @"data/" + "Img-" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".bmp";
+            double distance = ReadDistance(TB_Distance);
+            _distances.Add(distance);
+
+            _filePath = @"data/" + $"Img_{distance}_{DateTime.Now.ToString("yyyyMMdd-HHmmss")}.bmp";
             img.Save(_filePath, ImageFormat.Bmp);
             Observer?.Invoke(img);
         }
-        private void ProcessWithEmgu()
+        private void ProcessWithEmgu(string img)
         {
-            if (_loadedImg == null)
-            {
-                _loadedImg = _filePath;
-            }
+            _log.Info("ProcessWithEgmu " + img);
+            EmguCircleImage image = new EmguCircleImage(img);
+            _imgs.Add(image);
 
-            _log.Info("ProcessWithEgmu " + _loadedImg);
-            EmguCircleImage image = new EmguCircleImage(_loadedImg);
             image.Count();
             Dictionary<string, string> statInfo = image.StatisticInfo();
             _log.Info(Utils.String.Flatten(statInfo));
@@ -75,9 +79,34 @@ namespace TestStation
 
             Observer?.Invoke(image.Draw());
         }
+        private void BTN_ImgAnalyze_Click(object sender, EventArgs e)
+        {
+            ProcessWithEmgu((_loadedImg==null) ? _filePath : _loadedImg);
+        }
         private void BTN_Calculate_Click(object sender, EventArgs e)
         {
-            ProcessWithEmgu();
+            if (_imgs.Count == _distances.Count)
+            {
+                double[] result = new double[_imgs[0].Circles.Length];
+                for (int circleId = 0; circleId < result.Length; circleId++)
+                {
+                    double[] radius = new double[_imgs.Count];
+                    for (int imgId = 0; imgId < radius.Length; imgId++)
+                    {
+                        radius[imgId] = _imgs[imgId].Circles[circleId].Radius;
+                    }
+
+                    result[circleId] = Matlab.CalcWeist(_distances.ToArray(), radius);
+                    _log.Info($"{circleId}: {result[circleId]}" + Environment.NewLine);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Calculation can only apply to images with distance parameter, please re-do the test");
+            }
+
+            _distances.Clear();
+            _imgs.Clear();
         }
 
         private void BTN_Open_Click(object sender, EventArgs e)
@@ -159,13 +188,28 @@ namespace TestStation
             toolTip1.SetToolTip(BTN_Open, "Initialize the camera");
             toolTip1.SetToolTip(BTN_Read, "Capture an image via the camera");
             toolTip1.SetToolTip(BTN_Load, "Load an exsiting image for calculation");
-            toolTip1.SetToolTip(BTN_Calculate, "Calculate the read or loaded image");
+            toolTip1.SetToolTip(BTN_ImgAnalyze, "Calculate the read or loaded image");
             toolTip1.SetToolTip(BTN_Close, "Close the camera");
 
             toolTip1.SetToolTip(CB_Color, "Camera color mode: color or monochrome");
             toolTip1.SetToolTip(CB_SetRoi, "Camera range of interesting");
             toolTip1.SetToolTip(BTN_SetBin, "Camera sample rate");
             toolTip1.SetToolTip(BTN_ResetRoi, "Reset camera configuration");
+        }
+        private void TB_Distance_Click(object sender, EventArgs e)
+        {
+            TB_Distance.Text = "";
+        }
+        private double ReadDistance(TextBox tb)
+        {
+            double value = double.NaN;
+
+            if (double.TryParse(tb.Text, out value))
+            {
+                return value;
+            }
+
+            return double.NaN;
         }
         /* to be obsoleted */
         private void ProcessWithCircleFinder()
