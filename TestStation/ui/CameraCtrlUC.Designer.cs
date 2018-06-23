@@ -193,6 +193,7 @@
             this.TB_Distance.TabIndex = 15;
             this.TB_Distance.Text = "Distance(mm)";
             this.TB_Distance.Click += new System.EventHandler(this.TB_Distance_Click);
+            this.TB_Distance.Leave += new System.EventHandler(this.TB_Distance_Leave);
             // 
             // BTN_Calculate
             // 

@@ -43,10 +43,16 @@ namespace TestStation
 
         private void BTN_Read_Click(object sender, EventArgs e)
         {
+            Result ret;
 #if REAL_CAMERA
             if (_camera == null)
             {
-                BTN_Open_Click(sender, e);
+                ret = OpenCamera(CMB_CameraType.Text);
+                if (ret.Id != "Ok")
+                {
+                    MessageBox.Show(ret.Desc);
+                    return;
+                }
             }
             Bitmap img = _camera.Execute(new Command("Read", new Dictionary<string, string> { { "Type", "Bmp" } })).Param as Bitmap;
 #else
@@ -58,26 +64,8 @@ namespace TestStation
 
             _filePath = @"data/" + $"Img_{distance}_{DateTime.Now.ToString("yyyyMMdd-HHmmss")}.bmp";
             img.Save(_filePath, ImageFormat.Bmp);
+
             Observer?.Invoke(img);
-        }
-        private void ProcessWithEmgu(string img)
-        {
-            _log.Info("ProcessWithEgmu " + img);
-            EmguCircleImage image = new EmguCircleImage(img);
-            _imgs.Add(image);
-
-            image.Count();
-            Dictionary<string, string> statInfo = image.StatisticInfo();
-            _log.Info(Utils.String.Flatten(statInfo));
-
-            LB_CircleInfo.Text = "";
-            foreach (var k in statInfo.Keys)
-            {
-                LB_CircleInfo.Text += $"{k}: " + Environment.NewLine;
-                LB_CircleInfo.Text += $"    { statInfo[k]}" + Environment.NewLine;
-            }
-
-            Observer?.Invoke(image.Draw());
         }
         private void BTN_ImgAnalyze_Click(object sender, EventArgs e)
         {
@@ -111,28 +99,10 @@ namespace TestStation
 
         private void BTN_Open_Click(object sender, EventArgs e)
         {
-            switch (CMB_CameraType.Text)
+            Result ret = OpenCamera(CMB_CameraType.Text);
+            if (ret.Id != "Ok")
             {
-                case "Type A":
-                    HardwareSrv.GetInstance().Add(new M8051("Camera"));
-                    break;
-                case "Type B":
-                    HardwareSrv.GetInstance().Add(new Vcxu("Camera"));
-                    break;
-                default:
-                    MessageBox.Show("Please choose a valid camera type");
-                    return;
-            }
-            _camera = HardwareSrv.GetInstance().Get("Camera") as Camera;
-
-            try
-            {
-                _camera.Execute(new Command("Open"));
-            }
-            catch (Exception ex)
-            {
-                _log.Error("Failed to open the camera", ex);
-                MessageBox.Show("Failed to open the camera");
+                MessageBox.Show(ret.Desc);
             }
         }
         string _loadedImg;
@@ -148,6 +118,51 @@ namespace TestStation
         private void BTN_Close_Click(object sender, EventArgs e)
         {
             _camera?.Execute(new Command("Close"));
+        }
+        private Result OpenCamera(string type)
+        {
+            switch (type)
+            {
+                case "Type A":
+                    HardwareSrv.GetInstance().Add(new M8051("Camera"));
+                    break;
+                case "Type B":
+                    HardwareSrv.GetInstance().Add(new Vcxu("Camera"));
+                    break;
+                default:
+                    return new Result("Fail", "Unknown camera type");
+            }
+
+            _camera = HardwareSrv.GetInstance().Get("Camera") as Camera;
+
+            try
+            {
+                return _camera.Execute(new Command("Open"));
+            }
+            catch (Exception ex)
+            {
+                _log.Error("Failed to open the camera", ex);
+                return new Result("Fail", ex.ToString());
+            }
+        }
+        private void ProcessWithEmgu(string img)
+        {
+            _log.Info("ProcessWithEgmu " + img);
+            EmguCircleImage image = new EmguCircleImage(img);
+            _imgs.Add(image);
+
+            image.Count();
+            Dictionary<string, string> statInfo = image.StatisticInfo();
+            _log.Info(Utils.String.Flatten(statInfo));
+
+            LB_CircleInfo.Text = "";
+            foreach (var k in statInfo.Keys)
+            {
+                LB_CircleInfo.Text += $"{k}: " + Environment.NewLine;
+                LB_CircleInfo.Text += $"    { statInfo[k]}" + Environment.NewLine;
+            }
+
+            Observer?.Invoke(image.Draw());
         }
         #region camera configuration
         private bool _roiRectDraw = false;
@@ -186,9 +201,10 @@ namespace TestStation
         private void InitializeHelpInfo()
         {
             toolTip1.SetToolTip(BTN_Open, "Initialize the camera");
-            toolTip1.SetToolTip(BTN_Read, "Capture an image via the camera");
-            toolTip1.SetToolTip(BTN_Load, "Load an exsiting image for calculation");
-            toolTip1.SetToolTip(BTN_ImgAnalyze, "Calculate the read or loaded image");
+            toolTip1.SetToolTip(BTN_Read, "Capture an image via the camera, and queue this image into buffer for calculation");
+            toolTip1.SetToolTip(BTN_Load, "Load an exsiting image, and queue this image into buffer for calculation");
+            toolTip1.SetToolTip(BTN_ImgAnalyze, "Analyze the latest read or loaded image(Recognize circles and count pixels)");
+            toolTip1.SetToolTip(BTN_Calculate, "Calculate weist based on the read or loaded images, the images queue will be cleared after this action");
             toolTip1.SetToolTip(BTN_Close, "Close the camera");
 
             toolTip1.SetToolTip(CB_Color, "Camera color mode: color or monochrome");
@@ -250,6 +266,15 @@ namespace TestStation
                 double weightStdEv = Utils.Math.StdEv(f.Rounds.Select(x => (double)x.Weight).ToList());
                 file.Write(string.Format("StdEv of Weight: {0}", weightStdEv));
                 file.Write(Environment.NewLine);
+            }
+        }
+
+        private void TB_Distance_Leave(object sender, EventArgs e)
+        {
+            double value = double.NaN;
+            if (!double.TryParse(TB_Distance.Text, out value))
+            {
+                TB_Distance.Text = "Distance(mm)";
             }
         }
     }
