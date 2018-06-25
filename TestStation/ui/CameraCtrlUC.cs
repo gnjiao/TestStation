@@ -216,6 +216,14 @@ namespace TestStation
         {
             TB_Distance.Text = "";
         }
+        private void TB_Distance_Leave(object sender, EventArgs e)
+        {
+            double value = double.NaN;
+            if (!double.TryParse(TB_Distance.Text, out value))
+            {
+                TB_Distance.Text = "Distance(mm)";
+            }
+        }
         private double ReadDistance(TextBox tb)
         {
             double value = double.NaN;
@@ -266,15 +274,6 @@ namespace TestStation
                 double weightStdEv = Utils.Math.StdEv(f.Rounds.Select(x => (double)x.Weight).ToList());
                 file.Write(string.Format("StdEv of Weight: {0}", weightStdEv));
                 file.Write(Environment.NewLine);
-            }
-        }
-
-        private void TB_Distance_Leave(object sender, EventArgs e)
-        {
-            double value = double.NaN;
-            if (!double.TryParse(TB_Distance.Text, out value))
-            {
-                TB_Distance.Text = "Distance(mm)";
             }
         }
     }

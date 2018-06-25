@@ -5,8 +5,8 @@ namespace Utils
     public class Command
     {
         public string Id;
-        public Dictionary<string, string> Param;
-        public Command(string id, Dictionary<string, string> param = null)
+        public object Param;
+        public Command(string id, object param = null)
         {
             Id = id;
             Param = param;
@@ -17,11 +17,19 @@ namespace Utils
             if (Param != null)
             {
                 str += " : ";
-                foreach (var p in Param)
+                Dictionary<string, string> ps = Param as Dictionary<string, string>;
+                if (ps != null)
                 {
-                    str += string.Format("{0}({1});", p.Key, p.Value);
+                    foreach (var p in ps)
+                    {
+                        str += string.Format("{0}({1});", p.Key, p.Value);
+                    }
+                    str = str.Substring(0, str.Length - 1);
                 }
-                str = str.Substring(0, str.Length - 1);
+                else
+                {
+                    Param.ToString();
+                }
             }
             return str;
         }

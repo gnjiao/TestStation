@@ -20,9 +20,9 @@ namespace Hardware
                 case "Close":
                     return Close();
                 case "Read":
-                    return Read(cmd.Param);
+                    return Read(cmd.Param as Dictionary<string, string>);
                 case "Config":
-                    return Config(cmd.Param);
+                    return Config(cmd.Param as Dictionary<string, string>);
                 default:
                     return new Result("Command doesn't support");
             }

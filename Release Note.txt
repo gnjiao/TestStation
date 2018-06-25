@@ -1,0 +1,12 @@
+Release Note
+
+2018.06.24
+	Support M8051/VCXU(no image save) Control;
+	Support find circle;
+	Support count weist.
+	
+
+安装matlab（使用）
+	https://blog.csdn.net/qq_34445388/article/details/79638429
+安装libemgucv（开发）
+	http://www.emgu.com/wiki/index.php/Download_And_Installation

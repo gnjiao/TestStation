@@ -127,7 +127,7 @@ namespace TestStationTest
             o.OnEvent(new Event("StartTest"));
             o.OnEvent(new Event("TestFail"));
             o.OnEvent(new Event("Recover"));
-            Assert.IsTrue(o.CurStage.Name == "Loaded");
+            Assert.IsTrue(o.CurStage.Name == "Ready");
         }
         [TestMethod]
         public void TestStage_StageTestFail_ToReady()

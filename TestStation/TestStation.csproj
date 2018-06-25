@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Testcase.cs" />
     <Compile Include="ui\CameraCtrlForm.cs">
       <SubType>Form</SubType>
     </Compile>
