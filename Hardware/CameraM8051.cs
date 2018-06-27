@@ -28,7 +28,7 @@ namespace Hardware
 
                 DbgReadCameraInfo();
 
-                this._tlCamera.ExposureTime_us = 50000;
+                this._tlCamera.ExposureTime_us = 500000;
                 if (this._tlCamera.GainRange.Maximum > 0)
                 {
                     this._tlCamera.Gain = 90;

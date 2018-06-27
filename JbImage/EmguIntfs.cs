@@ -143,6 +143,8 @@ namespace JbImage
         private UMat _grayedUmat;
         public CircleF[] Circles;
         public int[] Lights;
+        public List<CircleF> FilteredCircles;
+        public List<int> FilteredLights;
 
         public EmguCircleImage(string path)
         {
@@ -167,10 +169,10 @@ namespace JbImage
         public Bitmap Draw()
         {
             Mat circleImage = _rawImg.Mat;
-            for (int i = 0; i < Circles.Length; i++)
+            for (int i = 0; i < FilteredCircles.Count; i++)
             {
-                CvInvoke.Circle(circleImage, Point.Round(Circles[i].Center), (int)Circles[i].Radius, new Bgr(Color.Red).MCvScalar, 2);
-                CvInvoke.PutText(circleImage, i.ToString("D3"), new Point((int)Circles[i].Center.X, (int)Circles[i].Center.Y), Emgu.CV.CvEnum.FontFace.HersheyScriptComplex, 1, new MCvScalar(255, 255, 0), 1);
+                CvInvoke.Circle(circleImage, Point.Round(FilteredCircles[i].Center), (int)FilteredCircles[i].Radius, new Bgr(Color.Red).MCvScalar, 2);
+                CvInvoke.PutText(circleImage, i.ToString("D3"), new Point((int)FilteredCircles[i].Center.X, (int)FilteredCircles[i].Center.Y), Emgu.CV.CvEnum.FontFace.HersheyScriptComplex, 1, new MCvScalar(255, 255, 0), 1);
             }
             circleImage.Save(Utils.String.FilePostfix(_imgPath, "-result"));
 
@@ -195,13 +197,29 @@ namespace JbImage
             });
             Circles = temp.ToArray();
         }
-        public void Count()
+        public void Count(double threshold = 0)
         {
             StringBuilder msgBuilder = new StringBuilder("Circles: " + Environment.NewLine);
+
+            int reference = 0;
+            FilteredCircles = new List<CircleF>();
+            FilteredLights = new List<int>();
+
             Lights = new int[Circles.Length];
             for (int i = 0; i < Circles.Length; i++)
             {
                 Lights[i] = EmguIntfs.CountPixels(EmguIntfs.ToImage(_grayedUmat), Circles[i]);
+
+                if (i == 0)
+                {
+                    reference = Lights[i];
+                }
+                if (Lights[i] > reference * threshold)
+                {
+                    FilteredLights.Add(Lights[i]);
+                    FilteredCircles.Add(Circles[i]);
+                }
+
                 msgBuilder.Append(string.Format("{0} {1}", i.ToString("D3"), Lights[i]) + Environment.NewLine);
             }
             _log.Debug(msgBuilder.ToString());
@@ -210,12 +228,12 @@ namespace JbImage
         {
             Dictionary<string, string> info = new Dictionary<string, string>();
 
-            info["MaxRadius"] = Circles.ToList().Max(circle => circle.Radius).ToString();
-            info["MinRadius"] = Circles.ToList().Min(circle => circle.Radius).ToString();
-            info["StdEvRadius"] = Utils.Math.StdEv(Circles.ToList().Select(x => (double)x.Radius).ToList()).ToString("F3");
-            info["MaxLight"] = Lights.ToList().Max().ToString();
-            info["MinLight"] = Lights.ToList().Min().ToString();
-            info["StdEvLight"] = Utils.Math.StdEv(Lights.ToList().Select(x => (double)x).ToList()).ToString("F3");
+            info["MaxRadius"] = FilteredCircles.ToList().Max(circle => circle.Radius).ToString();
+            info["MinRadius"] = FilteredCircles.ToList().Min(circle => circle.Radius).ToString();
+            info["StdEvRadius"] = Utils.Math.StdEv(FilteredCircles.ToList().Select(x => (double)x.Radius).ToList()).ToString("F3");
+            info["MaxLight"] = FilteredLights.ToList().Max().ToString();
+            info["MinLight"] = FilteredLights.ToList().Min().ToString();
+            info["StdEvLight"] = Utils.Math.StdEv(FilteredLights.ToList().Select(x => (double)x).ToList()).ToString("F3");
 
             return info;
         }

@@ -12,6 +12,7 @@ using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 using Utils;
+using System.Configuration;
 
 namespace TestStation
 {
@@ -151,7 +152,7 @@ namespace TestStation
             EmguCircleImage image = new EmguCircleImage(img);
             _imgs.Add(image);
 
-            image.Count();
+            image.Count(double.Parse(ConfigurationManager.AppSettings["CountThreshold"]));
             Dictionary<string, string> statInfo = image.StatisticInfo();
             _log.Info(Utils.String.Flatten(statInfo));
 
