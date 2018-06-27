@@ -6,6 +6,7 @@ using System.Timers;
 using Thorlabs.TSI.TLCamera;
 using Thorlabs.TSI.TLCameraInterfaces;
 using Utils;
+using System.Threading;
 
 namespace Hardware
 {
@@ -71,6 +72,17 @@ namespace Hardware
         protected override Result Read(Dictionary<string, string> param)
         {
             string type = param["Type"];
+
+            _latestFrame = null;
+            int maxWait = 30;
+            while (_latestFrame==null)
+            {
+                if (maxWait-- < 0)
+                {
+                    return new Result("Fail");
+                }
+                Thread.Sleep(1000);
+            }
 
             switch (type)
             {
@@ -162,7 +174,7 @@ namespace Hardware
             _log.Info("SensorWidth_pixels:" + _tlCamera.SensorWidth_pixels);
         }
 
-        private readonly Timer _timer = new Timer();
+        private readonly System.Timers.Timer _timer = new System.Timers.Timer();
         private Bitmap _latestDisplayBitmap;
         private ITLCameraSDK _tlCameraSDK;
         private ITLCamera _tlCamera;
