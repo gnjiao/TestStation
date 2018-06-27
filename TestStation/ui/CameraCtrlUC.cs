@@ -20,6 +20,8 @@ namespace TestStation
 
     public partial class CameraCtrlUC : UserControl
     {
+        private string _filePath = @"./../../Samples/Img_6_20180627-222513.bmp";
+
         public UpdateImage Observer;
 
         private Logger _log = new Logger(typeof(CameraCtrlUC));
@@ -36,8 +38,6 @@ namespace TestStation
 
             _database = DatabaseSrv.GetInstance();
         }
-
-        private string _filePath = @"./../../Samples/Test-24b.bmp";
 
         private List<double> _distances = new List<double>();
         private List<EmguCircleImage> _imgs = new List<EmguCircleImage>();
@@ -119,6 +119,7 @@ namespace TestStation
         private void BTN_Close_Click(object sender, EventArgs e)
         {
             _camera?.Execute(new Command("Close"));
+            _camera = null;
         }
         private Result OpenCamera(string type)
         {
@@ -146,10 +147,30 @@ namespace TestStation
                 return new Result("Fail", ex.ToString());
             }
         }
+        private int[] RadiusLimits()
+        {
+            int[] ret = new int[2];
+            
+            double value = ReadDistance(TB_Distance);
+            if (!double.IsNaN(value))
+            {
+                string index = "Min" + ((int)value).ToString("D2");
+                ret[0] = Int32.Parse(ConfigurationManager.AppSettings[index]);
+                index = "Max" + ((int)value).ToString("D2");
+                ret[1] = Int32.Parse(ConfigurationManager.AppSettings[index]);
+            }
+            else
+            {
+                ret[0] = Int32.Parse(ConfigurationManager.AppSettings["Min"]);
+                ret[1] = Int32.Parse(ConfigurationManager.AppSettings["Max"]);
+            }
+
+            return ret;
+        }
         private void ProcessWithEmgu(string img)
         {
             _log.Info("ProcessWithEgmu " + img);
-            EmguCircleImage image = new EmguCircleImage(img);
+            EmguCircleImage image = new EmguCircleImage(img, RadiusLimits());
             _imgs.Add(image);
 
             image.Count(double.Parse(ConfigurationManager.AppSettings["CountThreshold"]));

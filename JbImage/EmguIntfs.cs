@@ -107,7 +107,7 @@ namespace JbImage
             UMat uimage = Grayed(img);
 
             Image<Gray, Byte> image = Binarize(ToImage(uimage));
-            CircleF[] circles = CvInvoke.HoughCircles(image, HoughType.Gradient, 2, 40, 180, 13, 18, 22);
+            CircleF[] circles = CvInvoke.HoughCircles(image, HoughType.Gradient, 2, 40, 180, 13, 18, 30);
 
             watch.Stop();
             msgBuilder.Append(string.Format("{0} Hough circles - {1} ms; ", testName, watch.ElapsedMilliseconds));
@@ -146,7 +146,7 @@ namespace JbImage
         public List<CircleF> FilteredCircles;
         public List<int> FilteredLights;
 
-        public EmguCircleImage(string path)
+        public EmguCircleImage(string path, int[] minmax)
         {
             string testName = System.Reflection.MethodBase.GetCurrentMethod().Name;
             StringBuilder msgBuilder = new StringBuilder("Performance: ");
@@ -158,7 +158,7 @@ namespace JbImage
             _grayedUmat = EmguIntfs.Grayed(_rawImg);
 
             image = EmguIntfs.Binarize(EmguIntfs.ToImage(_grayedUmat));
-            Circles = CvInvoke.HoughCircles(image, HoughType.Gradient, 2, 40, 180, 13, 18, 22);
+            Circles = CvInvoke.HoughCircles(image, HoughType.Gradient, 2, 40, 180, 13, minmax[0], minmax[1]);
 
             Sort();
 
