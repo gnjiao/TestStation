@@ -41,7 +41,14 @@ namespace TestStation
 
         private List<double> _distances = new List<double>();
         private List<EmguCircleImage> _imgs = new List<EmguCircleImage>();
+        private void InsertImg(Bitmap img, bool shouldSave = true)
+        {
+            double distance = ReadDistance(TB_Distance);
+            _distances.Add(distance);
 
+            _filePath = @"data/" + $"Img_{distance}_{DateTime.Now.ToString("yyyyMMdd-HHmmss")}.bmp";
+            img.Save(_filePath, ImageFormat.Bmp);
+        }
         private void BTN_Read_Click(object sender, EventArgs e)
         {
             Result ret;
@@ -59,34 +66,53 @@ namespace TestStation
 #else
             Bitmap img = new Bitmap(10, 10);
 #endif
-
-            double distance = ReadDistance(TB_Distance);
-            _distances.Add(distance);
-
-            _filePath = @"data/" + $"Img_{distance}_{DateTime.Now.ToString("yyyyMMdd-HHmmss")}.bmp";
-            img.Save(_filePath, ImageFormat.Bmp);
-
+            InsertImg(img, true);
             Observer?.Invoke(img);
         }
         private void BTN_ImgAnalyze_Click(object sender, EventArgs e)
         {
-            ProcessWithEmgu((_loadedImg==null) ? _filePath : _loadedImg);
+            ProcessWithEmgu((_loadedImg==null) ? _filePath : _loadedImg, RadiusLimits());
         }
         private void BTN_Calculate_Click(object sender, EventArgs e)
         {
-            if (_imgs.Count == _distances.Count)
+#if DEBUG
+            //dbgAutoLoad();
+#endif
+            if (_imgs.Count == 0)
             {
-                double[] result = new double[_imgs[0].Circles.Length];
+                MessageBox.Show("No analyzed images found");
+            }
+            else if (_imgs.Count == _distances.Count)
+            {
+                double[] result = new double[_imgs[0].FilteredCircles.Count];
                 for (int circleId = 0; circleId < result.Length; circleId++)
                 {
-                    double[] radius = new double[_imgs.Count];
-                    for (int imgId = 0; imgId < radius.Length; imgId++)
+                    try
                     {
-                        radius[imgId] = _imgs[imgId].Circles[circleId].Radius;
-                    }
+                        double[] radius = new double[_imgs.Count];
 
-                    result[circleId] = Matlab.CalcWeist(_distances.ToArray(), radius);
-                    _log.Info($"{circleId}: {result[circleId]}" + Environment.NewLine);
+                        for (int imgId = 0; imgId < radius.Length; imgId++)
+                        {
+                            radius[imgId] = _imgs[imgId].FilteredCircles[circleId].Radius;
+                        }
+                        string output = "";
+                        for (int i = 0; i < radius.Length; i++)
+                        {
+                            output += radius[i].ToString("F2") + ",";
+                        }
+                        if (output.Length > 0)
+                        {
+                            output = output.Substring(0, output.Length - 1);
+                        }
+                        _log.Debug($"Circle{circleId} radius: {output}");
+
+                        result[circleId] = Matlab.CalcWeist(_distances.ToArray(), radius);
+                        _log.Info($"{circleId}: {result[circleId]}" + Environment.NewLine);
+                    }
+                    catch (Exception ex)
+                    {
+                        _log.Error($"Failed to calcute weist for {circleId}");
+                    }
                 }
             }
             else
@@ -113,7 +139,9 @@ namespace TestStation
             if (d.ShowDialog() == DialogResult.OK)
             {
                 _loadedImg = d.FileName;
-                Observer?.Invoke(new Bitmap(_loadedImg));
+                Bitmap img = new Bitmap(_loadedImg);
+                InsertImg(img, false);
+                Observer?.Invoke(img);
             }
         }
         private void BTN_Close_Click(object sender, EventArgs e)
@@ -167,10 +195,10 @@ namespace TestStation
 
             return ret;
         }
-        private void ProcessWithEmgu(string img)
+        private void ProcessWithEmgu(string img, int[] radiusLimits)
         {
             _log.Info("ProcessWithEgmu " + img);
-            EmguCircleImage image = new EmguCircleImage(img, RadiusLimits());
+            EmguCircleImage image = new EmguCircleImage(img, radiusLimits);
             _imgs.Add(image);
 
             image.Count(double.Parse(ConfigurationManager.AppSettings["CountThreshold"]));
@@ -256,6 +284,27 @@ namespace TestStation
             }
 
             return double.NaN;
+        }
+        /* debug suppport */
+        private void dbgAutoLoad()
+        {
+            string[] files = new string[] {
+                @"./../../Samples/Img_2_20180627-222551.bmp",
+                @"./../../Samples/Img_4_20180627-222537.bmp",
+                @"./../../Samples/Img_6_20180627-222513.bmp",
+            };
+
+            int i = 2;
+            foreach (var file in files)
+            {
+                TB_Distance.Text = i.ToString();
+                i += 2;
+
+                Bitmap img = new Bitmap(file);
+                InsertImg(img, false);
+
+                ProcessWithEmgu(file, RadiusLimits());
+            }
         }
         /* to be obsoleted */
         private void ProcessWithCircleFinder()
