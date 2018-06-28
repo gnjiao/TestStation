@@ -55,5 +55,31 @@ namespace ImageTest
             result = Utils.Matlab.CalcWeist(x, y);
             Assert.IsTrue(result == w);
         }
+        [TestMethod]
+        public void Test_Weist2()
+        {
+            double[] x = new double[] { -3, -2, -1, 0, 1, 2, 3 };
+            double[] y = new double[x.Length];
+
+            double a = 1;
+            double b = 1;
+            double c = 1;
+            for (int i = 0; i < x.Length; i++)
+            {
+                y[i] = a*x[i]*x[i] + b*x[i] + c;
+            }
+            double result = Utils.Matlab.CalcWeist2(y, x);
+            Assert.IsTrue(result == (4*a*c - b*b)/(4*a));
+
+            a = 0.5;
+            b = 0.5;
+            c = 0.5;
+            for (int i = 0; i < x.Length; i++)
+            {
+                y[i] = a * x[i] * x[i] + b * x[i] + c;
+            }
+            result = Utils.Matlab.CalcWeist2(y, x);
+            Assert.IsTrue(result == (4 * a * c - b * b) / (4 * a));
+        }
     }
 }

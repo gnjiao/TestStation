@@ -106,7 +106,7 @@ namespace TestStation
                         }
                         _log.Debug($"Circle{circleId} radius: {output}");
 
-                        result[circleId] = Matlab.CalcWeist(_distances.ToArray(), radius);
+                        result[circleId] = Matlab.CalcWeist2(radius, _distances.ToArray());
                         _log.Info($"{circleId}: {result[circleId]}" + Environment.NewLine);
                     }
                     catch (Exception ex)
