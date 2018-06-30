@@ -42,12 +42,12 @@ namespace TestStation
         }
         private void BTN_Read_Click(object sender, EventArgs e)
         {
-            _cameraCtrl.Read(ReadDistance(TB_Distance)).ShowMessageBox();
+            _cameraCtrl.Read(Distance).ShowMessageBox();
             Observer?.Invoke(_cameraCtrl.LatestImage);
         }
         private void BTN_ImgAnalyze_Click(object sender, EventArgs e)
         {
-            _cameraCtrl.Analyze(RadiusLimits()).ShowMessageBox();
+            _cameraCtrl.Analyze(Distance).ShowMessageBox();
             Observer?.Invoke(_cameraCtrl.AnalyzedImage);
         }
         private void BTN_Calculate_Click(object sender, EventArgs e)
@@ -66,33 +66,13 @@ namespace TestStation
             OpenFileDialog d = new OpenFileDialog();
             if (d.ShowDialog() == DialogResult.OK)
             {
-                _cameraCtrl.Load(d.FileName).ShowMessageBox();
+                _cameraCtrl.Load(d.FileName, Distance).ShowMessageBox();
                 Observer?.Invoke(_cameraCtrl.LatestImage);
             }
         }
         private void BTN_Close_Click(object sender, EventArgs e)
         {
             _cameraCtrl.Close().ShowMessageBox();
-        }
-        private int[] RadiusLimits()
-        {
-            int[] ret = new int[2];
-            
-            double value = ReadDistance(TB_Distance);
-            if (!double.IsNaN(value))
-            {
-                string index = "Min" + ((int)value).ToString("D2");
-                ret[0] = Int32.Parse(ConfigurationManager.AppSettings[index]);
-                index = "Max" + ((int)value).ToString("D2");
-                ret[1] = Int32.Parse(ConfigurationManager.AppSettings[index]);
-            }
-            else
-            {
-                ret[0] = Int32.Parse(ConfigurationManager.AppSettings["Min"]);
-                ret[1] = Int32.Parse(ConfigurationManager.AppSettings["Max"]);
-            }
-
-            return ret;
         }
         private void InitializeHelpInfo()
         {
@@ -120,16 +100,20 @@ namespace TestStation
                 TB_Distance.Text = "Distance(mm)";
             }
         }
-        private double ReadDistance(TextBox tb)
+        private double Distance
         {
-            double value = double.NaN;
-
-            if (double.TryParse(tb.Text, out value))
+            get
             {
-                return value;
+                double value = double.NaN;
+                if (double.TryParse(TB_Distance.Text, out value))
+                {
+                    return value;
+                }
+                else
+                {
+                    return double.NaN;
+                }
             }
-
-            return double.NaN;
         }
         /* debug suppport */
         private void dbgAutoLoad()
@@ -146,8 +130,8 @@ namespace TestStation
                 TB_Distance.Text = i.ToString();
                 i += 2;
 
-                _cameraCtrl.Load(file, ReadDistance(TB_Distance));
-                _cameraCtrl.Analyze(RadiusLimits());
+                _cameraCtrl.Load(file, Distance);
+                _cameraCtrl.Analyze(Distance);
             }
         }
         /* to be obsoleted */

@@ -20,6 +20,7 @@ namespace TestStation.core
 
         public CameraController()
         {
+            _log.Debug(Config.ToString());
         }
 
         string _filePath;
@@ -87,12 +88,15 @@ namespace TestStation.core
             InsertImg(LatestImage, distance, false);
             return new Result("Ok");
         }
-        public Result Analyze(int[] radiusLimits)
+        public Result Analyze(double distance)
         {
-            EmguCircleImage image = new EmguCircleImage(_filePath, radiusLimits);
+            EmguCircleImage image = new EmguCircleImage(_filePath, Config.RadiusLimit(distance));
             _imgs.Add(image);
-            image.Count(double.Parse(ConfigurationManager.AppSettings["CountThreshold"]));
+            image.Count(Config.CountThreshold);
             AnalyzedImage = image.Draw();
+            _log.Debug($"Analyze image {_filePath} use " + 
+                $"CountThreshold {Config.CountThreshold} " +
+                $"RadiusLimits {Config.RadiusLimit(distance)[0]} {Config.RadiusLimit(distance)[1]}");
 
             return new Result("Ok");
         }
@@ -170,9 +174,67 @@ namespace TestStation.core
             _filePath = @"data/" + $"Img_{distance}_{DateTime.Now.ToString("yyyyMMdd-HHmmss")}.bmp";
             img.Save(_filePath, ImageFormat.Bmp);
         }
-        private void ShowParams()
+        private class Config
         {
+            public static double CountThreshold
+            {
+                get
+                {
+                    return double.Parse(ConfigurationManager.AppSettings["CountThreshold"]);
+                }
+            }
+            public static int[] RadiusLimit(double distance)
+            {
+                int[] ret = new int[2];
+
+                double value = distance;
+                if (!double.IsNaN(value))
+                {
+                    string index = "Min" + ((int)value).ToString("D2");
+                    ret[0] = Int32.Parse(ConfigurationManager.AppSettings[index]);
+                    index = "Max" + ((int)value).ToString("D2");
+                    ret[1] = Int32.Parse(ConfigurationManager.AppSettings[index]);
+                }
+                else
+                {
+                    ret[0] = Int32.Parse(ConfigurationManager.AppSettings["Min"]);
+                    ret[1] = Int32.Parse(ConfigurationManager.AppSettings["Max"]);
+                }
+
+                return ret;
+            }
+            public static new string ToString()
+            {
+                string output = "";
+                foreach (string key in ConfigurationManager.AppSettings.Keys)
+                {
+                    output += $"{key}:{ConfigurationManager.AppSettings[key]}" + ",";
+                }
+                output.Substring(0, output.Length - 1);
+                return output;
+            }
         }
+        private int[] RadiusLimits(double distance)
+        {
+            int[] ret = new int[2];
+
+            double value = distance;
+            if (!double.IsNaN(value))
+            {
+                string index = "Min" + ((int)value).ToString("D2");
+                ret[0] = Int32.Parse(ConfigurationManager.AppSettings[index]);
+                index = "Max" + ((int)value).ToString("D2");
+                ret[1] = Int32.Parse(ConfigurationManager.AppSettings[index]);
+            }
+            else
+            {
+                ret[0] = Int32.Parse(ConfigurationManager.AppSettings["Min"]);
+                ret[1] = Int32.Parse(ConfigurationManager.AppSettings["Max"]);
+            }
+
+            return ret;
+        }
+
         /* to be obsoleted */
         private void ProcessWithCircleFinder()
         {
