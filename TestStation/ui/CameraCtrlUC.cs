@@ -144,10 +144,10 @@ namespace TestStation
             toolTip1.SetToolTip(BTN_Calculate, "Calculate weist based on the read or loaded images, the images queue will be cleared after this action");
             toolTip1.SetToolTip(BTN_Close, "Close the camera");
 
-            toolTip1.SetToolTip(CB_Color, "Camera color mode: color or monochrome");
-            toolTip1.SetToolTip(CB_SetRoi, "Camera range of interesting");
-            toolTip1.SetToolTip(BTN_SetBin, "Camera sample rate");
-            toolTip1.SetToolTip(BTN_ResetRoi, "Reset camera configuration");
+            //toolTip1.SetToolTip(CB_Color, "Camera color mode: color or monochrome");
+            //toolTip1.SetToolTip(CB_SetRoi, "Camera range of interesting");
+            //toolTip1.SetToolTip(BTN_SetBin, "Camera sample rate");
+            //toolTip1.SetToolTip(BTN_ResetRoi, "Reset camera configuration");
         }
         private void TB_Distance_Click(object sender, EventArgs e)
         {
@@ -209,38 +209,36 @@ namespace TestStation
         }
         /* to be obsoleted */
         #region camera configuration
-        private bool _roiRectDraw = false;
-        private void CB_SetRoi_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_roiRectDraw)
-            {
-                _roiRectDraw = true;
-            }
-            else
-            {
-                _cameraCtrl.mCamera.Execute(new Command("Config",
-                    new Dictionary<string, string> { { "RoiOriginX", "0" }, { "RoiOriginY", "0" },
-                    { "RoiWidth", "1" }, { "RoiHeight", "1" } }));
-            }
-        }
-
-        private void BTN_SetBin_Click(object sender, EventArgs e)
-        {
-            _cameraCtrl.mCamera.Execute(new Command("Config",
-                new Dictionary<string, string> { { "BinX", "2" }, { "BinY", "2" } }));
-        }
-
-        private void CB_Color_CheckedChanged(object sender, EventArgs e)
-        {
-            _cameraCtrl.mCamera.Execute(new Command("Config",
-                new Dictionary<string, string> { { "IsColorOperationEnabled", CB_Color.Checked.ToString() } }));
-        }
-        public void SetRoi(double xoffset, double yoffset, double width, double height)/* all parameters are determined via percentage */
-        {
-            _cameraCtrl.mCamera.Execute(new Command("Config",
-                new Dictionary<string, string> { { "RoiOriginX", xoffset.ToString("F2") }, { "RoiOriginY", yoffset.ToString("F2") },
-                    { "RoiWidth", width.ToString("F2") }, { "RoiHeight", height.ToString("F2") } }));
-        }
+        //private bool _roiRectDraw = false;
+        //private void CB_SetRoi_CheckedChanged(object sender, EventArgs e)
+        //{
+        //    if (!_roiRectDraw)
+        //    {
+        //        _roiRectDraw = true;
+        //    }
+        //    else
+        //    {
+        //        _cameraCtrl.mCamera.Execute(new Command("Config",
+        //            new Dictionary<string, string> { { "RoiOriginX", "0" }, { "RoiOriginY", "0" },
+        //            { "RoiWidth", "1" }, { "RoiHeight", "1" } }));
+        //    }
+        //}
+        //private void BTN_SetBin_Click(object sender, EventArgs e)
+        //{
+        //    _cameraCtrl.mCamera.Execute(new Command("Config",
+        //        new Dictionary<string, string> { { "BinX", "2" }, { "BinY", "2" } }));
+        //}
+        //private void CB_Color_CheckedChanged(object sender, EventArgs e)
+        //{
+        //    _cameraCtrl.mCamera.Execute(new Command("Config",
+        //        new Dictionary<string, string> { { "IsColorOperationEnabled", CB_Color.Checked.ToString() } }));
+        //}
+        //public void SetRoi(double xoffset, double yoffset, double width, double height)/* all parameters are determined via percentage */
+        //{
+        //    _cameraCtrl.mCamera.Execute(new Command("Config",
+        //        new Dictionary<string, string> { { "RoiOriginX", xoffset.ToString("F2") }, { "RoiOriginY", yoffset.ToString("F2") },
+        //            { "RoiWidth", width.ToString("F2") }, { "RoiHeight", height.ToString("F2") } }));
+        //}
         #endregion
         private void ProcessWithCircleFinder()
         {

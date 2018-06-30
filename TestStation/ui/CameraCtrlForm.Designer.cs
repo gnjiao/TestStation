@@ -47,7 +47,7 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(800, 450);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(982, 601);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // PB_Preview
@@ -56,7 +56,7 @@
             this.PB_Preview.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PB_Preview.Location = new System.Drawing.Point(151, 3);
             this.PB_Preview.Name = "PB_Preview";
-            this.PB_Preview.Size = new System.Drawing.Size(646, 444);
+            this.PB_Preview.Size = new System.Drawing.Size(828, 595);
             this.PB_Preview.TabIndex = 6;
             this.PB_Preview.TabStop = false;
             this.PB_Preview.MouseDown += new System.Windows.Forms.MouseEventHandler(this.PB_Preview_MouseDown);
@@ -68,14 +68,14 @@
             this.UC_CameraCtrl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.UC_CameraCtrl.Location = new System.Drawing.Point(3, 3);
             this.UC_CameraCtrl.Name = "UC_CameraCtrl";
-            this.UC_CameraCtrl.Size = new System.Drawing.Size(142, 444);
+            this.UC_CameraCtrl.Size = new System.Drawing.Size(142, 595);
             this.UC_CameraCtrl.TabIndex = 0;
             // 
             // CameraCtrlForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(982, 601);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "CameraCtrlForm";
             this.Text = "Camera Ctrl Form";
