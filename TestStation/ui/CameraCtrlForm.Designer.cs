@@ -28,27 +28,30 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.TBL_1RightLeft = new System.Windows.Forms.TableLayoutPanel();
             this.PB_Preview = new System.Windows.Forms.PictureBox();
+            this.TBL_2UpDown = new System.Windows.Forms.TableLayoutPanel();
             this.UC_CameraCtrl = new TestStation.CameraCtrlUC();
-            this.tableLayoutPanel1.SuspendLayout();
+            this.TBL_1RightLeft.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PB_Preview)).BeginInit();
+            this.TBL_2UpDown.SuspendLayout();
             this.SuspendLayout();
             // 
-            // tableLayoutPanel1
+            // TBL_1RightLeft
             // 
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 148F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.PB_Preview, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.UC_CameraCtrl, 0, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(982, 601);
-            this.tableLayoutPanel1.TabIndex = 0;
+            this.TBL_1RightLeft.ColumnCount = 2;
+            this.TBL_1RightLeft.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 148F));
+            this.TBL_1RightLeft.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.TBL_1RightLeft.Controls.Add(this.PB_Preview, 1, 0);
+            this.TBL_1RightLeft.Controls.Add(this.TBL_2UpDown, 0, 0);
+            this.TBL_1RightLeft.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TBL_1RightLeft.Location = new System.Drawing.Point(0, 0);
+            this.TBL_1RightLeft.Name = "TBL_1RightLeft";
+            this.TBL_1RightLeft.RowCount = 1;
+            this.TBL_1RightLeft.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.TBL_1RightLeft.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 601F));
+            this.TBL_1RightLeft.Size = new System.Drawing.Size(982, 601);
+            this.TBL_1RightLeft.TabIndex = 0;
             // 
             // PB_Preview
             // 
@@ -63,12 +66,26 @@
             this.PB_Preview.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PB_Preview_MouseMove);
             this.PB_Preview.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PB_Preview_MouseUp);
             // 
+            // TBL_2UpDown
+            // 
+            this.TBL_2UpDown.ColumnCount = 1;
+            this.TBL_2UpDown.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.TBL_2UpDown.Controls.Add(this.UC_CameraCtrl, 0, 0);
+            this.TBL_2UpDown.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TBL_2UpDown.Location = new System.Drawing.Point(3, 3);
+            this.TBL_2UpDown.Name = "TBL_2UpDown";
+            this.TBL_2UpDown.RowCount = 2;
+            this.TBL_2UpDown.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.TBL_2UpDown.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.TBL_2UpDown.Size = new System.Drawing.Size(142, 595);
+            this.TBL_2UpDown.TabIndex = 7;
+            // 
             // UC_CameraCtrl
             // 
             this.UC_CameraCtrl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.UC_CameraCtrl.Location = new System.Drawing.Point(3, 3);
             this.UC_CameraCtrl.Name = "UC_CameraCtrl";
-            this.UC_CameraCtrl.Size = new System.Drawing.Size(142, 595);
+            this.UC_CameraCtrl.Size = new System.Drawing.Size(136, 291);
             this.UC_CameraCtrl.TabIndex = 0;
             // 
             // CameraCtrlForm
@@ -76,20 +93,22 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(982, 601);
-            this.Controls.Add(this.tableLayoutPanel1);
+            this.Controls.Add(this.TBL_1RightLeft);
             this.Name = "CameraCtrlForm";
             this.Text = "Camera Ctrl Form";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.tableLayoutPanel1.ResumeLayout(false);
+            this.TBL_1RightLeft.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.PB_Preview)).EndInit();
+            this.TBL_2UpDown.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private CameraCtrlUC UC_CameraCtrl;
+        private System.Windows.Forms.TableLayoutPanel TBL_1RightLeft;
         private System.Windows.Forms.PictureBox PB_Preview;
+        private System.Windows.Forms.TableLayoutPanel TBL_2UpDown;
+        private CameraCtrlUC UC_CameraCtrl;
     }
 }
