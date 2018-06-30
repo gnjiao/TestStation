@@ -14,6 +14,7 @@ using System.Windows.Forms;
 using Utils;
 using System.Configuration;
 using TestStation.core;
+using Timer = System.Timers.Timer;
 
 namespace TestStation
 {
@@ -24,6 +25,8 @@ namespace TestStation
         private string _filePath = @"./../../Samples/Img_6_20180627-222513.bmp";
 
         public UpdateImage Observer;
+        private Timer _updateTimer;
+        private object _updateLock = new object();
 
         private Logger _log = new Logger(typeof(CameraCtrlUC));
         DatabaseSrv _database;
@@ -39,16 +42,66 @@ namespace TestStation
 
             _cameraCtrl = new CameraController();
             _database = DatabaseSrv.GetInstance();
+
+            _updateTimer = new Timer(200);
+            _updateTimer.Elapsed += RefreshImage;
+            _updateTimer.Start();
+        }
+        private void RefreshImage(object sender, EventArgs e)
+        {
+            _updateTimer.Stop();
+
+            lock (_updateLock)
+            {
+                Bitmap image = null;
+
+#if false
+                image = dbgRefreshedImage();
+#else
+                if (_cameraCtrl.mCamera != null)
+                {
+                    Result ret = _cameraCtrl.mCamera.Execute(new Command("Read", new Dictionary<string, string> { { "Type", "Bmp" } }));
+                    if (ret.Id == "Ok")
+                    {
+                        image = ret.Param as Bitmap;
+                    }
+                }
+#endif
+                if (image != null)
+                {
+                    Observer?.Invoke(image);
+                }
+            }
+
+            _updateTimer.Start();
         }
         private void BTN_Read_Click(object sender, EventArgs e)
         {
-            _cameraCtrl.Read(Distance).ShowMessageBox();
-            Observer?.Invoke(_cameraCtrl.LatestImage);
+            lock (_updateLock)
+            {
+                _updateTimer.Stop();
+
+                _cameraCtrl.Read(Distance).ShowMessageBox();
+                Observer?.Invoke(_cameraCtrl.LatestImage);
+
+                _updateTimer.Start();
+            }
         }
         private void BTN_ImgAnalyze_Click(object sender, EventArgs e)
         {
-            _cameraCtrl.Analyze(Distance).ShowMessageBox();
-            Observer?.Invoke(_cameraCtrl.AnalyzedImage);
+            if (BTN_ImgAnalyze.Text == "Image Analyze")
+            {
+                _updateTimer.Stop();
+                BTN_ImgAnalyze.Text = "Resume";
+
+                _cameraCtrl.Analyze(Distance).ShowMessageBox();
+                Observer?.Invoke(_cameraCtrl.AnalyzedImage);
+            }
+            else
+            {
+                BTN_ImgAnalyze.Text = "Image Analyze";
+                _updateTimer.Start();
+            }
         }
         private void BTN_Calculate_Click(object sender, EventArgs e)
         {
@@ -63,11 +116,19 @@ namespace TestStation
         }
         private void BTN_Load_Click(object sender, EventArgs e)
         {
-            OpenFileDialog d = new OpenFileDialog();
-            if (d.ShowDialog() == DialogResult.OK)
+            lock (_updateLock)
             {
-                _cameraCtrl.Load(d.FileName, Distance).ShowMessageBox();
-                Observer?.Invoke(_cameraCtrl.LatestImage);
+                _updateTimer.Stop();
+
+                OpenFileDialog d = new OpenFileDialog();
+                if (d.ShowDialog() == DialogResult.OK)
+                {
+                    lock (_updateLock)
+                    {
+                        _cameraCtrl.Load(d.FileName, Distance).ShowMessageBox();
+                        Observer?.Invoke(_cameraCtrl.LatestImage);
+                    }
+                }
             }
         }
         private void BTN_Close_Click(object sender, EventArgs e)
@@ -133,6 +194,18 @@ namespace TestStation
                 _cameraCtrl.Load(file, Distance);
                 _cameraCtrl.Analyze(Distance);
             }
+        }
+        private int dbgImageCount = 0;
+        private Bitmap dbgRefreshedImage()
+        {
+            string[] files = new string[] {
+                @"./../../Samples/Img_2_20180627-222551.bmp",
+                @"./../../Samples/Img_4_20180627-222537.bmp",
+                @"./../../Samples/Img_6_20180627-222513.bmp",
+            };
+            dbgImageCount++;
+
+            return new Bitmap(files[dbgImageCount % 3]);
         }
         /* to be obsoleted */
         #region camera configuration
