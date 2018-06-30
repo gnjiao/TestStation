@@ -38,6 +38,10 @@
             this.BTN_Close = new System.Windows.Forms.Button();
             this.TB_Distance = new System.Windows.Forms.TextBox();
             this.BTN_Calculate = new System.Windows.Forms.Button();
+            this.TB_DbgMinRadius = new System.Windows.Forms.TextBox();
+            this.TB_DbgMaxRadius = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // CMB_CameraType
@@ -52,6 +56,7 @@
             this.CMB_CameraType.Name = "CMB_CameraType";
             this.CMB_CameraType.Size = new System.Drawing.Size(149, 26);
             this.CMB_CameraType.TabIndex = 14;
+            this.CMB_CameraType.SelectedIndexChanged += new System.EventHandler(this.CMB_CameraType_SelectedIndexChanged);
             // 
             // BTN_Open
             // 
@@ -130,10 +135,46 @@
             this.BTN_Calculate.UseVisualStyleBackColor = true;
             this.BTN_Calculate.Click += new System.EventHandler(this.BTN_Calculate_Click);
             // 
+            // TB_DbgMinRadius
+            // 
+            this.TB_DbgMinRadius.Location = new System.Drawing.Point(44, 303);
+            this.TB_DbgMinRadius.Name = "TB_DbgMinRadius";
+            this.TB_DbgMinRadius.Size = new System.Drawing.Size(100, 28);
+            this.TB_DbgMinRadius.TabIndex = 17;
+            // 
+            // TB_DbgMaxRadius
+            // 
+            this.TB_DbgMaxRadius.Location = new System.Drawing.Point(44, 333);
+            this.TB_DbgMaxRadius.Name = "TB_DbgMaxRadius";
+            this.TB_DbgMaxRadius.Size = new System.Drawing.Size(100, 28);
+            this.TB_DbgMaxRadius.TabIndex = 18;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(5, 308);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(35, 18);
+            this.label1.TabIndex = 19;
+            this.label1.Text = "Min";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(5, 338);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(35, 18);
+            this.label2.TabIndex = 20;
+            this.label2.Text = "Max";
+            // 
             // CameraCtrlUC
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.TB_DbgMaxRadius);
+            this.Controls.Add(this.TB_DbgMinRadius);
             this.Controls.Add(this.TB_Distance);
             this.Controls.Add(this.BTN_Close);
             this.Controls.Add(this.BTN_Calculate);
@@ -143,7 +184,7 @@
             this.Controls.Add(this.BTN_Open);
             this.Controls.Add(this.CMB_CameraType);
             this.Name = "CameraCtrlUC";
-            this.Size = new System.Drawing.Size(149, 283);
+            this.Size = new System.Drawing.Size(149, 368);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -159,5 +200,9 @@
         private System.Windows.Forms.Button BTN_Close;
         private System.Windows.Forms.TextBox TB_Distance;
         private System.Windows.Forms.Button BTN_Calculate;
+        private System.Windows.Forms.TextBox TB_DbgMinRadius;
+        private System.Windows.Forms.TextBox TB_DbgMaxRadius;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
     }
 }

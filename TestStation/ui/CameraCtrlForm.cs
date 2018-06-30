@@ -17,7 +17,9 @@ namespace TestStation
         {
             InitializeComponent();
 
-            UC_CameraCtrl.Observer += LoadImg;
+            UC_CameraCtrl.UpdateImage += LoadImg;
+            UC_CameraCtrl.TypeChanged += UC_Result.SetType;
+            UC_CameraCtrl.UpdateResult += UC_Result.Update;
             SetRectangle = SetRoi;
         }
         private void LoadImg(object img)

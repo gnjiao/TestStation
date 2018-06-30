@@ -90,13 +90,17 @@ namespace TestStation.core
         }
         public Result Analyze(double distance)
         {
-            EmguCircleImage image = new EmguCircleImage(_filePath, Config.RadiusLimit(distance));
+            return Analyze(Config.RadiusLimit(distance));
+        }
+        public Result Analyze(int[] radiusLimit)
+        {
+            EmguCircleImage image = new EmguCircleImage(_filePath, radiusLimit);
             _imgs.Add(image);
             image.Count(Config.CountThreshold);
             AnalyzedImage = image.Draw();
-            _log.Debug($"Analyze image {_filePath} use " + 
+            _log.Debug($"Analyze image {_filePath} use " +
                 $"CountThreshold {Config.CountThreshold} " +
-                $"RadiusLimits {Config.RadiusLimit(distance)[0]} {Config.RadiusLimit(distance)[1]}");
+                $"RadiusLimits {radiusLimit[0]} {radiusLimit[1]}");
 
             return new Result("Ok");
         }

@@ -171,7 +171,7 @@
             this.Controls.Add(this.BTN_Z1GoHome);
             this.Controls.Add(this.label1);
             this.Name = "MotorCtrlUC";
-            this.Size = new System.Drawing.Size(141, 267);
+            this.Size = new System.Drawing.Size(141, 252);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -18,13 +18,16 @@ using Timer = System.Timers.Timer;
 
 namespace TestStation
 {
-    public delegate void UpdateImage(object param);
+    public delegate void EventHandler(object param);
 
     public partial class CameraCtrlUC : UserControl
     {
         private string _filePath = @"./../../Samples/Img_6_20180627-222513.bmp";
 
-        public UpdateImage Observer;
+        public EventHandler UpdateImage;
+        public EventHandler TypeChanged;
+        public EventHandler UpdateResult;
+
         private Timer _updateTimer;
         private object _updateLock = new object();
 
@@ -45,7 +48,7 @@ namespace TestStation
 
             _updateTimer = new Timer(200);
             _updateTimer.Elapsed += RefreshImage;
-            _updateTimer.Start();
+            //_updateTimer.Start();
         }
         private void RefreshImage(object sender, EventArgs e)
         {
@@ -69,7 +72,7 @@ namespace TestStation
 #endif
                 if (image != null)
                 {
-                    Observer?.Invoke(image);
+                    UpdateImage?.Invoke(image);
                 }
             }
 
@@ -82,7 +85,7 @@ namespace TestStation
                 _updateTimer.Stop();
 
                 _cameraCtrl.Read(Distance).ShowMessageBox();
-                Observer?.Invoke(_cameraCtrl.LatestImage);
+                UpdateImage?.Invoke(_cameraCtrl.LatestImage);
 
                 _updateTimer.Start();
             }
@@ -91,11 +94,21 @@ namespace TestStation
         {
             if (BTN_ImgAnalyze.Text == "Image Analyze")
             {
-                _updateTimer.Stop();
-                BTN_ImgAnalyze.Text = "Resume";
+                if (_updateTimer.Enabled)
+                {
+                    _updateTimer.Stop();
+                    BTN_ImgAnalyze.Text = "Resume";
+                }
 
-                _cameraCtrl.Analyze(Distance).ShowMessageBox();
-                Observer?.Invoke(_cameraCtrl.AnalyzedImage);
+                if (!double.IsNaN(DbgMinRadius) && !double.IsNaN(DbgMaxRadius))
+                {
+                    _cameraCtrl.Analyze(new int[] { (int)DbgMinRadius , (int)DbgMaxRadius }).ShowMessageBox();
+                }
+                else
+                {
+                    _cameraCtrl.Analyze(Distance).ShowMessageBox();
+                }
+                UpdateImage?.Invoke(_cameraCtrl.AnalyzedImage);
             }
             else
             {
@@ -109,10 +122,17 @@ namespace TestStation
             //dbgAutoLoad();
 #endif
             _cameraCtrl.Calculate().ShowMessageBox();
+            UpdateResult?.Invoke(new Dictionary<string, string>() {
+                { "TestKey1", "TestValue1" }, { "TestKey2", "TestValue2" }
+            });
         }
         private void BTN_Open_Click(object sender, EventArgs e)
         {
             _cameraCtrl.Open(CMB_CameraType.Text).ShowMessageBox();
+            if (_cameraCtrl.mCamera != null)
+            {
+                _updateTimer.Start();
+            }
         }
         private void BTN_Load_Click(object sender, EventArgs e)
         {
@@ -126,7 +146,7 @@ namespace TestStation
                     lock (_updateLock)
                     {
                         _cameraCtrl.Load(d.FileName, Distance).ShowMessageBox();
-                        Observer?.Invoke(_cameraCtrl.LatestImage);
+                        UpdateImage?.Invoke(_cameraCtrl.LatestImage);
                     }
                 }
             }
@@ -165,15 +185,33 @@ namespace TestStation
         {
             get
             {
-                double value = double.NaN;
-                if (double.TryParse(TB_Distance.Text, out value))
-                {
-                    return value;
-                }
-                else
-                {
-                    return double.NaN;
-                }
+                return ReadDouble(TB_Distance);
+            }
+        }
+        private double DbgMinRadius
+        {
+            get
+            {
+                return ReadDouble(TB_DbgMinRadius);
+            }
+        }
+        private double DbgMaxRadius
+        {
+            get
+            {
+                return ReadDouble(TB_DbgMaxRadius);
+            }
+        }
+        private double ReadDouble(TextBox tb)
+        {
+            double value = double.NaN;
+            if (double.TryParse(tb.Text, out value))
+            {
+                return value;
+            }
+            else
+            {
+                return double.NaN;
             }
         }
         /* debug suppport */
@@ -250,7 +288,7 @@ namespace TestStation
             Bitmap bmpFile = ImgProcess.Binarize(_filePath);
             CirclesFinder f = new CirclesFinder(bmpFile);
 
-            Observer?.Invoke(f.Draw(resultBmp));
+            UpdateImage?.Invoke(f.Draw(resultBmp));
 
             ImgProcess.Count(f.Rounds);
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(resultTxt, true))
@@ -278,6 +316,14 @@ namespace TestStation
                 double weightStdEv = Utils.Math.StdEv(f.Rounds.Select(x => (double)x.Weight).ToList());
                 file.Write(string.Format("StdEv of Weight: {0}", weightStdEv));
                 file.Write(Environment.NewLine);
+            }
+        }
+
+        private void CMB_CameraType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (CMB_CameraType.Text == "Type A" || CMB_CameraType.Text == "Type B")
+            {
+                TypeChanged?.Invoke(CMB_CameraType.Text);
             }
         }
     }
