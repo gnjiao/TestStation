@@ -13,6 +13,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Utils;
 using System.Configuration;
+using TestStation.core;
 
 namespace TestStation
 {
@@ -26,7 +27,7 @@ namespace TestStation
 
         private Logger _log = new Logger(typeof(CameraCtrlUC));
         DatabaseSrv _database;
-        public Camera _camera;
+        private CameraController _cameraCtrl;
         public CameraCtrlUC()
         {
             InitializeComponent();
@@ -36,144 +37,42 @@ namespace TestStation
             Logger log = new Logger("TestStation");
             log.Debug(string.Format("TestStation(V{0}) Started", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString()));
 
+            _cameraCtrl = new CameraController();
             _database = DatabaseSrv.GetInstance();
-        }
-
-        private List<double> _distances = new List<double>();
-        private List<EmguCircleImage> _imgs = new List<EmguCircleImage>();
-        private void InsertImg(Bitmap img, bool shouldSave = true)
-        {
-            double distance = ReadDistance(TB_Distance);
-            _distances.Add(distance);
-
-            _filePath = @"data/" + $"Img_{distance}_{DateTime.Now.ToString("yyyyMMdd-HHmmss")}.bmp";
-            img.Save(_filePath, ImageFormat.Bmp);
         }
         private void BTN_Read_Click(object sender, EventArgs e)
         {
-            Result ret;
-#if REAL_CAMERA
-            if (_camera == null)
-            {
-                ret = OpenCamera(CMB_CameraType.Text);
-                if (ret.Id != "Ok")
-                {
-                    MessageBox.Show(ret.Desc);
-                    return;
-                }
-            }
-            Bitmap img = _camera.Execute(new Command("Read", new Dictionary<string, string> { { "Type", "Bmp" } })).Param as Bitmap;
-#else
-            Bitmap img = new Bitmap(10, 10);
-#endif
-            InsertImg(img, true);
-            Observer?.Invoke(img);
+            _cameraCtrl.Read(ReadDistance(TB_Distance)).ShowMessageBox();
+            Observer?.Invoke(_cameraCtrl.LatestImage);
         }
         private void BTN_ImgAnalyze_Click(object sender, EventArgs e)
         {
-            ProcessWithEmgu((_loadedImg==null) ? _filePath : _loadedImg, RadiusLimits());
+            _cameraCtrl.Analyze(RadiusLimits()).ShowMessageBox();
+            Observer?.Invoke(_cameraCtrl.AnalyzedImage);
         }
         private void BTN_Calculate_Click(object sender, EventArgs e)
         {
 #if DEBUG
             //dbgAutoLoad();
 #endif
-            if (_imgs.Count == 0)
-            {
-                MessageBox.Show("No analyzed images found");
-            }
-            else if (_imgs.Count == _distances.Count)
-            {
-                double[] result = new double[_imgs[0].FilteredCircles.Count];
-                for (int circleId = 0; circleId < result.Length; circleId++)
-                {
-                    try
-                    {
-                        double[] radius = new double[_imgs.Count];
-
-                        for (int imgId = 0; imgId < radius.Length; imgId++)
-                        {
-                            radius[imgId] = _imgs[imgId].FilteredCircles[circleId].Radius;
-                        }
-                        string output = "";
-                        for (int i = 0; i < radius.Length; i++)
-                        {
-                            output += radius[i].ToString("F2") + ",";
-                        }
-                        if (output.Length > 0)
-                        {
-                            output = output.Substring(0, output.Length - 1);
-                        }
-                        _log.Debug($"Circle{circleId} radius: {output}");
-
-                        result[circleId] = Matlab.CalcWeist2(radius, _distances.ToArray());
-                        _log.Info($"{circleId}: {result[circleId]}" + Environment.NewLine);
-                    }
-                    catch (Exception ex)
-                    {
-                        _log.Error($"Failed to calcute weist for {circleId}");
-                    }
-                }
-            }
-            else
-            {
-                MessageBox.Show("Calculation can only apply to images with distance parameter, please re-do the test");
-            }
-
-            _distances.Clear();
-            _imgs.Clear();
+            _cameraCtrl.Calculate().ShowMessageBox();
         }
-
         private void BTN_Open_Click(object sender, EventArgs e)
         {
-            Result ret = OpenCamera(CMB_CameraType.Text);
-            if (ret.Id != "Ok")
-            {
-                MessageBox.Show(ret.Desc);
-            }
+            _cameraCtrl.Open(CMB_CameraType.Text).ShowMessageBox();
         }
-        string _loadedImg;
         private void BTN_Load_Click(object sender, EventArgs e)
         {
             OpenFileDialog d = new OpenFileDialog();
             if (d.ShowDialog() == DialogResult.OK)
             {
-                _loadedImg = d.FileName;
-                Bitmap img = new Bitmap(_loadedImg);
-                InsertImg(img, false);
-                Observer?.Invoke(img);
+                _cameraCtrl.Load(d.FileName).ShowMessageBox();
+                Observer?.Invoke(_cameraCtrl.LatestImage);
             }
         }
         private void BTN_Close_Click(object sender, EventArgs e)
         {
-            _camera?.Execute(new Command("Close"));
-            _camera = null;
-        }
-        private Result OpenCamera(string type)
-        {
-            switch (type)
-            {
-                case "Type A":
-                    HardwareSrv.GetInstance().Add(new M8051("Camera"));
-                    break;
-                case "Type B":
-                    HardwareSrv.GetInstance().Add(new Vcxu("Camera"));
-                    break;
-                default:
-                    return new Result("Fail", "Unknown camera type");
-            }
-
-            _camera = HardwareSrv.GetInstance().Get("Camera") as Camera;
-
-            try
-            {
-                return _camera.Execute(new Command("Open"));
-            }
-            catch (Exception ex)
-            {
-                _log.Error("Failed to open the camera", ex);
-                return new Result("Fail", ex.ToString());
-            }
+            _cameraCtrl.Close().ShowMessageBox();
         }
         private int[] RadiusLimits()
         {
@@ -195,59 +94,6 @@ namespace TestStation
 
             return ret;
         }
-        private void ProcessWithEmgu(string img, int[] radiusLimits)
-        {
-            _log.Info("ProcessWithEgmu " + img);
-            EmguCircleImage image = new EmguCircleImage(img, radiusLimits);
-            _imgs.Add(image);
-
-            image.Count(double.Parse(ConfigurationManager.AppSettings["CountThreshold"]));
-            Dictionary<string, string> statInfo = image.StatisticInfo();
-            _log.Info(Utils.String.Flatten(statInfo));
-
-            LB_CircleInfo.Text = "";
-            foreach (var k in statInfo.Keys)
-            {
-                LB_CircleInfo.Text += $"{k}: " + Environment.NewLine;
-                LB_CircleInfo.Text += $"    { statInfo[k]}" + Environment.NewLine;
-            }
-
-            Observer?.Invoke(image.Draw());
-        }
-        #region camera configuration
-        private bool _roiRectDraw = false;
-        private void CB_SetRoi_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_roiRectDraw)
-            {
-                _roiRectDraw = true;
-            }
-            else
-            {
-                _camera?.Execute(new Command("Config",
-                    new Dictionary<string, string> { { "RoiOriginX", "0" }, { "RoiOriginY", "0" },
-                    { "RoiWidth", "1" }, { "RoiHeight", "1" } }));
-            }
-        }
-
-        private void BTN_SetBin_Click(object sender, EventArgs e)
-        {
-            _camera?.Execute(new Command("Config",
-                new Dictionary<string, string> { { "BinX", "2" }, { "BinY", "2" } }));
-        }
-
-        private void CB_Color_CheckedChanged(object sender, EventArgs e)
-        {
-            _camera?.Execute(new Command("Config", 
-                new Dictionary<string, string> { { "IsColorOperationEnabled", CB_Color.Checked.ToString() } }));
-        }
-        public void SetRoi(double xoffset, double yoffset, double width, double height)/* all parameters are determined via percentage */
-        {
-            _camera?.Execute(new Command("Config",
-                new Dictionary<string, string> { { "RoiOriginX", xoffset.ToString("F2") }, { "RoiOriginY", yoffset.ToString("F2") },
-                    { "RoiWidth", width.ToString("F2") }, { "RoiHeight", height.ToString("F2") } }));
-        }
-        #endregion
         private void InitializeHelpInfo()
         {
             toolTip1.SetToolTip(BTN_Open, "Initialize the camera");
@@ -300,13 +146,45 @@ namespace TestStation
                 TB_Distance.Text = i.ToString();
                 i += 2;
 
-                Bitmap img = new Bitmap(file);
-                InsertImg(img, false);
-
-                ProcessWithEmgu(file, RadiusLimits());
+                _cameraCtrl.Load(file, ReadDistance(TB_Distance));
+                _cameraCtrl.Analyze(RadiusLimits());
             }
         }
         /* to be obsoleted */
+        #region camera configuration
+        private bool _roiRectDraw = false;
+        private void CB_SetRoi_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_roiRectDraw)
+            {
+                _roiRectDraw = true;
+            }
+            else
+            {
+                _cameraCtrl.mCamera.Execute(new Command("Config",
+                    new Dictionary<string, string> { { "RoiOriginX", "0" }, { "RoiOriginY", "0" },
+                    { "RoiWidth", "1" }, { "RoiHeight", "1" } }));
+            }
+        }
+
+        private void BTN_SetBin_Click(object sender, EventArgs e)
+        {
+            _cameraCtrl.mCamera.Execute(new Command("Config",
+                new Dictionary<string, string> { { "BinX", "2" }, { "BinY", "2" } }));
+        }
+
+        private void CB_Color_CheckedChanged(object sender, EventArgs e)
+        {
+            _cameraCtrl.mCamera.Execute(new Command("Config",
+                new Dictionary<string, string> { { "IsColorOperationEnabled", CB_Color.Checked.ToString() } }));
+        }
+        public void SetRoi(double xoffset, double yoffset, double width, double height)/* all parameters are determined via percentage */
+        {
+            _cameraCtrl.mCamera.Execute(new Command("Config",
+                new Dictionary<string, string> { { "RoiOriginX", xoffset.ToString("F2") }, { "RoiOriginY", yoffset.ToString("F2") },
+                    { "RoiWidth", width.ToString("F2") }, { "RoiHeight", height.ToString("F2") } }));
+        }
+        #endregion
         private void ProcessWithCircleFinder()
         {
             //var rawData = _camera.Execute(new Command("Read", new Dictionary<string, string> { { "Type", "Raw" } })).Param as Bitmap;

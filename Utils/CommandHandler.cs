@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace Utils
 {
@@ -53,6 +54,13 @@ namespace Utils
                 str += " : " + Desc;
             }
             return str;
+        }
+        public void ShowMessageBox(bool showOk = false)
+        {
+            if (Id != "Ok" || showOk)
+            {
+                MessageBox.Show(ToString());
+            }
         }
     }
     public class CommandHandler

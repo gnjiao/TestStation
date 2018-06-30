@@ -21,8 +21,11 @@ namespace TestStation
         }
         private void LoadImg(object img)
         {
-            Bitmap resize = new Bitmap(img as Bitmap, PB_Preview.Width, PB_Preview.Height);
-            PB_Preview.Image = resize;
+            if (img != null)
+            {
+                Bitmap resize = new Bitmap(img as Bitmap, PB_Preview.Width, PB_Preview.Height);
+                PB_Preview.Image = resize;
+            }
         }
         private void SetRoi(object sender, Rectangle rect)
         {
