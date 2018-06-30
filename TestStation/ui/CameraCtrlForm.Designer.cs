@@ -32,6 +32,7 @@
             this.PB_Preview = new System.Windows.Forms.PictureBox();
             this.TBL_2UpDown = new System.Windows.Forms.TableLayoutPanel();
             this.UC_CameraCtrl = new TestStation.CameraCtrlUC();
+            this.UC_MotorCtrl = new TestStation.ui.MotorCtrlUC();
             this.TBL_1RightLeft.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PB_Preview)).BeginInit();
             this.TBL_2UpDown.SuspendLayout();
@@ -71,6 +72,7 @@
             this.TBL_2UpDown.ColumnCount = 1;
             this.TBL_2UpDown.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.TBL_2UpDown.Controls.Add(this.UC_CameraCtrl, 0, 0);
+            this.TBL_2UpDown.Controls.Add(this.UC_MotorCtrl, 0, 1);
             this.TBL_2UpDown.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TBL_2UpDown.Location = new System.Drawing.Point(3, 3);
             this.TBL_2UpDown.Name = "TBL_2UpDown";
@@ -88,6 +90,14 @@
             this.UC_CameraCtrl.Size = new System.Drawing.Size(136, 291);
             this.UC_CameraCtrl.TabIndex = 0;
             // 
+            // UC_MotorCtrl
+            // 
+            this.UC_MotorCtrl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.UC_MotorCtrl.Location = new System.Drawing.Point(3, 300);
+            this.UC_MotorCtrl.Name = "UC_MotorCtrl";
+            this.UC_MotorCtrl.Size = new System.Drawing.Size(136, 292);
+            this.UC_MotorCtrl.TabIndex = 1;
+            // 
             // CameraCtrlForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
@@ -97,6 +107,7 @@
             this.Name = "CameraCtrlForm";
             this.Text = "Camera Ctrl Form";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.CameraCtrlForm_FormClosing);
             this.TBL_1RightLeft.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.PB_Preview)).EndInit();
             this.TBL_2UpDown.ResumeLayout(false);
@@ -110,5 +121,6 @@
         private System.Windows.Forms.PictureBox PB_Preview;
         private System.Windows.Forms.TableLayoutPanel TBL_2UpDown;
         private CameraCtrlUC UC_CameraCtrl;
+        private ui.MotorCtrlUC UC_MotorCtrl;
     }
 }

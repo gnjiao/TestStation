@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TestStation.ui;
 
 namespace TestStation
 {
@@ -82,5 +83,10 @@ namespace TestStation
             ControlPaint.DrawReversibleFrame(m_MouseRect, Color.White, FrameStyle.Dashed);
         }
         #endregion
+
+        private void CameraCtrlForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            MotorCtrlUC.OnClose();
+        }
     }
 }
