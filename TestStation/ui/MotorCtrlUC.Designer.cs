@@ -141,18 +141,18 @@
             this.LB_Z1Position.AutoSize = true;
             this.LB_Z1Position.Location = new System.Drawing.Point(42, 10);
             this.LB_Z1Position.Name = "LB_Z1Position";
-            this.LB_Z1Position.Size = new System.Drawing.Size(53, 18);
+            this.LB_Z1Position.Size = new System.Drawing.Size(44, 18);
             this.LB_Z1Position.TabIndex = 10;
-            this.LB_Z1Position.Text = "-- mm";
+            this.LB_Z1Position.Text = "0 mm";
             // 
             // LB_Z2Position
             // 
             this.LB_Z2Position.AutoSize = true;
             this.LB_Z2Position.Location = new System.Drawing.Point(42, 133);
             this.LB_Z2Position.Name = "LB_Z2Position";
-            this.LB_Z2Position.Size = new System.Drawing.Size(53, 18);
+            this.LB_Z2Position.Size = new System.Drawing.Size(44, 18);
             this.LB_Z2Position.TabIndex = 11;
-            this.LB_Z2Position.Text = "-- mm";
+            this.LB_Z2Position.Text = "0 mm";
             // 
             // MotorCtrlUC
             // 

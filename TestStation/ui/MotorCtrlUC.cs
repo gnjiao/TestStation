@@ -40,14 +40,14 @@ namespace TestStation.ui
         }
         private void BTN_Z2MoveUp_Click(object sender, EventArgs e)
         {
-            ds102?.ZAxisGoPositive(DS102.AXIS_Z2, Z2Distance);
-            Z2Position += Z2Distance;
+            ds102?.ZAxisGoNegative(DS102.AXIS_Z2, Z2Distance);
+            Z2Position -= Z2Distance;
             LB_Z2Position.Text = $"{Z2Position:F2} mm";
         }
         private void BTN_Z2MoveDown_Click(object sender, EventArgs e)
         {
-            ds102?.ZAxisGoNegative(DS102.AXIS_Z2, Z2Distance);
-            Z2Position -= Z2Distance;
+            ds102?.ZAxisGoPositive(DS102.AXIS_Z2, Z2Distance);
+            Z2Position += Z2Distance;
             LB_Z2Position.Text = $"{Z2Position:F2} mm";
         }
         private void BTN_Z1GoHome_Click(object sender, EventArgs e)
@@ -56,6 +56,7 @@ namespace TestStation.ui
             BTN_Z1GoHome.Refresh();
 
             ds102?.GoOrigin(DS102.AXIS_Z1);
+            LB_Z1Position.Text = $"0 mm";
 
             BTN_Z1GoHome.Enabled = true;
         }
@@ -65,6 +66,7 @@ namespace TestStation.ui
             BTN_Z2GoHome.Refresh();
 
             ds102?.GoOrigin(DS102.AXIS_Z2);
+            LB_Z2Position.Text = $"0 mm";
 
             BTN_Z2GoHome.Enabled = true;
         }
