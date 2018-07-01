@@ -21,14 +21,14 @@ namespace TestStation.ui
             Dictionary<string, string> data = new Dictionary<string, string>();
             switch (type as string)
             {
-                case "Type A":
+                case "NFT":
                     data["Dead Emitter Count"] = "";
                     data["Dead Cluster Count"] = "";
                     data["Emitter Divergence Angle"] = "";
                     data["Beam Waist Diameter"] = "";
                     data["Emission Uniformity"] = "";
                     break;
-                case "Type B":
+                case "FFT":
                     data["Divergence Angle"] = "";
                     break;
             }

@@ -30,16 +30,23 @@ namespace TestStation.core
         {
             if (mCamera == null)
             {
-                switch (cameraType)
+                if (!string.IsNullOrEmpty(Config.ForceCameraType))
                 {
-                    case "Type A":
-                        HardwareSrv.GetInstance().Add(new M8051("Camera"));
-                        break;
-                    case "Type B":
-                        HardwareSrv.GetInstance().Add(new Vcxu("Camera"));
-                        break;
-                    default:
-                        return new Result("Fail", "Unknown camera type");
+                    HardwareSrv.GetInstance().Add(new M8051("Camera"));
+                }
+                else
+                {
+                    switch (cameraType)
+                    {
+                        case "NFT":
+                            HardwareSrv.GetInstance().Add(new M8051("Camera"));
+                            break;
+                        case "FFT":
+                            HardwareSrv.GetInstance().Add(new Vcxu("Camera"));
+                            break;
+                        default:
+                            return new Result("Fail", "Unknown camera type");
+                    }
                 }
 
                 mCamera = HardwareSrv.GetInstance().Get("Camera") as Camera;
@@ -96,8 +103,9 @@ namespace TestStation.core
         {
             EmguCircleImage image = new EmguCircleImage(_filePath, radiusLimit);
             _imgs.Add(image);
+
             image.FilterOnStrength(Config.CountThreshold);
-            AnalyzedImage = image.Draw();
+            AnalyzedImage = image.DrawCircles();
             _log.Debug($"Analyze image {_filePath} use " +
                 $"CountThreshold {Config.CountThreshold} " +
                 $"RadiusLimits {radiusLimit[0]} {radiusLimit[1]}");
@@ -180,6 +188,13 @@ namespace TestStation.core
         }
         private class Config
         {
+            public static string ForceCameraType
+            {
+                get
+                {
+                    return ConfigurationManager.AppSettings["ForceCameraType"];
+                }
+            }
             public static double CountThreshold
             {
                 get

@@ -166,13 +166,14 @@ namespace JbImage
                 byte centerStrength = EmguIntfs.ToImage(_grayedUmat).Data[(int)Circles[i].Center.Y, (int)Circles[i].Center.X, 0];
                 _log.Debug($"Circle{i:D3} center strength: {centerStrength}");
 
+
             }
 
             watch.Stop();
             msgBuilder.Append(string.Format("{0} Hough circles - {1} ms; ", testName, watch.ElapsedMilliseconds));
             _log.Debug(msgBuilder.ToString());
         }
-        public Bitmap Draw()
+        public Bitmap DrawCircles()
         {
             Mat circleImage = _rawImg.Mat;
             for (int i = 0; i < FilteredCircles.Count; i++)

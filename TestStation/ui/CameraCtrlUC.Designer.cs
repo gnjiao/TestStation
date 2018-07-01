@@ -50,8 +50,8 @@
             this.CMB_CameraType.FormattingEnabled = true;
             this.CMB_CameraType.Items.AddRange(new object[] {
             "Camera Type",
-            "Type A",
-            "Type B"});
+            "NFT",
+            "FFT"});
             this.CMB_CameraType.Location = new System.Drawing.Point(0, 0);
             this.CMB_CameraType.Name = "CMB_CameraType";
             this.CMB_CameraType.Size = new System.Drawing.Size(149, 26);

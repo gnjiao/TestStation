@@ -321,7 +321,7 @@ namespace TestStation
 
         private void CMB_CameraType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (CMB_CameraType.Text == "Type A" || CMB_CameraType.Text == "Type B")
+            if (CMB_CameraType.Text == "NFT" || CMB_CameraType.Text == "FFT")
             {
                 TypeChanged?.Invoke(CMB_CameraType.Text);
             }
