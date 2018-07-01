@@ -139,14 +139,14 @@
             // 
             this.TB_DbgMinRadius.Location = new System.Drawing.Point(44, 303);
             this.TB_DbgMinRadius.Name = "TB_DbgMinRadius";
-            this.TB_DbgMinRadius.Size = new System.Drawing.Size(100, 28);
+            this.TB_DbgMinRadius.Size = new System.Drawing.Size(92, 28);
             this.TB_DbgMinRadius.TabIndex = 17;
             // 
             // TB_DbgMaxRadius
             // 
             this.TB_DbgMaxRadius.Location = new System.Drawing.Point(44, 333);
             this.TB_DbgMaxRadius.Name = "TB_DbgMaxRadius";
-            this.TB_DbgMaxRadius.Size = new System.Drawing.Size(100, 28);
+            this.TB_DbgMaxRadius.Size = new System.Drawing.Size(92, 28);
             this.TB_DbgMaxRadius.TabIndex = 18;
             // 
             // label1

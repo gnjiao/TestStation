@@ -72,10 +72,10 @@ namespace JbImage
             CvInvoke.BilateralFilter(grayImage, threshImage, 25, 25 * 2, 25 / 2);
             return threshImage;
         }
-        public static Image<Gray, Byte> Binarize(Image<Gray, Byte> grayImage)
+        public static Image<Gray, Byte> Binarize(int threshold, Image<Gray, Byte> grayImage)
         {
             var threshImage = grayImage.CopyBlank();
-            CvInvoke.Threshold(grayImage, threshImage, 30, 255, ThresholdType.Binary);
+            CvInvoke.Threshold(grayImage, threshImage, threshold, 255, ThresholdType.Binary);
             return threshImage;
         }
         public static int CountPixels(Image<Gray, Byte> img, CircleF circle)
@@ -106,8 +106,8 @@ namespace JbImage
             Image<Bgr, Byte> img = Load(testImage);
             UMat uimage = Grayed(img);
 
-            Image<Gray, Byte> image = Binarize(ToImage(uimage));
-            CircleF[] circles = CvInvoke.HoughCircles(image, HoughType.Gradient, 2, 40, 180, 13, 18, 30);
+            Image<Gray, Byte> image = Binarize(30, ToImage(uimage));
+            CircleF[] circles = CvInvoke.HoughCircles(image, HoughType.Gradient, 2, 40, 180, 13, 18, 20);
 
             watch.Stop();
             msgBuilder.Append(string.Format("{0} Hough circles - {1} ms; ", testName, watch.ElapsedMilliseconds));
@@ -157,10 +157,16 @@ namespace JbImage
             _rawImg = EmguIntfs.Load(path);
             _grayedUmat = EmguIntfs.Grayed(_rawImg);
 
-            image = EmguIntfs.Binarize(EmguIntfs.ToImage(_grayedUmat));
+            image = EmguIntfs.Binarize(30, EmguIntfs.ToImage(_grayedUmat));
             Circles = CvInvoke.HoughCircles(image, HoughType.Gradient, 2, 40, 180, 13, minmax[0], minmax[1]);
-
             Sort();
+
+            for (int i = 0; i < Circles.Length; i++)
+            {
+                byte centerStrength = EmguIntfs.ToImage(_grayedUmat).Data[(int)Circles[i].Center.Y, (int)Circles[i].Center.X, 0];
+                _log.Debug($"Circle{i:D3} center strength: {centerStrength}");
+
+            }
 
             watch.Stop();
             msgBuilder.Append(string.Format("{0} Hough circles - {1} ms; ", testName, watch.ElapsedMilliseconds));
@@ -197,7 +203,7 @@ namespace JbImage
             });
             Circles = temp.ToArray();
         }
-        public void Count(double threshold = 0)
+        public void FilterOnStrength(double threshold = 0)
         {
             StringBuilder msgBuilder = new StringBuilder("Circles: " + Environment.NewLine);
 
