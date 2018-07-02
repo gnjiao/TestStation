@@ -23,6 +23,7 @@ namespace Utils
         }
         public static double StdEv(List<double> values)
         {
+            double stdEv = 0;
             double average = 0;
             foreach (var value in values)
             {
@@ -36,7 +37,8 @@ namespace Utils
                 deviationSum += ((double)value - average)*((double)value - average);
             }
 
-            return System.Math.Sqrt(deviationSum / (values.Count - 1));
+            stdEv = System.Math.Sqrt(deviationSum / (values.Count - 1));
+            return stdEv * 3 / average;
         }
     }
 }

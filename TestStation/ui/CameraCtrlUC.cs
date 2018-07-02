@@ -326,5 +326,20 @@ namespace TestStation
                 TypeChanged?.Invoke(CMB_CameraType.Text);
             }
         }
+
+        private void BTN_SetCamera_Click(object sender, EventArgs e)
+        {
+            double delay = ReadDouble(TB_DelayMs);
+            if (double.IsNaN(delay))
+            {
+                _cameraCtrl.SetDelay((int)delay);
+            }
+
+            double exposure = ReadDouble(TB_DelayMs);
+            if (double.IsNaN(exposure))
+            {
+                _cameraCtrl.SetExposure((int)exposure);
+            }
+        }
     }
 }

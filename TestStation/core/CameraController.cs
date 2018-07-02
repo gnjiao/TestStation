@@ -109,6 +109,7 @@ namespace TestStation.core
             _log.Debug($"Analyze image {_filePath} use " +
                 $"CountThreshold {Config.CountThreshold} " +
                 $"RadiusLimits {radiusLimit[0]} {radiusLimit[1]}");
+            _log.Debug(Utils.String.Flatten(image.StatisticInfo()));
 
             return new Result("Ok");
         }
@@ -175,6 +176,18 @@ namespace TestStation.core
             mCamera?.Execute(new Command("Close"));
             mCamera = null;
             return new Result("Ok");
+        }
+        public Result SetDelay(int ms)
+        {
+            return mCamera.Execute(new Command("Config", new Dictionary<string, string>() {
+                { "Delay", ms.ToString() }
+            }));
+        }
+        public Result SetExposure(int ms)
+        {
+            return mCamera.Execute(new Command("Config", new Dictionary<string, string>() {
+                { "Exposure", ms.ToString() }
+            }));
         }
         private void InsertImg(Bitmap img, double distance, bool shouldSave = true)
         {

@@ -42,7 +42,7 @@ namespace Hardware
         }
         protected override Result Config(Dictionary<string, string> param)
         {
-            return new Result("Ok");
+            return new Result("Fail", "Under development");
         }
 
         private BGAPI2.System _usbSystem = null;

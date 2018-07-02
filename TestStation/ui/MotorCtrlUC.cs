@@ -18,6 +18,7 @@ namespace TestStation.ui
                 ds102.Port = Int32.Parse(ConfigurationManager.AppSettings["DS102Port"]);
                 if (!ds102.OpenDS102())
                 {
+                    MessageBox.Show($"Failed to open DS102, please make sure the COM{ds102.Port} is available");
                     ds102 = null;
                 }
             }

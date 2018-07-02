@@ -42,6 +42,11 @@
             this.TB_DbgMaxRadius = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.TB_ExpoMs = new System.Windows.Forms.TextBox();
+            this.TB_DelayMs = new System.Windows.Forms.TextBox();
+            this.BTN_SetCamera = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // CMB_CameraType
@@ -167,10 +172,59 @@
             this.label2.TabIndex = 20;
             this.label2.Text = "Max";
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(5, 416);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(44, 18);
+            this.label3.TabIndex = 24;
+            this.label3.Text = "Expo";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(5, 386);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(53, 18);
+            this.label4.TabIndex = 23;
+            this.label4.Text = "Delay";
+            // 
+            // TB_ExpoMs
+            // 
+            this.TB_ExpoMs.Location = new System.Drawing.Point(64, 411);
+            this.TB_ExpoMs.Name = "TB_ExpoMs";
+            this.TB_ExpoMs.Size = new System.Drawing.Size(72, 28);
+            this.TB_ExpoMs.TabIndex = 22;
+            this.TB_ExpoMs.Text = "ms";
+            // 
+            // TB_DelayMs
+            // 
+            this.TB_DelayMs.Location = new System.Drawing.Point(64, 381);
+            this.TB_DelayMs.Name = "TB_DelayMs";
+            this.TB_DelayMs.Size = new System.Drawing.Size(72, 28);
+            this.TB_DelayMs.TabIndex = 21;
+            this.TB_DelayMs.Text = "ms";
+            // 
+            // BTN_SetCamera
+            // 
+            this.BTN_SetCamera.Location = new System.Drawing.Point(8, 445);
+            this.BTN_SetCamera.Name = "BTN_SetCamera";
+            this.BTN_SetCamera.Size = new System.Drawing.Size(128, 32);
+            this.BTN_SetCamera.TabIndex = 25;
+            this.BTN_SetCamera.Text = "Set";
+            this.BTN_SetCamera.UseVisualStyleBackColor = true;
+            this.BTN_SetCamera.Click += new System.EventHandler(this.BTN_SetCamera_Click);
+            // 
             // CameraCtrlUC
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.BTN_SetCamera);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.TB_ExpoMs);
+            this.Controls.Add(this.TB_DelayMs);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.TB_DbgMaxRadius);
@@ -184,7 +238,7 @@
             this.Controls.Add(this.BTN_Open);
             this.Controls.Add(this.CMB_CameraType);
             this.Name = "CameraCtrlUC";
-            this.Size = new System.Drawing.Size(149, 368);
+            this.Size = new System.Drawing.Size(149, 494);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -204,5 +258,10 @@
         private System.Windows.Forms.TextBox TB_DbgMaxRadius;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox TB_ExpoMs;
+        private System.Windows.Forms.TextBox TB_DelayMs;
+        private System.Windows.Forms.Button BTN_SetCamera;
     }
 }

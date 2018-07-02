@@ -102,6 +102,11 @@ namespace Hardware
             {
                 switch (key)
                 {
+                    case "Delay":
+                        return new Result("Fail", "Under development");
+                    case "Exposure":
+                        _tlCamera.ExposureTime_us = 1000 * UInt32.Parse(param[key]);
+                        return new Result("Ok");
                     #region Color Config
                     case "IsColorOperationEnabled":
                         _tlCamera.IsColorOperationEnabled = bool.Parse(param[key]);
@@ -126,7 +131,9 @@ namespace Hardware
                     case "BinY":
                         value.BinX = UInt32.Parse(param[key]);
                         break;
-                        #endregion
+                    #endregion
+                    default:
+                        return new Result("Fail", $"Error parameter {key}");
                 }
             }
 
