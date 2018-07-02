@@ -29,6 +29,7 @@ namespace Hardware
 
                 DbgReadCameraInfo();
 
+                //this._tlCamera.IsColorOperationEnabled = false;
                 this._tlCamera.ExposureTime_us = 500000;
                 if (this._tlCamera.GainRange.Maximum > 0)
                 {

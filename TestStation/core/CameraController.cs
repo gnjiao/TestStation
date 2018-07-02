@@ -101,10 +101,11 @@ namespace TestStation.core
         }
         public Result Analyze(int[] radiusLimit)
         {
+            _log.Debug("Start Analyze");
             EmguCircleImage image = new EmguCircleImage(_filePath, radiusLimit);
             _imgs.Add(image);
 
-            image.FilterOnStrength(Config.CountThreshold);
+            //image.FilterOnStrength(Config.CountThreshold);
             AnalyzedImage = image.DrawCircles();
             _log.Debug($"Analyze image {_filePath} use " +
                 $"CountThreshold {Config.CountThreshold} " +

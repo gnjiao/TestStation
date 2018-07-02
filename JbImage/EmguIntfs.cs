@@ -78,6 +78,7 @@ namespace JbImage
             CvInvoke.Threshold(grayImage, threshImage, threshold, 255, ThresholdType.Binary);
             return threshImage;
         }
+        /*jiangbo : bug here, may count pixel outside the circle*/
         public static int CountPixels(Image<Gray, Byte> img, CircleF circle)
         {
             double centerX = circle.Center.X;
@@ -133,6 +134,13 @@ namespace JbImage
         }
         public static void Test()
         {
+            Image<Bgr, Byte> img = Load(testImage);
+            UMat uimage = Grayed(img);
+
+            Mat mask = new Mat(uimage.Size, DepthType.Cv8U, 1);
+            CvInvoke.Circle(mask, new Point(10, 10), 10, new Bgr(Color.Black).MCvScalar, -1);
+
+            Mat imgPart = new Mat();
         }
     }
     public class EmguCircleImage
@@ -142,8 +150,10 @@ namespace JbImage
         private Image<Bgr, Byte> _rawImg;
         private UMat _grayedUmat;
         public CircleF[] Circles;
+        public CircleF[] Circles2nd;
         public int[] Lights;
         public List<CircleF> FilteredCircles;
+        public List<CircleF> FilteredCircles2nd;
         public List<int> FilteredLights;
 
         public EmguCircleImage(string path, int[] minmax)
@@ -157,16 +167,57 @@ namespace JbImage
             _rawImg = EmguIntfs.Load(path);
             _grayedUmat = EmguIntfs.Grayed(_rawImg);
 
-            image = EmguIntfs.Binarize(30, EmguIntfs.ToImage(_grayedUmat));
+            image = EmguIntfs.Binarize(50, EmguIntfs.ToImage(_grayedUmat));
             Circles = CvInvoke.HoughCircles(image, HoughType.Gradient, 2, 40, 180, 13, minmax[0], minmax[1]);
-            Sort();
-
-            for (int i = 0; i < Circles.Length; i++)
+            Circles = Sort(Circles);
+            #region filter 86.3%
+            FilteredCircles = new List<CircleF>();
+            FilteredLights = new List<int>();
+            var raw = EmguIntfs.ToImage(_grayedUmat);
+            foreach (var circle in Circles)
             {
-                byte centerStrength = EmguIntfs.ToImage(_grayedUmat).Data[(int)Circles[i].Center.Y, (int)Circles[i].Center.X, 0];
-                _log.Debug($"Circle{i:D3} center strength: {centerStrength}");
+                int startX = (int)System.Math.Floor(circle.Center.X - circle.Radius - 10);
+                int startY = (int)System.Math.Floor(circle.Center.Y - circle.Radius - 10);
+                int len = (int)System.Math.Ceiling((double)circle.Radius * 2.0) + 20;
 
+                int strength = raw.Data[(int)circle.Center.Y, (int)circle.Center.X, 0];
+                if (strength < 30)
+                {
+                    continue;
+                }
+                else
+                {
+                    FilteredCircles.Add(circle);
 
+                    int threshold = (int)((double)strength * 0.863);
+
+                    raw.ROI = new Rectangle(startX, startY, len, len);
+
+                    Image<Gray, Byte> oneCircle = EmguIntfs.Binarize(threshold, raw);
+                    raw.ROI = Rectangle.Empty;
+
+                    for (int x = 0; x < len; x++)
+                    {
+                        for (int y = 0; y < len; y++)
+                        {
+                            raw.Data[startY + y, startX + x, 0] = oneCircle.Data[y, x, 0];
+                        }
+                    }
+                }
+            }
+            raw.Save(@"D:\Test.jpg");
+            #endregion
+
+            Circles2nd = CvInvoke.HoughCircles(raw, HoughType.Gradient, 2, 40, 180, 13, minmax[0] - 2, minmax[1] - 2);
+            Circles2nd = Sort(Circles2nd);
+            FilteredCircles2nd = new List<CircleF>();
+            foreach (var circle in Circles2nd)
+            {
+                int strength = raw.Data[(int)circle.Center.Y, (int)circle.Center.X, 0];
+                if (strength > 30)
+                {
+                    FilteredCircles2nd.Add(circle);
+                }
             }
 
             watch.Stop();
@@ -175,19 +226,24 @@ namespace JbImage
         }
         public Bitmap DrawCircles()
         {
+            _log.Debug("Start DrawCircles");
             Mat circleImage = _rawImg.Mat;
             for (int i = 0; i < FilteredCircles.Count; i++)
             {
-                CvInvoke.Circle(circleImage, Point.Round(FilteredCircles[i].Center), (int)FilteredCircles[i].Radius, new Bgr(Color.Red).MCvScalar, 2);
+                CvInvoke.Circle(circleImage, Point.Round(FilteredCircles[i].Center), (int)FilteredCircles[i].Radius, new Bgr(Color.Red).MCvScalar, 1);
                 CvInvoke.PutText(circleImage, i.ToString("D3"), new Point((int)FilteredCircles[i].Center.X, (int)FilteredCircles[i].Center.Y), Emgu.CV.CvEnum.FontFace.HersheyScriptComplex, 1, new MCvScalar(255, 255, 0), 1);
+            }
+            for (int i = 0; i < FilteredCircles2nd.Count; i++)
+            {
+                CvInvoke.Circle(circleImage, Point.Round(FilteredCircles2nd[i].Center), (int)FilteredCircles2nd[i].Radius, new Bgr(Color.Yellow).MCvScalar, 1);
             }
             circleImage.Save(Utils.String.FilePostfix(_imgPath, "-result"));
 
             return circleImage.Bitmap;
         }
-        public void Sort()
+        public CircleF[] Sort(CircleF[] circles)
         {
-            List<CircleF> temp = Circles.ToList();
+            List<CircleF> temp = circles.ToList();
             temp.Sort((c1,c2) => {
                 if (c1.Center.Y < c2.Center.Y)
                 {
@@ -202,10 +258,11 @@ namespace JbImage
                     return 1;
                 }
             });
-            Circles = temp.ToArray();
+            return temp.ToArray();
         }
         public void FilterOnStrength(double threshold = 0)
         {
+            _log.Debug("Start FilterOnStrength");
             StringBuilder msgBuilder = new StringBuilder("Circles: " + Environment.NewLine);
 
             int reference = 0;
@@ -227,7 +284,7 @@ namespace JbImage
                     FilteredCircles.Add(Circles[i]);
                 }
 
-                msgBuilder.Append(string.Format("{0} {1}", i.ToString("D3"), Lights[i]) + Environment.NewLine);
+                //msgBuilder.Append(string.Format("{0} {1}", i.ToString("D3"), Lights[i]) + Environment.NewLine);
             }
             _log.Debug(msgBuilder.ToString());
         }
@@ -238,9 +295,9 @@ namespace JbImage
             info["MaxRadius"] = FilteredCircles.ToList().Max(circle => circle.Radius).ToString();
             info["MinRadius"] = FilteredCircles.ToList().Min(circle => circle.Radius).ToString();
             info["StdEvRadius"] = Utils.Math.StdEv(FilteredCircles.ToList().Select(x => (double)x.Radius).ToList()).ToString("F3");
-            info["MaxLight"] = FilteredLights.ToList().Max().ToString();
-            info["MinLight"] = FilteredLights.ToList().Min().ToString();
-            info["StdEvLight"] = Utils.Math.StdEv(FilteredLights.ToList().Select(x => (double)x).ToList()).ToString("F3");
+            //info["MaxLight"] = FilteredLights.ToList().Max().ToString();
+            //info["MinLight"] = FilteredLights.ToList().Min().ToString();
+            //info["StdEvLight"] = Utils.Math.StdEv(FilteredLights.ToList().Select(x => (double)x).ToList()).ToString("F3");
 
             return info;
         }

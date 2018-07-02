@@ -92,6 +92,7 @@ namespace TestStation
         }
         private void BTN_ImgAnalyze_Click(object sender, EventArgs e)
         {
+            _log.Debug("BTN_ImgAnalyze_Click");
             if (BTN_ImgAnalyze.Text == "Image Analyze")
             {
                 if (_updateTimer.Enabled)
@@ -136,18 +137,15 @@ namespace TestStation
         }
         private void BTN_Load_Click(object sender, EventArgs e)
         {
-            lock (_updateLock)
-            {
-                _updateTimer.Stop();
+            _updateTimer.Stop();
 
-                OpenFileDialog d = new OpenFileDialog();
-                if (d.ShowDialog() == DialogResult.OK)
+            OpenFileDialog d = new OpenFileDialog();
+            if (d.ShowDialog() == DialogResult.OK)
+            {
+                lock (_updateLock)
                 {
-                    lock (_updateLock)
-                    {
-                        _cameraCtrl.Load(d.FileName, Distance).ShowMessageBox();
-                        UpdateImage?.Invoke(_cameraCtrl.LatestImage);
-                    }
+                    _cameraCtrl.Load(d.FileName, Distance).ShowMessageBox();
+                    UpdateImage?.Invoke(_cameraCtrl.LatestImage);
                 }
             }
         }
