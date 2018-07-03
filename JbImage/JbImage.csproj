@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Circle.cs" />
+    <Compile Include="EmguParameters.cs" />
     <Compile Include="SingleCircle.cs" />
     <Compile Include="CirclesFinder.cs" />
     <Compile Include="ImgProcess.cs" />

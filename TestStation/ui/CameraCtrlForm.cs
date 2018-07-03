@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JbImage;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,10 +18,42 @@ namespace TestStation
         {
             InitializeComponent();
 
+            LoadEmguParameters();
+
             UC_CameraCtrl.UpdateImage += LoadImg;
             UC_CameraCtrl.TypeChanged += UC_Result.SetType;
             UC_CameraCtrl.UpdateResult += UC_Result.Update;
             SetRectangle = SetRoi;
+        }
+        private void LoadEmguParameters()
+        {
+            EmguParameters.Item["UseCanny"] = Properties.Settings.Default.UseCanny;
+            EmguParameters.Item["SaveFile"] = Properties.Settings.Default.SaveFile;
+            EmguParameters.Item["BinThreshold"] = Properties.Settings.Default.BinThreshold;
+
+            EmguParameters.Item["Canny1Threshold1"] = Properties.Settings.Default.Canny1Threshold1;
+            EmguParameters.Item["Canny1Threshold2"] = Properties.Settings.Default.Canny1Threshold2;
+            EmguParameters.Item["Canny1ApertureSize"] = Properties.Settings.Default.Canny1ApertureSize;
+            EmguParameters.Item["Canny1I2Gradient"] = Properties.Settings.Default.Canny1I2Gradient;
+
+            EmguParameters.Item["Hough1Dp"] = Properties.Settings.Default.Hough1Dp;
+            EmguParameters.Item["Hough1MinDist"] = Properties.Settings.Default.Hough1MinDist;
+            EmguParameters.Item["Hough1Param1"] = Properties.Settings.Default.Hough1Param1;
+            EmguParameters.Item["Hough1Param2"] = Properties.Settings.Default.Hough1Param2;
+            EmguParameters.Item["Hough1MinRadius"] = Properties.Settings.Default.Hough1MinRadius;
+            EmguParameters.Item["Hough1MaxRadius"] = Properties.Settings.Default.Hough1MaxRadius;
+
+            EmguParameters.Item["Canny2Threshold1"] = Properties.Settings.Default.Canny2Threshold1;
+            EmguParameters.Item["Canny2Threshold2"] = Properties.Settings.Default.Canny2Threshold2;
+            EmguParameters.Item["Canny2ApertureSize"] = Properties.Settings.Default.Canny2ApertureSize;
+            EmguParameters.Item["Canny2I2Gradient"] = Properties.Settings.Default.Canny2I2Gradient;
+
+            EmguParameters.Item["Hough2Dp"] = Properties.Settings.Default.Hough2Dp;
+            EmguParameters.Item["Hough2MinDist"] = Properties.Settings.Default.Hough2MinDist;
+            EmguParameters.Item["Hough2Param1"] = Properties.Settings.Default.Hough2Param1;
+            EmguParameters.Item["Hough2Param2"] = Properties.Settings.Default.Hough2Param2;
+            EmguParameters.Item["Hough2MinRadius"] = Properties.Settings.Default.Hough2MinRadius;
+            EmguParameters.Item["Hough2MaxRadius"] = Properties.Settings.Default.Hough2MaxRadius;
         }
         private void LoadImg(object img)
         {

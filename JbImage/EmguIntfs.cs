@@ -40,10 +40,10 @@ namespace JbImage
             CvInvoke.CvtColor(image, uimage, ColorConversion.Bgr2Gray);
             return uimage;
         }
-        public static Image<Gray, Byte> EdgeDetect(Image<Gray, Byte> uimage)
+        public static Image<Gray, Byte> Canny(Image<Gray, Byte> uimage, double d1 = 90, double d2 = 180, int i1 = 3, bool b1 = false)
         {
             Image<Gray, Byte> edge = new Image<Gray, Byte>(uimage.Cols, uimage.Rows);
-            CvInvoke.Canny(uimage, edge, 90, 180);
+            CvInvoke.Canny(uimage, edge, d1, d2, i1, b1);
             return edge;
         }
         public static Image<Gray, Byte> PyrRemoveNoise(Image<Gray, Byte> uimage)
@@ -158,17 +158,46 @@ namespace JbImage
 
         public EmguCircleImage(string path, int[] minmax)
         {
+            _log.Debug(Utils.String.Flatten(EmguParameters.Item));
+
+            bool saveFile = bool.Parse(EmguParameters.Item["SaveFile"]);
+            bool useCanny = bool.Parse(EmguParameters.Item["UseCanny"]);
+
             string testName = System.Reflection.MethodBase.GetCurrentMethod().Name;
             StringBuilder msgBuilder = new StringBuilder("Performance: ");
-            Image<Gray, Byte> image;
 
             Stopwatch watch = Stopwatch.StartNew();
             _imgPath = path;
             _rawImg = EmguIntfs.Load(path);
             _grayedUmat = EmguIntfs.Grayed(_rawImg);
 
-            image = EmguIntfs.Binarize(50, EmguIntfs.ToImage(_grayedUmat));
-            Circles = CvInvoke.HoughCircles(image, HoughType.Gradient, 2, 40, 180, 13, minmax[0], minmax[1]);
+            Image<Gray, Byte> _edged;
+
+            if (useCanny)
+            {
+                _edged = EmguIntfs.Canny(EmguIntfs.ToImage(_grayedUmat),
+                    double.Parse(EmguParameters.Item["Canny1Threshold1"]),
+                    double.Parse(EmguParameters.Item["Canny1Threshold2"]),
+                    Int32.Parse(EmguParameters.Item["Canny1ApertureSize"]),
+                    bool.Parse(EmguParameters.Item["Canny1I2Gradient"]));
+                if (saveFile)
+                {
+                    _edged.Save(Utils.String.FilePostfix(_imgPath, "-1-edge"));
+                }
+            }
+            else
+            {
+                _edged = EmguIntfs.ToImage(_grayedUmat);
+            }
+
+            Image<Gray, Byte> image = EmguIntfs.Binarize(Int32.Parse(EmguParameters.Item["BinThreshold"]), _edged);
+            Circles = CvInvoke.HoughCircles(image, HoughType.Gradient,
+                double.Parse(EmguParameters.Item["Hough1Dp"]),
+                double.Parse(EmguParameters.Item["Hough1MinDist"]),
+                double.Parse(EmguParameters.Item["Hough1Param1"]),
+                double.Parse(EmguParameters.Item["Hough1Param2"]),
+                Int32.Parse(EmguParameters.Item["Hough1MinRadius"]),
+                Int32.Parse(EmguParameters.Item["Hough1MaxRadius"]));
             Circles = Sort(Circles);
             #region filter 86.3%
             FilteredCircles = new List<CircleF>();
@@ -205,10 +234,36 @@ namespace JbImage
                     }
                 }
             }
-            raw.Save(@"D:\Test.jpg");
+            if (saveFile)
+            {
+                raw.Save(Utils.String.FilePostfix(_imgPath, "-2-filter"));
+            }
             #endregion
 
-            Circles2nd = CvInvoke.HoughCircles(raw, HoughType.Gradient, 2, 40, 180, 13, minmax[0] - 2, minmax[1] - 2);
+            if (useCanny)
+            {
+                _edged = EmguIntfs.Canny(raw,
+                    double.Parse(EmguParameters.Item["Canny2Threshold1"]),
+                    double.Parse(EmguParameters.Item["Canny2Threshold2"]),
+                    Int32.Parse(EmguParameters.Item["Canny2ApertureSize"]),
+                    bool.Parse(EmguParameters.Item["Canny2I2Gradient"]));
+                if (saveFile)
+                {
+                    _edged.Save(Utils.String.FilePostfix(_imgPath, "-3-edge"));
+                }
+            }
+            else
+            {
+                _edged = raw;
+            }
+
+            Circles2nd = CvInvoke.HoughCircles(_edged, HoughType.Gradient,
+                double.Parse(EmguParameters.Item["Hough2Dp"]),
+                double.Parse(EmguParameters.Item["Hough2MinDist"]),
+                double.Parse(EmguParameters.Item["Hough2Param1"]),
+                double.Parse(EmguParameters.Item["Hough2Param2"]),
+                Int32.Parse(EmguParameters.Item["Hough2MinRadius"]),
+                Int32.Parse(EmguParameters.Item["Hough2MaxRadius"]));
             Circles2nd = Sort(Circles2nd);
             FilteredCircles2nd = new List<CircleF>();
             foreach (var circle in Circles2nd)
@@ -230,12 +285,12 @@ namespace JbImage
             Mat circleImage = _rawImg.Mat;
             for (int i = 0; i < FilteredCircles.Count; i++)
             {
-                CvInvoke.Circle(circleImage, Point.Round(FilteredCircles[i].Center), (int)FilteredCircles[i].Radius, new Bgr(Color.Red).MCvScalar, 1);
-                CvInvoke.PutText(circleImage, i.ToString("D3"), new Point((int)FilteredCircles[i].Center.X, (int)FilteredCircles[i].Center.Y), Emgu.CV.CvEnum.FontFace.HersheyScriptComplex, 1, new MCvScalar(255, 255, 0), 1);
+                CvInvoke.Circle(circleImage, Point.Round(FilteredCircles[i].Center), (int)FilteredCircles[i].Radius, new Bgr(Color.Yellow).MCvScalar, 1);
             }
             for (int i = 0; i < FilteredCircles2nd.Count; i++)
             {
-                CvInvoke.Circle(circleImage, Point.Round(FilteredCircles2nd[i].Center), (int)FilteredCircles2nd[i].Radius, new Bgr(Color.Yellow).MCvScalar, 1);
+                CvInvoke.Circle(circleImage, Point.Round(FilteredCircles2nd[i].Center), (int)FilteredCircles2nd[i].Radius, new Bgr(Color.Red).MCvScalar, 1);
+                CvInvoke.PutText(circleImage, i.ToString("D3"), new Point((int)FilteredCircles2nd[i].Center.X, (int)FilteredCircles2nd[i].Center.Y), Emgu.CV.CvEnum.FontFace.HersheyScriptComplex, 1, new MCvScalar(255, 255, 0), 1);
             }
             circleImage.Save(Utils.String.FilePostfix(_imgPath, "-result"));
 

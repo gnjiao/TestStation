@@ -15,6 +15,7 @@ using Utils;
 using System.Configuration;
 using TestStation.core;
 using Timer = System.Timers.Timer;
+using TestStation.ui;
 
 namespace TestStation
 {
@@ -338,6 +339,12 @@ namespace TestStation
             {
                 _cameraCtrl.SetExposure((int)exposure);
             }
+        }
+
+        private void TB_Parameters_Click(object sender, EventArgs e)
+        {
+            EmguParameterForm form = new EmguParameterForm();
+            form.Show();
         }
     }
 }

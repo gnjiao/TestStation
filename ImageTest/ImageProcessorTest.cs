@@ -13,7 +13,7 @@ namespace ImageTest
         [TestMethod]
         public void ProcessorTest_Binarize()
         {
-            Image i = (Image)ImgProcess.Binarize(path + "Sample2-24b.bmp");
+            Bitmap i = (Bitmap)ImgProcess.Binarize(path + "Sample2-24b.bmp");
             i.Save(path + "Sample2-24b-bin.bmp");
         }
         [TestMethod]

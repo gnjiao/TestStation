@@ -47,6 +47,7 @@
             this.TB_ExpoMs = new System.Windows.Forms.TextBox();
             this.TB_DelayMs = new System.Windows.Forms.TextBox();
             this.BTN_SetCamera = new System.Windows.Forms.Button();
+            this.TB_Parameters = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // CMB_CameraType
@@ -216,10 +217,21 @@
             this.BTN_SetCamera.UseVisualStyleBackColor = true;
             this.BTN_SetCamera.Click += new System.EventHandler(this.BTN_SetCamera_Click);
             // 
+            // TB_Parameters
+            // 
+            this.TB_Parameters.Location = new System.Drawing.Point(8, 500);
+            this.TB_Parameters.Name = "TB_Parameters";
+            this.TB_Parameters.Size = new System.Drawing.Size(128, 32);
+            this.TB_Parameters.TabIndex = 26;
+            this.TB_Parameters.Text = "Parameters";
+            this.TB_Parameters.UseVisualStyleBackColor = true;
+            this.TB_Parameters.Click += new System.EventHandler(this.TB_Parameters_Click);
+            // 
             // CameraCtrlUC
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.TB_Parameters);
             this.Controls.Add(this.BTN_SetCamera);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label4);
@@ -238,7 +250,7 @@
             this.Controls.Add(this.BTN_Open);
             this.Controls.Add(this.CMB_CameraType);
             this.Name = "CameraCtrlUC";
-            this.Size = new System.Drawing.Size(149, 494);
+            this.Size = new System.Drawing.Size(149, 535);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -263,5 +275,6 @@
         private System.Windows.Forms.TextBox TB_ExpoMs;
         private System.Windows.Forms.TextBox TB_DelayMs;
         private System.Windows.Forms.Button BTN_SetCamera;
+        private System.Windows.Forms.Button TB_Parameters;
     }
 }

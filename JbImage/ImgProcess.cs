@@ -27,7 +27,7 @@ namespace JbImage
                 }
             }
 
-            Image i = (Image)ImgProcess.Binarize(file);
+            Bitmap i = ImgProcess.Binarize(file);
             i.Save(fileplus);
             _logger.Info("End FormatBmp");
 
