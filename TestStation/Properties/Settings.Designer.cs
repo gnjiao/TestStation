@@ -298,5 +298,17 @@ namespace TestStation.Properties {
                 this["UseCanny"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("true")]
+        public string ShowFirstResult {
+            get {
+                return ((string)(this["ShowFirstResult"]));
+            }
+            set {
+                this["ShowFirstResult"] = value;
+            }
+        }
     }
 }

@@ -79,6 +79,7 @@
             this.BTN_Save = new System.Windows.Forms.Button();
             this.CB_Save = new System.Windows.Forms.CheckBox();
             this.CB_UseCanny = new System.Windows.Forms.CheckBox();
+            this.CB_ShowFirstResult = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -206,7 +207,7 @@
             this.groupBox1.Controls.Add(this.label10);
             this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Controls.Add(this.label8);
-            this.groupBox1.Location = new System.Drawing.Point(7, 0);
+            this.groupBox1.Location = new System.Drawing.Point(7, 42);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(317, 505);
             this.groupBox1.TabIndex = 17;
@@ -313,7 +314,7 @@
             this.groupBox2.Controls.Add(this.label17);
             this.groupBox2.Controls.Add(this.textBox22);
             this.groupBox2.Controls.Add(this.label18);
-            this.groupBox2.Location = new System.Drawing.Point(372, 0);
+            this.groupBox2.Location = new System.Drawing.Point(372, 42);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(317, 505);
             this.groupBox2.TabIndex = 18;
@@ -530,7 +531,7 @@
             // CB_Save
             // 
             this.CB_Save.AutoSize = true;
-            this.CB_Save.Location = new System.Drawing.Point(12, 511);
+            this.CB_Save.Location = new System.Drawing.Point(239, 14);
             this.CB_Save.Name = "CB_Save";
             this.CB_Save.Size = new System.Drawing.Size(196, 22);
             this.CB_Save.TabIndex = 22;
@@ -540,18 +541,29 @@
             // CB_UseCanny
             // 
             this.CB_UseCanny.AutoSize = true;
-            this.CB_UseCanny.Location = new System.Drawing.Point(365, 511);
+            this.CB_UseCanny.Location = new System.Drawing.Point(21, 14);
             this.CB_UseCanny.Name = "CB_UseCanny";
             this.CB_UseCanny.Size = new System.Drawing.Size(160, 22);
             this.CB_UseCanny.TabIndex = 23;
             this.CB_UseCanny.Text = "Use Canny Edge";
             this.CB_UseCanny.UseVisualStyleBackColor = true;
             // 
+            // CB_ShowFirstResult
+            // 
+            this.CB_ShowFirstResult.AutoSize = true;
+            this.CB_ShowFirstResult.Location = new System.Drawing.Point(486, 14);
+            this.CB_ShowFirstResult.Name = "CB_ShowFirstResult";
+            this.CB_ShowFirstResult.Size = new System.Drawing.Size(187, 22);
+            this.CB_ShowFirstResult.TabIndex = 24;
+            this.CB_ShowFirstResult.Text = "Show First Result";
+            this.CB_ShowFirstResult.UseVisualStyleBackColor = true;
+            // 
             // EmguParameterForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(698, 600);
+            this.Controls.Add(this.CB_ShowFirstResult);
             this.Controls.Add(this.CB_UseCanny);
             this.Controls.Add(this.CB_Save);
             this.Controls.Add(this.BTN_Save);
@@ -623,5 +635,6 @@
         private System.Windows.Forms.TextBox textBox22;
         private System.Windows.Forms.CheckBox CB_Save;
         private System.Windows.Forms.CheckBox CB_UseCanny;
+        private System.Windows.Forms.CheckBox CB_ShowFirstResult;
     }
 }

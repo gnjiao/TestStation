@@ -11,6 +11,7 @@ namespace JbImage
         public static Dictionary<string, string> Item = new Dictionary<string, string>() {
             { "UseCanny", "false"},
             { "SaveFile", "false"},
+            { "ShowFirstResult", "false"},
 
             { "BinThreshold", "30"},
 

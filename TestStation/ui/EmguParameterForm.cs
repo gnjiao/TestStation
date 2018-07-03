@@ -42,6 +42,7 @@ namespace TestStation.ui
 
             EmguParameters.Item["SaveFile"] = CB_Save.Checked.ToString();
             EmguParameters.Item["UseCanny"] = CB_UseCanny.Checked.ToString();
+            EmguParameters.Item["ShowFirstResult"] = CB_ShowFirstResult.Checked.ToString();
         }
 
         private void BTN_Save_Click(object sender, EventArgs e)
@@ -74,6 +75,7 @@ namespace TestStation.ui
 
             Properties.Settings.Default.SaveFile = EmguParameters.Item["SaveFile"];
             Properties.Settings.Default.UseCanny = EmguParameters.Item["UseCanny"];
+            Properties.Settings.Default.ShowFirstResult = EmguParameters.Item["ShowFirstResult"];
 
             Properties.Settings.Default.Save();
         }
@@ -111,6 +113,7 @@ namespace TestStation.ui
 
             CB_UseCanny.Checked = bool.Parse(EmguParameters.Item["UseCanny"]);
             CB_Save.Checked = bool.Parse(EmguParameters.Item["SaveFile"]);
+            CB_ShowFirstResult.Checked = bool.Parse(EmguParameters.Item["ShowFirstResult"]);
         }
     }
 }

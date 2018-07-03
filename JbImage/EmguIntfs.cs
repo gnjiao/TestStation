@@ -281,12 +281,19 @@ namespace JbImage
         }
         public Bitmap DrawCircles()
         {
+            bool showFirstResult = bool.Parse(EmguParameters.Item["ShowFirstResult"]);
+
             _log.Debug("Start DrawCircles");
             Mat circleImage = _rawImg.Mat;
-            for (int i = 0; i < FilteredCircles.Count; i++)
+
+            if (showFirstResult)
             {
-                CvInvoke.Circle(circleImage, Point.Round(FilteredCircles[i].Center), (int)FilteredCircles[i].Radius, new Bgr(Color.Yellow).MCvScalar, 1);
+                for (int i = 0; i < FilteredCircles.Count; i++)
+                {
+                    CvInvoke.Circle(circleImage, Point.Round(FilteredCircles[i].Center), (int)FilteredCircles[i].Radius, new Bgr(Color.Yellow).MCvScalar, 1);
+                }
             }
+
             for (int i = 0; i < FilteredCircles2nd.Count; i++)
             {
                 CvInvoke.Circle(circleImage, Point.Round(FilteredCircles2nd[i].Center), (int)FilteredCircles2nd[i].Radius, new Bgr(Color.Red).MCvScalar, 1);

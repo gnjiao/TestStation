@@ -29,6 +29,8 @@ namespace TestStation
         {
             EmguParameters.Item["UseCanny"] = Properties.Settings.Default.UseCanny;
             EmguParameters.Item["SaveFile"] = Properties.Settings.Default.SaveFile;
+            EmguParameters.Item["ShowFirstResult"] = Properties.Settings.Default.ShowFirstResult;
+
             EmguParameters.Item["BinThreshold"] = Properties.Settings.Default.BinThreshold;
 
             EmguParameters.Item["Canny1Threshold1"] = Properties.Settings.Default.Canny1Threshold1;
