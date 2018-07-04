@@ -74,5 +74,8 @@
     <Setting Name="ShowFirstResult" Type="System.String" Scope="User">
       <Value Profile="(Default)">true</Value>
     </Setting>
+    <Setting Name="FilterSizeExtra" Type="System.String" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

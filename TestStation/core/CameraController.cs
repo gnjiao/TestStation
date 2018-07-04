@@ -26,6 +26,7 @@ namespace TestStation.core
         string _filePath;
         private List<double> _distances = new List<double>();
         private List<EmguCircleImage> _imgs = new List<EmguCircleImage>();
+        private string _testType = "";
         public Result Open(string cameraType)
         {
             if (mCamera == null)
@@ -50,6 +51,7 @@ namespace TestStation.core
                 }
 
                 mCamera = HardwareSrv.GetInstance().Get("Camera") as Camera;
+                _testType = cameraType;
 
                 try
                 {

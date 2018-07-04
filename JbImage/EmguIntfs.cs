@@ -205,9 +205,9 @@ namespace JbImage
             var raw = EmguIntfs.ToImage(_grayedUmat);
             foreach (var circle in Circles)
             {
-                int startX = (int)System.Math.Floor(circle.Center.X - circle.Radius - 10);
-                int startY = (int)System.Math.Floor(circle.Center.Y - circle.Radius - 10);
-                int len = (int)System.Math.Ceiling((double)circle.Radius * 2.0) + 20;
+                int startX = (int)System.Math.Floor(circle.Center.X - circle.Radius - Int32.Parse(EmguParameters.Item["FilterSizeExtra"]));
+                int startY = (int)System.Math.Floor(circle.Center.Y - circle.Radius - Int32.Parse(EmguParameters.Item["FilterSizeExtra"]));
+                int len = (int)System.Math.Ceiling((double)circle.Radius * 2.0) + 2 * Int32.Parse(EmguParameters.Item["FilterSizeExtra"]);
 
                 int strength = raw.Data[(int)circle.Center.Y, (int)circle.Center.X, 0];
                 if (strength < 30)

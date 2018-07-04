@@ -310,5 +310,17 @@ namespace TestStation.Properties {
                 this["ShowFirstResult"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public string FilterSizeExtra {
+            get {
+                return ((string)(this["FilterSizeExtra"]));
+            }
+            set {
+                this["FilterSizeExtra"] = value;
+            }
+        }
     }
 }

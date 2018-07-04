@@ -32,6 +32,7 @@ namespace TestStation
             EmguParameters.Item["ShowFirstResult"] = Properties.Settings.Default.ShowFirstResult;
 
             EmguParameters.Item["BinThreshold"] = Properties.Settings.Default.BinThreshold;
+            EmguParameters.Item["FilterSizeExtra"] = Properties.Settings.Default.FilterSizeExtra;
 
             EmguParameters.Item["Canny1Threshold1"] = Properties.Settings.Default.Canny1Threshold1;
             EmguParameters.Item["Canny1Threshold2"] = Properties.Settings.Default.Canny1Threshold2;

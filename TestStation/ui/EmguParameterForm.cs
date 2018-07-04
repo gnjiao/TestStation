@@ -15,6 +15,7 @@ namespace TestStation.ui
         private void BTN_Set_Click(object sender, EventArgs e)
         {
             EmguParameters.Item["BinThreshold"] = tbBinThreshold.Text;
+            EmguParameters.Item["FilterSizeExtra"] = tbFilterSizeExtra.Text;
 
             EmguParameters.Item["Canny1Threshold1"] = tbCanny1Threshold1.Text;
             EmguParameters.Item["Canny1Threshold2"] = tbCanny1Threshold2.Text;
@@ -48,6 +49,7 @@ namespace TestStation.ui
         private void BTN_Save_Click(object sender, EventArgs e)
         {
             Properties.Settings.Default.BinThreshold = EmguParameters.Item["BinThreshold"];
+            Properties.Settings.Default.FilterSizeExtra = EmguParameters.Item["FilterSizeExtra"];
 
             Properties.Settings.Default.Canny1Threshold1 = EmguParameters.Item["Canny1Threshold1"];
             Properties.Settings.Default.Canny1Threshold2 = EmguParameters.Item["Canny1Threshold2"];
@@ -86,6 +88,7 @@ namespace TestStation.ui
         private void LoadEmguParameters()
         {
             tbBinThreshold.Text = EmguParameters.Item["BinThreshold"];
+            tbFilterSizeExtra.Text = EmguParameters.Item["FilterSizeExtra"];
 
             tbCanny1Threshold1.Text = EmguParameters.Item["Canny1Threshold1"];
             tbCanny1Threshold2.Text = EmguParameters.Item["Canny1Threshold2"];

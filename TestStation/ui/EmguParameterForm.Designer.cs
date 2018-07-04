@@ -80,6 +80,8 @@
             this.CB_Save = new System.Windows.Forms.CheckBox();
             this.CB_UseCanny = new System.Windows.Forms.CheckBox();
             this.CB_ShowFirstResult = new System.Windows.Forms.CheckBox();
+            this.label19 = new System.Windows.Forms.Label();
+            this.tbFilterSizeExtra = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -292,6 +294,8 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.tbFilterSizeExtra);
+            this.groupBox2.Controls.Add(this.label19);
             this.groupBox2.Controls.Add(this.tbHough2MaxRadius);
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.tbHough2MinRadius);
@@ -346,7 +350,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(19, 205);
+            this.label2.Location = new System.Drawing.Point(19, 219);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(152, 18);
             this.label2.TabIndex = 4;
@@ -362,7 +366,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(19, 85);
+            this.label3.Location = new System.Drawing.Point(19, 99);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(152, 18);
             this.label3.TabIndex = 1;
@@ -378,7 +382,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(19, 125);
+            this.label4.Location = new System.Drawing.Point(19, 139);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(152, 18);
             this.label4.TabIndex = 2;
@@ -394,7 +398,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(19, 165);
+            this.label12.Location = new System.Drawing.Point(19, 179);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(170, 18);
             this.label12.TabIndex = 3;
@@ -418,7 +422,7 @@
             // 
             // tbCanny2I2Gradient
             // 
-            this.tbCanny2I2Gradient.Location = new System.Drawing.Point(211, 195);
+            this.tbCanny2I2Gradient.Location = new System.Drawing.Point(211, 209);
             this.tbCanny2I2Gradient.Name = "tbCanny2I2Gradient";
             this.tbCanny2I2Gradient.Size = new System.Drawing.Size(100, 28);
             this.tbCanny2I2Gradient.TabIndex = 37;
@@ -434,7 +438,7 @@
             // 
             // tbCanny2ApertureSize
             // 
-            this.tbCanny2ApertureSize.Location = new System.Drawing.Point(211, 155);
+            this.tbCanny2ApertureSize.Location = new System.Drawing.Point(211, 169);
             this.tbCanny2ApertureSize.Name = "tbCanny2ApertureSize";
             this.tbCanny2ApertureSize.Size = new System.Drawing.Size(100, 28);
             this.tbCanny2ApertureSize.TabIndex = 36;
@@ -450,7 +454,7 @@
             // 
             // tbCanny2Threshold2
             // 
-            this.tbCanny2Threshold2.Location = new System.Drawing.Point(211, 115);
+            this.tbCanny2Threshold2.Location = new System.Drawing.Point(211, 129);
             this.tbCanny2Threshold2.Name = "tbCanny2Threshold2";
             this.tbCanny2Threshold2.Size = new System.Drawing.Size(100, 28);
             this.tbCanny2Threshold2.TabIndex = 35;
@@ -466,7 +470,7 @@
             // 
             // tbCanny2Threshold1
             // 
-            this.tbCanny2Threshold1.Location = new System.Drawing.Point(211, 75);
+            this.tbCanny2Threshold1.Location = new System.Drawing.Point(211, 89);
             this.tbCanny2Threshold1.Name = "tbCanny2Threshold1";
             this.tbCanny2Threshold1.Size = new System.Drawing.Size(100, 28);
             this.tbCanny2Threshold1.TabIndex = 34;
@@ -558,6 +562,22 @@
             this.CB_ShowFirstResult.Text = "Show First Result";
             this.CB_ShowFirstResult.UseVisualStyleBackColor = true;
             // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(19, 57);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(143, 18);
+            this.label19.TabIndex = 44;
+            this.label19.Text = "FilterSizeExtra";
+            // 
+            // tbFilterSizeExtra
+            // 
+            this.tbFilterSizeExtra.Location = new System.Drawing.Point(211, 48);
+            this.tbFilterSizeExtra.Name = "tbFilterSizeExtra";
+            this.tbFilterSizeExtra.Size = new System.Drawing.Size(100, 28);
+            this.tbFilterSizeExtra.TabIndex = 45;
+            // 
             // EmguParameterForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
@@ -636,5 +656,7 @@
         private System.Windows.Forms.CheckBox CB_Save;
         private System.Windows.Forms.CheckBox CB_UseCanny;
         private System.Windows.Forms.CheckBox CB_ShowFirstResult;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.TextBox tbFilterSizeExtra;
     }
 }

@@ -14,6 +14,7 @@ namespace JbImage
             { "ShowFirstResult", "false"},
 
             { "BinThreshold", "30"},
+            { "FilterSizeExtra", "10"},
 
             { "Canny1Threshold1", "90" },
             { "Canny1Threshold2", "180" },
