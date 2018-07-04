@@ -156,7 +156,7 @@ namespace JbImage
         public List<CircleF> FilteredCircles2nd;
         public List<int> FilteredLights;
 
-        public EmguCircleImage(string path, int[] minmax)
+        private void NFTAnalyze(string path)
         {
             _log.Debug(Utils.String.Flatten(EmguParameters.Item));
 
@@ -205,9 +205,16 @@ namespace JbImage
             var raw = EmguIntfs.ToImage(_grayedUmat);
             foreach (var circle in Circles)
             {
-                int startX = (int)System.Math.Floor(circle.Center.X - circle.Radius - Int32.Parse(EmguParameters.Item["FilterSizeExtra"]));
-                int startY = (int)System.Math.Floor(circle.Center.Y - circle.Radius - Int32.Parse(EmguParameters.Item["FilterSizeExtra"]));
-                int len = (int)System.Math.Ceiling((double)circle.Radius * 2.0) + 2 * Int32.Parse(EmguParameters.Item["FilterSizeExtra"]);
+                int extra = Int32.Parse(EmguParameters.Item["FilterSizeExtra"]);
+
+                int startX = (int)System.Math.Floor(circle.Center.X - circle.Radius - extra);
+                int startY = (int)System.Math.Floor(circle.Center.Y - circle.Radius - extra);
+                int len = (int)System.Math.Ceiling((double)circle.Radius * 2.0) + 2 * extra;
+                if (startX < 0 || startY < 0)
+                {
+                    _log.Warn("FilterSizeExtra may be too big, filter abandoned");
+                    continue;
+                }
 
                 int strength = raw.Data[(int)circle.Center.Y, (int)circle.Center.X, 0];
                 if (strength < 30)
@@ -278,6 +285,32 @@ namespace JbImage
             watch.Stop();
             msgBuilder.Append(string.Format("{0} Hough circles - {1} ms; ", testName, watch.ElapsedMilliseconds));
             _log.Debug(msgBuilder.ToString());
+        }
+        private void FFTAnalyze(string path)
+        {
+            Stopwatch watch = Stopwatch.StartNew();
+            _imgPath = path;
+            _rawImg = EmguIntfs.Load(path);
+            _grayedUmat = EmguIntfs.Grayed(_rawImg);
+            Image<Gray, Byte> _edged;
+            _edged = EmguIntfs.Canny(EmguIntfs.ToImage(_grayedUmat),
+                double.Parse(EmguParameters.Item["Canny1Threshold1"]),
+                double.Parse(EmguParameters.Item["Canny1Threshold2"]),
+                Int32.Parse(EmguParameters.Item["Canny1ApertureSize"]),
+                bool.Parse(EmguParameters.Item["Canny1I2Gradient"]));
+            _edged.Save(Utils.String.FilePostfix(_imgPath, "-1-edge"));
+        }
+        public EmguCircleImage(string path, string testType, int[] minmax)
+        {
+            switch (testType)
+            {
+                case "NFT":
+                    NFTAnalyze(path);
+                    break;
+                case "FFT":
+                    FFTAnalyze(path);
+                    break;
+            }
         }
         public Bitmap DrawCircles()
         {

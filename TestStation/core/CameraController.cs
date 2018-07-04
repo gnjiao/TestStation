@@ -29,6 +29,8 @@ namespace TestStation.core
         private string _testType = "";
         public Result Open(string cameraType)
         {
+            _testType = cameraType;
+
             if (mCamera == null)
             {
                 if (!string.IsNullOrEmpty(Config.ForceCameraType))
@@ -51,7 +53,6 @@ namespace TestStation.core
                 }
 
                 mCamera = HardwareSrv.GetInstance().Get("Camera") as Camera;
-                _testType = cameraType;
 
                 try
                 {
@@ -97,14 +98,13 @@ namespace TestStation.core
             InsertImg(LatestImage, distance, false);
             return new Result("Ok");
         }
-        public Result Analyze(double distance)
+        public Result Analyze(string testType, double distance)
         {
-            return Analyze(Config.RadiusLimit(distance));
+            return Analyze(testType, Config.RadiusLimit(distance));
         }
-        public Result Analyze(int[] radiusLimit)
+        public Result Analyze(string testType, int[] radiusLimit)
         {
-            _log.Debug("Start Analyze");
-            EmguCircleImage image = new EmguCircleImage(_filePath, radiusLimit);
+            EmguCircleImage image = new EmguCircleImage(_filePath, testType, radiusLimit);
             _imgs.Add(image);
 
             //image.FilterOnStrength(Config.CountThreshold);

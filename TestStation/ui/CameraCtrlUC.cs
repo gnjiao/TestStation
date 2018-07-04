@@ -39,7 +39,7 @@ namespace TestStation
         {
             InitializeComponent();
             InitializeHelpInfo();
-            CMB_CameraType.SelectedIndex = 0;
+            CMB_CameraType.SelectedIndex = 1;
 
             Logger log = new Logger("TestStation");
             log.Debug(string.Format("TestStation(V{0}) Started", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString()));
@@ -106,11 +106,11 @@ namespace TestStation
 
                 if (!double.IsNaN(DbgMinRadius) && !double.IsNaN(DbgMaxRadius))
                 {
-                    _cameraCtrl.Analyze(new int[] { (int)DbgMinRadius, (int)DbgMaxRadius }).ShowMessageBox();
+                    _cameraCtrl.Analyze(CMB_CameraType.Text, new int[] { (int)DbgMinRadius, (int)DbgMaxRadius }).ShowMessageBox();
                 }
                 else
                 {
-                    _cameraCtrl.Analyze(Distance).ShowMessageBox();
+                    _cameraCtrl.Analyze(CMB_CameraType.Text, Distance).ShowMessageBox();
                 }
                 UpdateImage?.Invoke(_cameraCtrl.AnalyzedImage);
             }
@@ -229,7 +229,7 @@ namespace TestStation
                 i += 2;
 
                 _cameraCtrl.Load(file, Distance);
-                _cameraCtrl.Analyze(Distance);
+                _cameraCtrl.Analyze("NFT", Distance);
             }
         }
         private int dbgImageCount = 0;
