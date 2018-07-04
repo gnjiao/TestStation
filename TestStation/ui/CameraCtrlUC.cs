@@ -53,10 +53,10 @@ namespace TestStation
         }
         private void RefreshImage(object sender, EventArgs e)
         {
-            _updateTimer.Stop();
-
             lock (_updateLock)
             {
+                _updateTimer.Stop();
+
                 Bitmap image = null;
 
 #if false
@@ -75,9 +75,9 @@ namespace TestStation
                 {
                     UpdateImage?.Invoke(image);
                 }
-            }
 
-            _updateTimer.Start();
+                _updateTimer.Start();
+            }
         }
         private void BTN_Read_Click(object sender, EventArgs e)
         {
@@ -93,18 +93,20 @@ namespace TestStation
         }
         private void BTN_ImgAnalyze_Click(object sender, EventArgs e)
         {
-            _log.Debug("BTN_ImgAnalyze_Click");
             if (BTN_ImgAnalyze.Text == "Image Analyze")
             {
                 if (_updateTimer.Enabled)
                 {
-                    _updateTimer.Stop();
-                    BTN_ImgAnalyze.Text = "Resume";
+                    lock (_updateLock)
+                    {
+                        _updateTimer.Stop();
+                        BTN_ImgAnalyze.Text = "Resume";
+                    }
                 }
 
                 if (!double.IsNaN(DbgMinRadius) && !double.IsNaN(DbgMaxRadius))
                 {
-                    _cameraCtrl.Analyze(new int[] { (int)DbgMinRadius , (int)DbgMaxRadius }).ShowMessageBox();
+                    _cameraCtrl.Analyze(new int[] { (int)DbgMinRadius, (int)DbgMaxRadius }).ShowMessageBox();
                 }
                 else
                 {
@@ -138,8 +140,6 @@ namespace TestStation
         }
         private void BTN_Load_Click(object sender, EventArgs e)
         {
-            _updateTimer.Stop();
-
             OpenFileDialog d = new OpenFileDialog();
             if (d.ShowDialog() == DialogResult.OK)
             {
