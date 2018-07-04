@@ -103,8 +103,9 @@ namespace Hardware
             {
                 switch (key)
                 {
-                    case "Delay":
-                        return new Result("Fail", "Under development");
+                    case "Gain":
+                        _tlCamera.Gain = UInt32.Parse(param[key]);
+                        return new Result("Ok");
                     case "Exposure":
                         _tlCamera.ExposureTime_us = 1000 * UInt32.Parse(param[key]);
                         return new Result("Ok");

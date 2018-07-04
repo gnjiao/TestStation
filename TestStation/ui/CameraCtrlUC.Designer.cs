@@ -45,7 +45,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.TB_ExpoMs = new System.Windows.Forms.TextBox();
-            this.TB_DelayMs = new System.Windows.Forms.TextBox();
+            this.TB_Gain = new System.Windows.Forms.TextBox();
             this.BTN_SetCamera = new System.Windows.Forms.Button();
             this.TB_Parameters = new System.Windows.Forms.Button();
             this.SuspendLayout();
@@ -187,9 +187,9 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(5, 386);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(53, 18);
+            this.label4.Size = new System.Drawing.Size(44, 18);
             this.label4.TabIndex = 23;
-            this.label4.Text = "Delay";
+            this.label4.Text = "Gain";
             // 
             // TB_ExpoMs
             // 
@@ -199,13 +199,13 @@
             this.TB_ExpoMs.TabIndex = 22;
             this.TB_ExpoMs.Text = "ms";
             // 
-            // TB_DelayMs
+            // TB_Gain
             // 
-            this.TB_DelayMs.Location = new System.Drawing.Point(64, 381);
-            this.TB_DelayMs.Name = "TB_DelayMs";
-            this.TB_DelayMs.Size = new System.Drawing.Size(72, 28);
-            this.TB_DelayMs.TabIndex = 21;
-            this.TB_DelayMs.Text = "ms";
+            this.TB_Gain.Location = new System.Drawing.Point(64, 381);
+            this.TB_Gain.Name = "TB_Gain";
+            this.TB_Gain.Size = new System.Drawing.Size(72, 28);
+            this.TB_Gain.TabIndex = 21;
+            this.TB_Gain.Text = "90";
             // 
             // BTN_SetCamera
             // 
@@ -236,7 +236,7 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.TB_ExpoMs);
-            this.Controls.Add(this.TB_DelayMs);
+            this.Controls.Add(this.TB_Gain);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.TB_DbgMaxRadius);
@@ -273,7 +273,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox TB_ExpoMs;
-        private System.Windows.Forms.TextBox TB_DelayMs;
+        private System.Windows.Forms.TextBox TB_Gain;
         private System.Windows.Forms.Button BTN_SetCamera;
         private System.Windows.Forms.Button TB_Parameters;
     }

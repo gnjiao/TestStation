@@ -180,10 +180,10 @@ namespace TestStation.core
             mCamera = null;
             return new Result("Ok");
         }
-        public Result SetDelay(int ms)
+        public Result SetGain(int gain)
         {
             return mCamera.Execute(new Command("Config", new Dictionary<string, string>() {
-                { "Delay", ms.ToString() }
+                { "Gain", gain.ToString() }
             }));
         }
         public Result SetExposure(int ms)

@@ -328,13 +328,13 @@ namespace TestStation
 
         private void BTN_SetCamera_Click(object sender, EventArgs e)
         {
-            double delay = ReadDouble(TB_DelayMs);
-            if (double.IsNaN(delay))
+            double gain = ReadDouble(TB_Gain);
+            if (double.IsNaN(gain))
             {
-                _cameraCtrl.SetDelay((int)delay);
+                _cameraCtrl.SetGain((int)gain);
             }
 
-            double exposure = ReadDouble(TB_DelayMs);
+            double exposure = ReadDouble(TB_Gain);
             if (double.IsNaN(exposure))
             {
                 _cameraCtrl.SetExposure((int)exposure);
