@@ -125,23 +125,31 @@ namespace JbImage
                 Int32.Parse(EmguParameters.Item["Hough2MaxRadius"]));
             Circles2nd = Sort(Circles2nd);
             FilteredCircles2nd = new List<CircleF>();
+            List<int> brightness = new List<int>();
+            int i = 0;
             foreach (var circle in Circles2nd)
             {
                 int strength = raw.Data[(int)circle.Center.Y, (int)circle.Center.X, 0];
                 if (strength > 30)
                 {
                     FilteredCircles2nd.Add(circle);
+                    int b = CountPixels(_grayedUmat, circle);
+                    brightness.Add(b);
+                    _log.Debug($"Circle{i:D3}: ({circle.Center.X},{circle.Center.Y}) {circle.Radius} {b}");
+
+                    i++;
                 }
             }
 
             CircleImage ret = new CircleImage();
             ret.Path = Path;
             ret.Circles = FilteredCircles2nd;
-            ret.RetImg = NFTDrawCircle();
+            ret.Brightness = brightness;
+            ret.RetImg = DrawCircle();
 
             return ret;
         }
-        public override Result Calculate(List<CircleImage> img, List<double> distance)
+        private double[] CalcWeist(List<CircleImage> img, List<double> distance)
         {
             double[] result = new double[img[0].Circles.Count];
             for (int circleId = 0; circleId < result.Length; circleId++)
@@ -175,10 +183,30 @@ namespace JbImage
                 }
             }
 
-            return new Result("Ok");
+            return result;
+        }
+        private double CalcDivergenceAngle(List<CircleImage> img)
+        {
+            return double.NaN;
+        }
+        private double CalcUniformity(List<CircleImage> img)
+        {
+            return double.NaN;
+        }
+        public override Result Calculate(List<CircleImage> img, List<double> distance)
+        {
+            Dictionary<string, string> ret = new Dictionary<string, string>();
+
+            ret["Dead Emitter Count"] = img[0].Circles.Count.ToString();
+            ret["Dead Cluster Count"] = img[0].Circles.Count.ToString();
+            ret["Emitter Divergence Angle"] = CalcDivergenceAngle(img).ToString("F3");
+            ret["Beam Waist Diameter"] = CalcWeist(img, distance).ToList().FindAll(x => x < 30 && x > 15).ToList().Average().ToString("F3");
+            ret["Emission Uniformity"] = CalcDivergenceAngle(img).ToString("F3");
+
+            return new Result("Ok", null, ret);
         }
 
-        private Bitmap NFTDrawCircle()
+        private Bitmap DrawCircle()
         {
             bool showFirstResult = bool.Parse(EmguParameters.Item["ShowFirstResult"]);
 

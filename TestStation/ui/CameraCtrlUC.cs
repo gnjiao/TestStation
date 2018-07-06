@@ -125,10 +125,10 @@ namespace TestStation
 #if DEBUG
             //dbgAutoLoad();
 #endif
-            _cameraCtrl.Calculate().ShowMessageBox();
-            UpdateResult?.Invoke(new Dictionary<string, string>() {
-                { "TestKey1", "TestValue1" }, { "TestKey2", "TestValue2" }
-            });
+            Result ret = _cameraCtrl.Calculate();
+            ret.ShowMessageBox();
+
+            UpdateResult?.Invoke(ret.Param as Dictionary<string, string>);
         }
         private void BTN_Open_Click(object sender, EventArgs e)
         {

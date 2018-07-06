@@ -56,5 +56,22 @@ namespace JbImage
             });
             return temp.ToArray();
         }
+        public static int CountPixels(Image<Gray, Byte> img, CircleF circle)
+        {
+            double centerX = circle.Center.X;
+            double centerY = circle.Center.Y;
+            double r = circle.Radius;
+            int sum = 0;
+
+            for (int x = (int)System.Math.Floor(centerX - r); x < (int)System.Math.Ceiling(centerX + r); x++)
+            {
+                for (int y = (int)System.Math.Floor(centerY - r); y < (int)System.Math.Ceiling(centerY + r); y++)
+                {
+                    sum += img.Data[y, x, 0];
+                }
+            }
+
+            return sum;
+        }
     }
 }

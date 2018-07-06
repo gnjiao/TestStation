@@ -85,9 +85,17 @@ namespace JbImage
 
             return ret;
         }
+        private double CalcDivergenceAngle(List<CircleImage> img)
+        {
+            return double.NaN;
+        }
         public override Result Calculate(List<CircleImage> img, List<double> distance)
         {
-            return new Result("Ok");
+            Dictionary<string, string> ret = new Dictionary<string, string>();
+
+            ret["Emitter Divergence Angle"] = CalcDivergenceAngle(img).ToString("F3");
+
+            return new Result("Ok", null, ret);
         }
     }
 }
