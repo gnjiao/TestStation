@@ -25,7 +25,7 @@ namespace TestStation.core
 
         string _filePath;
         private List<double> _distances = new List<double>();
-        private List<EmguCircleImage> _imgs = new List<EmguCircleImage>();
+        private List<CircleImage> _imgs = new List<CircleImage>();
         private string _testType = "";
         public Result Open(string cameraType)
         {
@@ -104,70 +104,16 @@ namespace TestStation.core
         }
         public Result Analyze(string testType, int[] radiusLimit)
         {
-            EmguCircleImage image = new EmguCircleImage(_filePath, testType, radiusLimit);
-            _imgs.Add(image);
-
-            //image.FilterOnStrength(Config.CountThreshold);
-            AnalyzedImage = image.DrawCircles(testType);
-            _log.Debug($"Analyze image {_filePath} use " +
-                $"CountThreshold {Config.CountThreshold} " +
-                $"RadiusLimits {radiusLimit[0]} {radiusLimit[1]}");
-            _log.Debug(Utils.String.Flatten(image.StatisticInfo()));
-
-            return new Result("Ok");
-        }
-        private Result _calculate()
-        {
-            double[] result = new double[_imgs[0].FilteredCircles.Count];
-            for (int circleId = 0; circleId < result.Length; circleId++)
-            {
-                try
-                {
-                    double[] radius = new double[_imgs.Count];
-
-                    for (int imgId = 0; imgId < radius.Length; imgId++)
-                    {
-                        radius[imgId] = _imgs[imgId].FilteredCircles[circleId].Radius;
-                    }
-                    string output = "";
-                    for (int i = 0; i < radius.Length; i++)
-                    {
-                        output += radius[i].ToString("F2") + ",";
-                    }
-                    if (output.Length > 0)
-                    {
-                        output = output.Substring(0, output.Length - 1);
-                    }
-                    _log.Debug($"Circle{circleId} radius: {output}");
-
-                    result[circleId] = Matlab.CalcWeist2(radius, _distances.ToArray());
-                    _log.Info($"{circleId}: {result[circleId]}" + Environment.NewLine);
-                }
-                catch (Exception ex)
-                {
-                    result[circleId] = double.NaN;
-                    _log.Error($"Failed to calcute weist for {circleId}", ex);
-                }
-            }
+            AnalyzerIntf analyzer = AnalyzerIntf.GetAnalyzer(testType);
+            CircleImage i = analyzer.FindCircle(_filePath);
+            _imgs.Add(i);
+            AnalyzedImage = i.RetImg;
 
             return new Result("Ok");
         }
         public Result Calculate()
         {
-            Result ret;
-
-            if (_imgs.Count > 0 && _imgs.Count == _distances.Count)
-            {
-                ret =  _calculate();
-            }
-            else if (_imgs.Count == 0)
-            {
-                ret = new Result("Fail", "No analyzed images found");
-            }
-            else
-            {
-                ret = new Result("Fail", "Calculation can only apply to images with distance parameter, please re-do the test");
-            }
+            Result ret = AnalyzerIntf.GetAnalyzer("NFT").Calculate(_imgs, _distances);
 
             _distances.Clear();
             _imgs.Clear();

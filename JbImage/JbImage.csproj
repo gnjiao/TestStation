@@ -7,8 +7,8 @@
     <ProjectGuid>{88E41CF6-CC56-49D7-B09D-E220F5727653}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Image</RootNamespace>
-    <AssemblyName>Image</AssemblyName>
+    <RootNamespace>JbImage</RootNamespace>
+    <AssemblyName>JbImage</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -56,7 +56,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnalyzerFFT.cs" />
+    <Compile Include="AnalyzerIntf.cs" />
+    <Compile Include="AnalyzerNFT.cs" />
     <Compile Include="Circle.cs" />
+    <Compile Include="CircleImage.cs" />
     <Compile Include="EmguParameters.cs" />
     <Compile Include="SingleCircle.cs" />
     <Compile Include="CirclesFinder.cs" />
