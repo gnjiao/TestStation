@@ -343,7 +343,7 @@ namespace TestStation
 
         private void TB_Parameters_Click(object sender, EventArgs e)
         {
-            EmguParameterForm form = new EmguParameterForm();
+            ParameterForm form = new ParameterForm(TB_Distance.Text);
             form.Show();
         }
     }

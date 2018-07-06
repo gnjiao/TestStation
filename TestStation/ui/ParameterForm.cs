@@ -5,17 +5,26 @@ using Utils;
 
 namespace TestStation.ui
 {
-    public partial class EmguParameterForm : Form
+    public partial class ParameterForm : Form
     {
-        public EmguParameterForm()
+        public ParameterForm(string distance)
         {
             InitializeComponent();
-            LoadEmguParameters();
+            tbTag.Text = distance;
+            LoadEmguParameters(distance);
         }
 
         private void BTN_Set_Click(object sender, EventArgs e)
         {
-            Parameters param = EmguParameters.Params[0];
+            Parameters param = EmguParameters.Params.Find(x => x.Tag == tbTag.Text);
+            if (param == null)
+            {
+                param = new Parameters
+                {
+                    Tag = tbTag.Text
+                };
+                EmguParameters.Params.Add(param);
+            }
 
             param.BinThreshold = Int32.Parse(tbBinThreshold.Text);
             param.FilterSquareExtra = Int32.Parse(tbFilterSizeExtra.Text);
@@ -52,14 +61,20 @@ namespace TestStation.ui
         private void BTN_Save_Click(object sender, EventArgs e)
         {
             XmlSerializer.Save("EmguParameters.xml", EmguParameters.Params);
+            Close();
         }
         private void BTN_Reset_Click(object sender, EventArgs e)
         {
-            LoadEmguParameters();
+            LoadEmguParameters(tbTag.Text);
         }
-        private void LoadEmguParameters()
+        private void LoadEmguParameters(string distance)
         {
-            Parameters param = EmguParameters.Params[0];
+            Parameters param = EmguParameters.Params.Find(x => x.Tag == distance);
+            if (param == null)
+            {
+                MessageBox.Show($"Failed to find parameters for {distance}, load default parameters instead");
+                param = EmguParameters.Params.Find(x => x.Tag == "Default");
+            }
 
             tbBinThreshold.Text = param.BinThreshold.ToString();
             tbFilterSizeExtra.Text = param.FilterSquareExtra.ToString();

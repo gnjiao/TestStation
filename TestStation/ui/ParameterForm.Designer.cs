@@ -1,6 +1,6 @@
 ﻿namespace TestStation.ui
 {
-    partial class EmguParameterForm
+    partial class ParameterForm
     {
         /// <summary>
         /// Required designer variable.
@@ -52,6 +52,8 @@
             this.tbCanny1Threshold1 = new System.Windows.Forms.TextBox();
             this.tbBinThreshold = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.tbFilterSizeExtra = new System.Windows.Forms.TextBox();
+            this.label19 = new System.Windows.Forms.Label();
             this.tbHough2MaxRadius = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tbHough2MinRadius = new System.Windows.Forms.TextBox();
@@ -74,14 +76,14 @@
             this.label17 = new System.Windows.Forms.Label();
             this.textBox22 = new System.Windows.Forms.TextBox();
             this.label18 = new System.Windows.Forms.Label();
-            this.BTN_Reset = new System.Windows.Forms.Button();
+            this.BTN_Load = new System.Windows.Forms.Button();
             this.BTN_Set = new System.Windows.Forms.Button();
             this.BTN_Save = new System.Windows.Forms.Button();
             this.CB_Save = new System.Windows.Forms.CheckBox();
             this.CB_UseCanny = new System.Windows.Forms.CheckBox();
             this.CB_ShowFirstResult = new System.Windows.Forms.CheckBox();
-            this.label19 = new System.Windows.Forms.Label();
-            this.tbFilterSizeExtra = new System.Windows.Forms.TextBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.tbTag = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -98,7 +100,7 @@
             // lblCanny1Threshold1
             // 
             this.lblCanny1Threshold1.AutoSize = true;
-            this.lblCanny1Threshold1.Location = new System.Drawing.Point(19, 85);
+            this.lblCanny1Threshold1.Location = new System.Drawing.Point(19, 106);
             this.lblCanny1Threshold1.Name = "lblCanny1Threshold1";
             this.lblCanny1Threshold1.Size = new System.Drawing.Size(152, 18);
             this.lblCanny1Threshold1.TabIndex = 1;
@@ -107,7 +109,7 @@
             // lblCanny1Threshold2
             // 
             this.lblCanny1Threshold2.AutoSize = true;
-            this.lblCanny1Threshold2.Location = new System.Drawing.Point(19, 125);
+            this.lblCanny1Threshold2.Location = new System.Drawing.Point(19, 146);
             this.lblCanny1Threshold2.Name = "lblCanny1Threshold2";
             this.lblCanny1Threshold2.Size = new System.Drawing.Size(152, 18);
             this.lblCanny1Threshold2.TabIndex = 2;
@@ -116,7 +118,7 @@
             // lblCanny1ApertureSize
             // 
             this.lblCanny1ApertureSize.AutoSize = true;
-            this.lblCanny1ApertureSize.Location = new System.Drawing.Point(19, 165);
+            this.lblCanny1ApertureSize.Location = new System.Drawing.Point(19, 186);
             this.lblCanny1ApertureSize.Name = "lblCanny1ApertureSize";
             this.lblCanny1ApertureSize.Size = new System.Drawing.Size(170, 18);
             this.lblCanny1ApertureSize.TabIndex = 3;
@@ -125,7 +127,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(19, 205);
+            this.label5.Location = new System.Drawing.Point(19, 226);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(152, 18);
             this.label5.TabIndex = 4;
@@ -134,7 +136,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(19, 272);
+            this.label6.Location = new System.Drawing.Point(19, 293);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(80, 18);
             this.label6.TabIndex = 5;
@@ -143,7 +145,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(19, 312);
+            this.label7.Location = new System.Drawing.Point(19, 333);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(125, 18);
             this.label7.TabIndex = 6;
@@ -152,7 +154,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(19, 352);
+            this.label8.Location = new System.Drawing.Point(19, 373);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(116, 18);
             this.label8.TabIndex = 7;
@@ -161,7 +163,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(19, 392);
+            this.label9.Location = new System.Drawing.Point(19, 413);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(116, 18);
             this.label9.TabIndex = 8;
@@ -170,7 +172,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(19, 432);
+            this.label10.Location = new System.Drawing.Point(19, 453);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(143, 18);
             this.label10.TabIndex = 9;
@@ -179,7 +181,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(19, 472);
+            this.label11.Location = new System.Drawing.Point(19, 493);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(143, 18);
             this.label11.TabIndex = 10;
@@ -209,78 +211,78 @@
             this.groupBox1.Controls.Add(this.label10);
             this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Controls.Add(this.label8);
-            this.groupBox1.Location = new System.Drawing.Point(7, 42);
+            this.groupBox1.Location = new System.Drawing.Point(7, 117);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(317, 505);
+            this.groupBox1.Size = new System.Drawing.Size(317, 535);
             this.groupBox1.TabIndex = 17;
             this.groupBox1.TabStop = false;
             // 
             // tbHough1MaxRadius
             // 
-            this.tbHough1MaxRadius.Location = new System.Drawing.Point(211, 469);
+            this.tbHough1MaxRadius.Location = new System.Drawing.Point(211, 490);
             this.tbHough1MaxRadius.Name = "tbHough1MaxRadius";
             this.tbHough1MaxRadius.Size = new System.Drawing.Size(100, 28);
             this.tbHough1MaxRadius.TabIndex = 32;
             // 
             // tbHough1MinRadius
             // 
-            this.tbHough1MinRadius.Location = new System.Drawing.Point(211, 429);
+            this.tbHough1MinRadius.Location = new System.Drawing.Point(211, 450);
             this.tbHough1MinRadius.Name = "tbHough1MinRadius";
             this.tbHough1MinRadius.Size = new System.Drawing.Size(100, 28);
             this.tbHough1MinRadius.TabIndex = 31;
             // 
             // tbHough1Param2
             // 
-            this.tbHough1Param2.Location = new System.Drawing.Point(211, 382);
+            this.tbHough1Param2.Location = new System.Drawing.Point(211, 403);
             this.tbHough1Param2.Name = "tbHough1Param2";
             this.tbHough1Param2.Size = new System.Drawing.Size(100, 28);
             this.tbHough1Param2.TabIndex = 30;
             // 
             // tbHough1Param1
             // 
-            this.tbHough1Param1.Location = new System.Drawing.Point(211, 342);
+            this.tbHough1Param1.Location = new System.Drawing.Point(211, 363);
             this.tbHough1Param1.Name = "tbHough1Param1";
             this.tbHough1Param1.Size = new System.Drawing.Size(100, 28);
             this.tbHough1Param1.TabIndex = 29;
             // 
             // tbHough1MinDist
             // 
-            this.tbHough1MinDist.Location = new System.Drawing.Point(211, 302);
+            this.tbHough1MinDist.Location = new System.Drawing.Point(211, 323);
             this.tbHough1MinDist.Name = "tbHough1MinDist";
             this.tbHough1MinDist.Size = new System.Drawing.Size(100, 28);
             this.tbHough1MinDist.TabIndex = 28;
             // 
             // tbHough1Dp
             // 
-            this.tbHough1Dp.Location = new System.Drawing.Point(211, 262);
+            this.tbHough1Dp.Location = new System.Drawing.Point(211, 283);
             this.tbHough1Dp.Name = "tbHough1Dp";
             this.tbHough1Dp.Size = new System.Drawing.Size(100, 28);
             this.tbHough1Dp.TabIndex = 27;
             // 
             // tbCanny1I2Gradient
             // 
-            this.tbCanny1I2Gradient.Location = new System.Drawing.Point(211, 195);
+            this.tbCanny1I2Gradient.Location = new System.Drawing.Point(211, 216);
             this.tbCanny1I2Gradient.Name = "tbCanny1I2Gradient";
             this.tbCanny1I2Gradient.Size = new System.Drawing.Size(100, 28);
             this.tbCanny1I2Gradient.TabIndex = 26;
             // 
             // tbCanny1ApertureSize
             // 
-            this.tbCanny1ApertureSize.Location = new System.Drawing.Point(211, 155);
+            this.tbCanny1ApertureSize.Location = new System.Drawing.Point(211, 176);
             this.tbCanny1ApertureSize.Name = "tbCanny1ApertureSize";
             this.tbCanny1ApertureSize.Size = new System.Drawing.Size(100, 28);
             this.tbCanny1ApertureSize.TabIndex = 25;
             // 
             // tbCanny1Threshold2
             // 
-            this.tbCanny1Threshold2.Location = new System.Drawing.Point(211, 115);
+            this.tbCanny1Threshold2.Location = new System.Drawing.Point(211, 136);
             this.tbCanny1Threshold2.Name = "tbCanny1Threshold2";
             this.tbCanny1Threshold2.Size = new System.Drawing.Size(100, 28);
             this.tbCanny1Threshold2.TabIndex = 24;
             // 
             // tbCanny1Threshold1
             // 
-            this.tbCanny1Threshold1.Location = new System.Drawing.Point(211, 75);
+            this.tbCanny1Threshold1.Location = new System.Drawing.Point(211, 96);
             this.tbCanny1Threshold1.Name = "tbCanny1Threshold1";
             this.tbCanny1Threshold1.Size = new System.Drawing.Size(100, 28);
             this.tbCanny1Threshold1.TabIndex = 23;
@@ -318,15 +320,31 @@
             this.groupBox2.Controls.Add(this.label17);
             this.groupBox2.Controls.Add(this.textBox22);
             this.groupBox2.Controls.Add(this.label18);
-            this.groupBox2.Location = new System.Drawing.Point(372, 42);
+            this.groupBox2.Location = new System.Drawing.Point(372, 117);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(317, 505);
+            this.groupBox2.Size = new System.Drawing.Size(317, 535);
             this.groupBox2.TabIndex = 18;
             this.groupBox2.TabStop = false;
             // 
+            // tbFilterSizeExtra
+            // 
+            this.tbFilterSizeExtra.Location = new System.Drawing.Point(211, 54);
+            this.tbFilterSizeExtra.Name = "tbFilterSizeExtra";
+            this.tbFilterSizeExtra.Size = new System.Drawing.Size(100, 28);
+            this.tbFilterSizeExtra.TabIndex = 45;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(19, 63);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(143, 18);
+            this.label19.TabIndex = 44;
+            this.label19.Text = "FilterSizeExtra";
+            // 
             // tbHough2MaxRadius
             // 
-            this.tbHough2MaxRadius.Location = new System.Drawing.Point(211, 469);
+            this.tbHough2MaxRadius.Location = new System.Drawing.Point(211, 493);
             this.tbHough2MaxRadius.Name = "tbHough2MaxRadius";
             this.tbHough2MaxRadius.Size = new System.Drawing.Size(100, 28);
             this.tbHough2MaxRadius.TabIndex = 43;
@@ -342,7 +360,7 @@
             // 
             // tbHough2MinRadius
             // 
-            this.tbHough2MinRadius.Location = new System.Drawing.Point(211, 429);
+            this.tbHough2MinRadius.Location = new System.Drawing.Point(211, 453);
             this.tbHough2MinRadius.Name = "tbHough2MinRadius";
             this.tbHough2MinRadius.Size = new System.Drawing.Size(100, 28);
             this.tbHough2MinRadius.TabIndex = 42;
@@ -350,7 +368,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(19, 219);
+            this.label2.Location = new System.Drawing.Point(19, 235);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(152, 18);
             this.label2.TabIndex = 4;
@@ -358,7 +376,7 @@
             // 
             // tbHough2Param2
             // 
-            this.tbHough2Param2.Location = new System.Drawing.Point(211, 382);
+            this.tbHough2Param2.Location = new System.Drawing.Point(211, 406);
             this.tbHough2Param2.Name = "tbHough2Param2";
             this.tbHough2Param2.Size = new System.Drawing.Size(100, 28);
             this.tbHough2Param2.TabIndex = 41;
@@ -366,7 +384,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(19, 99);
+            this.label3.Location = new System.Drawing.Point(19, 115);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(152, 18);
             this.label3.TabIndex = 1;
@@ -374,7 +392,7 @@
             // 
             // tbHough2Param1
             // 
-            this.tbHough2Param1.Location = new System.Drawing.Point(211, 342);
+            this.tbHough2Param1.Location = new System.Drawing.Point(211, 366);
             this.tbHough2Param1.Name = "tbHough2Param1";
             this.tbHough2Param1.Size = new System.Drawing.Size(100, 28);
             this.tbHough2Param1.TabIndex = 40;
@@ -382,7 +400,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(19, 139);
+            this.label4.Location = new System.Drawing.Point(19, 155);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(152, 18);
             this.label4.TabIndex = 2;
@@ -390,7 +408,7 @@
             // 
             // tbHough2MinDist
             // 
-            this.tbHough2MinDist.Location = new System.Drawing.Point(211, 302);
+            this.tbHough2MinDist.Location = new System.Drawing.Point(211, 326);
             this.tbHough2MinDist.Name = "tbHough2MinDist";
             this.tbHough2MinDist.Size = new System.Drawing.Size(100, 28);
             this.tbHough2MinDist.TabIndex = 39;
@@ -398,7 +416,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(19, 179);
+            this.label12.Location = new System.Drawing.Point(19, 195);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(170, 18);
             this.label12.TabIndex = 3;
@@ -406,7 +424,7 @@
             // 
             // tbHough2Dp
             // 
-            this.tbHough2Dp.Location = new System.Drawing.Point(211, 262);
+            this.tbHough2Dp.Location = new System.Drawing.Point(211, 286);
             this.tbHough2Dp.Name = "tbHough2Dp";
             this.tbHough2Dp.Size = new System.Drawing.Size(100, 28);
             this.tbHough2Dp.TabIndex = 38;
@@ -414,7 +432,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(19, 392);
+            this.label13.Location = new System.Drawing.Point(19, 416);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(116, 18);
             this.label13.TabIndex = 8;
@@ -422,7 +440,7 @@
             // 
             // tbCanny2I2Gradient
             // 
-            this.tbCanny2I2Gradient.Location = new System.Drawing.Point(211, 209);
+            this.tbCanny2I2Gradient.Location = new System.Drawing.Point(211, 225);
             this.tbCanny2I2Gradient.Name = "tbCanny2I2Gradient";
             this.tbCanny2I2Gradient.Size = new System.Drawing.Size(100, 28);
             this.tbCanny2I2Gradient.TabIndex = 37;
@@ -430,7 +448,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(19, 272);
+            this.label14.Location = new System.Drawing.Point(19, 296);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(80, 18);
             this.label14.TabIndex = 5;
@@ -438,7 +456,7 @@
             // 
             // tbCanny2ApertureSize
             // 
-            this.tbCanny2ApertureSize.Location = new System.Drawing.Point(211, 169);
+            this.tbCanny2ApertureSize.Location = new System.Drawing.Point(211, 185);
             this.tbCanny2ApertureSize.Name = "tbCanny2ApertureSize";
             this.tbCanny2ApertureSize.Size = new System.Drawing.Size(100, 28);
             this.tbCanny2ApertureSize.TabIndex = 36;
@@ -446,7 +464,7 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(19, 472);
+            this.label15.Location = new System.Drawing.Point(19, 496);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(143, 18);
             this.label15.TabIndex = 10;
@@ -454,7 +472,7 @@
             // 
             // tbCanny2Threshold2
             // 
-            this.tbCanny2Threshold2.Location = new System.Drawing.Point(211, 129);
+            this.tbCanny2Threshold2.Location = new System.Drawing.Point(211, 145);
             this.tbCanny2Threshold2.Name = "tbCanny2Threshold2";
             this.tbCanny2Threshold2.Size = new System.Drawing.Size(100, 28);
             this.tbCanny2Threshold2.TabIndex = 35;
@@ -462,7 +480,7 @@
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(19, 432);
+            this.label16.Location = new System.Drawing.Point(19, 456);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(143, 18);
             this.label16.TabIndex = 9;
@@ -470,7 +488,7 @@
             // 
             // tbCanny2Threshold1
             // 
-            this.tbCanny2Threshold1.Location = new System.Drawing.Point(211, 89);
+            this.tbCanny2Threshold1.Location = new System.Drawing.Point(211, 105);
             this.tbCanny2Threshold1.Name = "tbCanny2Threshold1";
             this.tbCanny2Threshold1.Size = new System.Drawing.Size(100, 28);
             this.tbCanny2Threshold1.TabIndex = 34;
@@ -478,7 +496,7 @@
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(19, 312);
+            this.label17.Location = new System.Drawing.Point(19, 336);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(125, 18);
             this.label17.TabIndex = 6;
@@ -496,25 +514,25 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(19, 352);
+            this.label18.Location = new System.Drawing.Point(19, 376);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(116, 18);
             this.label18.TabIndex = 7;
             this.label18.Text = "Hough2Param1";
             // 
-            // BTN_Reset
+            // BTN_Load
             // 
-            this.BTN_Reset.Location = new System.Drawing.Point(187, 555);
-            this.BTN_Reset.Name = "BTN_Reset";
-            this.BTN_Reset.Size = new System.Drawing.Size(75, 37);
-            this.BTN_Reset.TabIndex = 19;
-            this.BTN_Reset.Text = "Reset";
-            this.BTN_Reset.UseVisualStyleBackColor = true;
-            this.BTN_Reset.Click += new System.EventHandler(this.BTN_Reset_Click);
+            this.BTN_Load.Location = new System.Drawing.Point(190, 665);
+            this.BTN_Load.Name = "BTN_Load";
+            this.BTN_Load.Size = new System.Drawing.Size(75, 37);
+            this.BTN_Load.TabIndex = 19;
+            this.BTN_Load.Text = "Load";
+            this.BTN_Load.UseVisualStyleBackColor = true;
+            this.BTN_Load.Click += new System.EventHandler(this.BTN_Reset_Click);
             // 
             // BTN_Set
             // 
-            this.BTN_Set.Location = new System.Drawing.Point(310, 555);
+            this.BTN_Set.Location = new System.Drawing.Point(315, 665);
             this.BTN_Set.Name = "BTN_Set";
             this.BTN_Set.Size = new System.Drawing.Size(75, 37);
             this.BTN_Set.TabIndex = 20;
@@ -524,7 +542,7 @@
             // 
             // BTN_Save
             // 
-            this.BTN_Save.Location = new System.Drawing.Point(438, 555);
+            this.BTN_Save.Location = new System.Drawing.Point(440, 665);
             this.BTN_Save.Name = "BTN_Save";
             this.BTN_Save.Size = new System.Drawing.Size(75, 37);
             this.BTN_Save.TabIndex = 21;
@@ -535,7 +553,7 @@
             // CB_Save
             // 
             this.CB_Save.AutoSize = true;
-            this.CB_Save.Location = new System.Drawing.Point(239, 14);
+            this.CB_Save.Location = new System.Drawing.Point(239, 89);
             this.CB_Save.Name = "CB_Save";
             this.CB_Save.Size = new System.Drawing.Size(196, 22);
             this.CB_Save.TabIndex = 22;
@@ -545,7 +563,7 @@
             // CB_UseCanny
             // 
             this.CB_UseCanny.AutoSize = true;
-            this.CB_UseCanny.Location = new System.Drawing.Point(21, 14);
+            this.CB_UseCanny.Location = new System.Drawing.Point(21, 89);
             this.CB_UseCanny.Name = "CB_UseCanny";
             this.CB_UseCanny.Size = new System.Drawing.Size(160, 22);
             this.CB_UseCanny.TabIndex = 23;
@@ -555,43 +573,46 @@
             // CB_ShowFirstResult
             // 
             this.CB_ShowFirstResult.AutoSize = true;
-            this.CB_ShowFirstResult.Location = new System.Drawing.Point(486, 14);
+            this.CB_ShowFirstResult.Location = new System.Drawing.Point(486, 89);
             this.CB_ShowFirstResult.Name = "CB_ShowFirstResult";
             this.CB_ShowFirstResult.Size = new System.Drawing.Size(187, 22);
             this.CB_ShowFirstResult.TabIndex = 24;
             this.CB_ShowFirstResult.Text = "Show First Result";
             this.CB_ShowFirstResult.UseVisualStyleBackColor = true;
             // 
-            // label19
+            // label20
             // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(19, 57);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(143, 18);
-            this.label19.TabIndex = 44;
-            this.label19.Text = "FilterSizeExtra";
+            this.label20.AutoSize = true;
+            this.label20.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label20.Location = new System.Drawing.Point(26, 35);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(88, 18);
+            this.label20.TabIndex = 25;
+            this.label20.Text = "Distance";
             // 
-            // tbFilterSizeExtra
+            // tbTag
             // 
-            this.tbFilterSizeExtra.Location = new System.Drawing.Point(211, 48);
-            this.tbFilterSizeExtra.Name = "tbFilterSizeExtra";
-            this.tbFilterSizeExtra.Size = new System.Drawing.Size(100, 28);
-            this.tbFilterSizeExtra.TabIndex = 45;
+            this.tbTag.Location = new System.Drawing.Point(131, 29);
+            this.tbTag.Name = "tbTag";
+            this.tbTag.Size = new System.Drawing.Size(100, 28);
+            this.tbTag.TabIndex = 26;
             // 
-            // EmguParameterForm
+            // ParameterForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(698, 600);
+            this.ClientSize = new System.Drawing.Size(707, 717);
+            this.Controls.Add(this.tbTag);
+            this.Controls.Add(this.label20);
             this.Controls.Add(this.CB_ShowFirstResult);
             this.Controls.Add(this.CB_UseCanny);
             this.Controls.Add(this.CB_Save);
             this.Controls.Add(this.BTN_Save);
             this.Controls.Add(this.BTN_Set);
-            this.Controls.Add(this.BTN_Reset);
+            this.Controls.Add(this.BTN_Load);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
-            this.Name = "EmguParameterForm";
+            this.Name = "ParameterForm";
             this.Text = "Parameter Form";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -628,7 +649,7 @@
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.Button BTN_Reset;
+        private System.Windows.Forms.Button BTN_Load;
         private System.Windows.Forms.Button BTN_Set;
         private System.Windows.Forms.Button BTN_Save;
         private System.Windows.Forms.TextBox tbCanny1I2Gradient;
@@ -658,5 +679,7 @@
         private System.Windows.Forms.CheckBox CB_ShowFirstResult;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.TextBox tbFilterSizeExtra;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.TextBox tbTag;
     }
 }
