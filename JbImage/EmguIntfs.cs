@@ -134,13 +134,59 @@ namespace JbImage
         }
         public static void Test()
         {
-            Image<Bgr, Byte> img = Load(testImage);
-            UMat uimage = Grayed(img);
+            StringBuilder msgBuilder = new StringBuilder("Performance: ");
+            Stopwatch watch = Stopwatch.StartNew();
 
-            Mat mask = new Mat(uimage.Size, DepthType.Cv8U, 1);
-            CvInvoke.Circle(mask, new Point(10, 10), 10, new Bgr(Color.Black).MCvScalar, -1);
+            string _imgPath = @"D:\work\TestStation\ImageTest\Test\FFT.bmp";
+            Image<Bgr, byte>_rawImg = EmguIntfs.Load(_imgPath);
+            UMat _grayedUmat = EmguIntfs.Grayed(_rawImg);
 
-            Mat imgPart = new Mat();
+            int multiple = 1;
+            UMat pyrDown = new UMat();
+            CvInvoke.PyrDown(_grayedUmat, pyrDown);
+            multiple *= 2;
+            CvInvoke.PyrDown(pyrDown, _grayedUmat);
+            multiple *= 2;
+
+            Image<Gray, Byte> _bin = EmguIntfs.Binarize(Int32.Parse(EmguParameters.Item["BinThreshold"]),
+                EmguIntfs.ToImage(_grayedUmat));
+
+            Image<Gray, Byte> _edged = EmguIntfs.Canny(_bin,
+                double.Parse(EmguParameters.Item["Canny1Threshold1"]),
+                double.Parse(EmguParameters.Item["Canny1Threshold2"]),
+                Int32.Parse(EmguParameters.Item["Canny1ApertureSize"]),
+                bool.Parse(EmguParameters.Item["Canny1I2Gradient"]));
+            _edged.Save(Utils.String.FilePostfix(_imgPath, "-1-edge"));
+
+            CircleF[] Circles = CvInvoke.HoughCircles(_edged, HoughType.Gradient,
+                double.Parse(EmguParameters.Item["Hough1Dp"]),
+                50,
+                double.Parse(EmguParameters.Item["Hough1Param1"]),
+                50,
+                200,
+                500);
+
+            #region draw
+            Mat _result = _edged.Mat;
+
+            for (int i = 0; i < Circles.Length; i++)
+            {
+                Point center = Point.Round(Circles[i].Center);
+                center.X *= 1;
+                center.Y *= 1;
+                int radius = (int)Circles[i].Radius * 1;
+
+                //if (2 * radius < _result.Size.Height && 2 * radius < _result.Size.Width)
+                {
+                    CvInvoke.Circle(_result, center, radius, new Bgr(Color.White).MCvScalar, 1);
+                    CvInvoke.PutText(_result, i.ToString("D3"), new Point((int)Circles[i].Center.X, (int)Circles[i].Center.Y), Emgu.CV.CvEnum.FontFace.HersheyScriptComplex, 1, new MCvScalar(255, 255, 0), 1);
+                }
+            }
+            _result.Save(Utils.String.FilePostfix(_imgPath, "-result"));
+            #endregion
+
+            watch.Stop();
+            msgBuilder.Append(string.Format("{0} Hough circles - {1} ms; ", "FFT", watch.ElapsedMilliseconds));
         }
     }
     public class EmguCircleImage
@@ -149,6 +195,7 @@ namespace JbImage
         private string _imgPath;
         private Image<Bgr, Byte> _rawImg;
         private UMat _grayedUmat;
+        private Mat _result;
         public CircleF[] Circles;
         public CircleF[] Circles2nd;
         public int[] Lights;
@@ -199,6 +246,7 @@ namespace JbImage
                 Int32.Parse(EmguParameters.Item["Hough1MinRadius"]),
                 Int32.Parse(EmguParameters.Item["Hough1MaxRadius"]));
             Circles = Sort(Circles);
+
             #region filter 86.3%
             FilteredCircles = new List<CircleF>();
             FilteredLights = new List<int>();
@@ -288,17 +336,71 @@ namespace JbImage
         }
         private void FFTAnalyze(string path)
         {
+            StringBuilder msgBuilder = new StringBuilder("Performance: ");
             Stopwatch watch = Stopwatch.StartNew();
+
             _imgPath = path;
             _rawImg = EmguIntfs.Load(path);
             _grayedUmat = EmguIntfs.Grayed(_rawImg);
-            Image<Gray, Byte> _edged;
-            _edged = EmguIntfs.Canny(EmguIntfs.ToImage(_grayedUmat),
+
+            int multiple = 1;
+            UMat pyrDown = new UMat();
+            CvInvoke.PyrDown(_grayedUmat, pyrDown);
+            multiple *= 2;
+            CvInvoke.PyrDown(pyrDown, _grayedUmat);
+            multiple *= 2;
+
+            Image<Gray, Byte> _bin = EmguIntfs.Binarize(Int32.Parse(EmguParameters.Item["BinThreshold"]), 
+                EmguIntfs.ToImage(_grayedUmat));
+
+            Image<Gray, Byte> _edged = EmguIntfs.Canny(_bin,
                 double.Parse(EmguParameters.Item["Canny1Threshold1"]),
                 double.Parse(EmguParameters.Item["Canny1Threshold2"]),
                 Int32.Parse(EmguParameters.Item["Canny1ApertureSize"]),
                 bool.Parse(EmguParameters.Item["Canny1I2Gradient"]));
             _edged.Save(Utils.String.FilePostfix(_imgPath, "-1-edge"));
+
+            Circles = CvInvoke.HoughCircles(_edged, HoughType.Gradient,
+                double.Parse(EmguParameters.Item["Hough1Dp"]),
+                Int32.Parse(EmguParameters.Item["Hough1MinDist"]),
+                double.Parse(EmguParameters.Item["Hough1Param1"]),
+                Int32.Parse(EmguParameters.Item["Hough1Param2"]),
+                Int32.Parse(EmguParameters.Item["Hough1MinRadius"]),
+                Int32.Parse(EmguParameters.Item["Hough1MaxRadius"]));
+            Circles = Sort(Circles);
+
+            #region skip
+            FilteredCircles = new List<CircleF>();
+            FilteredCircles2nd = new List<CircleF>();
+            foreach (var c in Circles)
+            {
+                FilteredCircles.Add(c);
+                FilteredCircles2nd.Add(c);
+            }
+            #endregion
+
+            #region draw
+            _result = _edged.Mat;
+
+            for (int i = 0; i < FilteredCircles2nd.Count; i++)
+            {
+                Point center = Point.Round(FilteredCircles2nd[i].Center);
+                center.X *= 1;
+                center.Y *= 1;
+                int radius = (int)FilteredCircles2nd[i].Radius * 1;
+
+                //if (2 * radius < _result.Size.Height && 2 * radius < _result.Size.Width)
+                {
+                    CvInvoke.Circle(_result, center, radius, new Bgr(Color.White).MCvScalar, 1);
+                    CvInvoke.PutText(_result, i.ToString("D3"), new Point((int)FilteredCircles2nd[i].Center.X, (int)FilteredCircles2nd[i].Center.Y), Emgu.CV.CvEnum.FontFace.HersheyScriptComplex, 1, new MCvScalar(255, 255, 0), 1);
+                }
+            }
+            _result.Save(Utils.String.FilePostfix(_imgPath, "-result"));
+            #endregion
+
+            watch.Stop();
+            msgBuilder.Append(string.Format("{0} Hough circles - {1} ms; ", "FFT", watch.ElapsedMilliseconds));
+            _log.Debug(msgBuilder.ToString());
         }
         public EmguCircleImage(string path, string testType, int[] minmax)
         {
@@ -312,7 +414,7 @@ namespace JbImage
                     break;
             }
         }
-        public Bitmap DrawCircles()
+        private Bitmap NFTDrawCircle()
         {
             bool showFirstResult = bool.Parse(EmguParameters.Item["ShowFirstResult"]);
 
@@ -335,6 +437,23 @@ namespace JbImage
             circleImage.Save(Utils.String.FilePostfix(_imgPath, "-result"));
 
             return circleImage.Bitmap;
+        }
+        private Bitmap FFTDrawCircle()
+        {
+            return _result.Bitmap;
+        }
+        public Bitmap DrawCircles(string testType)
+        {
+            switch (testType)
+            {
+                case "NFT":
+                    return NFTDrawCircle();
+                case "FFT":
+                    return FFTDrawCircle();
+            }
+
+            _log.Error($"Unsupported test type({testType})");
+            return null;
         }
         public CircleF[] Sort(CircleF[] circles)
         {

@@ -13,7 +13,7 @@ namespace JbImage
             { "SaveFile", "false"},
             { "ShowFirstResult", "false"},
 
-            { "BinThreshold", "30"},
+            { "BinThreshold", "50"},
             { "FilterSizeExtra", "10"},
 
             { "Canny1Threshold1", "90" },

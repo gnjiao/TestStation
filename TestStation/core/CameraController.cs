@@ -108,7 +108,7 @@ namespace TestStation.core
             _imgs.Add(image);
 
             //image.FilterOnStrength(Config.CountThreshold);
-            AnalyzedImage = image.DrawCircles();
+            AnalyzedImage = image.DrawCircles(testType);
             _log.Debug($"Analyze image {_filePath} use " +
                 $"CountThreshold {Config.CountThreshold} " +
                 $"RadiusLimits {radiusLimit[0]} {radiusLimit[1]}");
