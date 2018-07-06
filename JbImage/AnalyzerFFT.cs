@@ -87,6 +87,14 @@ namespace JbImage
         }
         private double CalcDivergenceAngle(List<CircleImage> img)
         {
+            /* arctan(光斑半径 / 芯片到透镜的距离) */
+            return double.NaN;
+        }
+        private double CalcPowerDensity(List<CircleImage> img)
+        {
+            /* 激光器发光功率 / 光斑面积 */
+            CircleImage i = img[0];
+            double result = i.Circles[0].Area;
             return double.NaN;
         }
         public override Result Calculate(List<CircleImage> img, List<double> distance)
@@ -94,6 +102,7 @@ namespace JbImage
             Dictionary<string, string> ret = new Dictionary<string, string>();
 
             ret["Emitter Divergence Angle"] = CalcDivergenceAngle(img).ToString("F3");
+            ret["Power Density"] = CalcDivergenceAngle(img).ToString("F3");
 
             return new Result("Ok", null, ret);
         }
