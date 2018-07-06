@@ -16,24 +16,24 @@ namespace JbImage
     {
         public override CircleImage FindCircle(string path)
         {
-            _log.Debug(Utils.String.Flatten(EmguParameters.Item));
-
-            bool saveFile = bool.Parse(EmguParameters.Item["SaveFile"]);
-            bool useCanny = bool.Parse(EmguParameters.Item["UseCanny"]);
+            //_log.Debug(Utils.String.Flatten(EmguParameters.Item));
 
             Path = path;
             RawImg = EmguIntfs.Load(path);
+            Parameters param = EmguParameters.Params[0];
+            bool saveFile = param.SaveFile;
+            bool useCanny = param.UseCanny;
 
             #region 1st with constant filter and find circles
-            Image<Gray, Byte> _grayedUmat = EmguIntfs.ToImage(EmguIntfs.Grayed(RawImg));
+            Image <Gray, Byte> _grayedUmat = EmguIntfs.ToImage(EmguIntfs.Grayed(RawImg));
             Image<Gray, Byte> _edged;
             if (useCanny)
             {
                 _edged = EmguIntfs.Canny(_grayedUmat,
-                    double.Parse(EmguParameters.Item["Canny1Threshold1"]),
-                    double.Parse(EmguParameters.Item["Canny1Threshold2"]),
-                    Int32.Parse(EmguParameters.Item["Canny1ApertureSize"]),
-                    bool.Parse(EmguParameters.Item["Canny1I2Gradient"]));
+                    param.Canny1Threshold1,
+                    param.Canny1Threshold2,
+                    param.Canny1ApertureSize,
+                    param.Canny1I2Gradient);
                 if (saveFile)
                 {
                     _edged.Save(Utils.String.FilePostfix(Path, "-1-edge"));
@@ -44,15 +44,14 @@ namespace JbImage
                 _edged = _grayedUmat;
             }
 
-            Image<Gray, Byte> image = EmguIntfs.Binarize(Int32.Parse(EmguParameters.Item["BinThreshold"]), _edged);
+            Image<Gray, Byte> image = EmguIntfs.Binarize(param.BinThreshold, _edged);
 
             Circles = CvInvoke.HoughCircles(image, HoughType.Gradient,
-                double.Parse(EmguParameters.Item["Hough1Dp"]),
-                double.Parse(EmguParameters.Item["Hough1MinDist"]),
-                double.Parse(EmguParameters.Item["Hough1Param1"]),
-                double.Parse(EmguParameters.Item["Hough1Param2"]),
-                Int32.Parse(EmguParameters.Item["Hough1MinRadius"]),
-                Int32.Parse(EmguParameters.Item["Hough1MaxRadius"]));
+                param.Hough1Dp,
+                param.Hough1MinDist,
+                param.Hough1Param1,
+                param.Hough1Param2,
+                param.Hough1MinRadius, param.Hough1MaxRadius);
             Circles = Sort(Circles);
             #endregion
 
@@ -62,7 +61,7 @@ namespace JbImage
             var raw = _grayedUmat;
             foreach (var circle in Circles)
             {
-                int extra = Int32.Parse(EmguParameters.Item["FilterSizeExtra"]);
+                int extra = param.FilterSquareExtra;
 
                 int startX = (int)System.Math.Floor(circle.Center.X - circle.Radius - extra);
                 int startY = (int)System.Math.Floor(circle.Center.Y - circle.Radius - extra);
@@ -102,10 +101,10 @@ namespace JbImage
             if (useCanny)
             {
                 _edged = EmguIntfs.Canny(raw,
-                    double.Parse(EmguParameters.Item["Canny2Threshold1"]),
-                    double.Parse(EmguParameters.Item["Canny2Threshold2"]),
-                    Int32.Parse(EmguParameters.Item["Canny2ApertureSize"]),
-                    bool.Parse(EmguParameters.Item["Canny2I2Gradient"]));
+                    param.Canny2Threshold1,
+                    param.Canny2Threshold2,
+                    param.Canny2ApertureSize,
+                    param.Canny2I2Gradient);
                 if (saveFile)
                 {
                     _edged.Save(Utils.String.FilePostfix(Path, "-3-edge"));
@@ -117,12 +116,11 @@ namespace JbImage
             }
 
             Circles2nd = CvInvoke.HoughCircles(_edged, HoughType.Gradient,
-                double.Parse(EmguParameters.Item["Hough2Dp"]),
-                double.Parse(EmguParameters.Item["Hough2MinDist"]),
-                double.Parse(EmguParameters.Item["Hough2Param1"]),
-                double.Parse(EmguParameters.Item["Hough2Param2"]),
-                Int32.Parse(EmguParameters.Item["Hough2MinRadius"]),
-                Int32.Parse(EmguParameters.Item["Hough2MaxRadius"]));
+                param.Hough2Dp,
+                param.Hough2MinDist,
+                param.Hough2Param1,
+                param.Hough2Param2,
+                param.Hough2MinRadius, param.Hough2MaxRadius);
             Circles2nd = Sort(Circles2nd);
             FilteredCircles2nd = new List<CircleF>();
             List<int> brightness = new List<int>();
@@ -208,7 +206,7 @@ namespace JbImage
 
         private Bitmap DrawCircle()
         {
-            bool showFirstResult = bool.Parse(EmguParameters.Item["ShowFirstResult"]);
+            bool showFirstResult = EmguParameters.Params[0].ShowFirstResult;
 
             _log.Debug("Start DrawCircles");
             Mat circleImage = RawImg.Mat;

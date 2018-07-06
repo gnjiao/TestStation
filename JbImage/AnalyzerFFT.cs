@@ -16,7 +16,7 @@ namespace JbImage
     {
         public override CircleImage FindCircle(string path)
         {
-            _log.Debug(Utils.String.Flatten(EmguParameters.Item));
+            //_log.Debug(Utils.String.Flatten(EmguParameters.Item));
 
             Path = path;
             RawImg = EmguIntfs.Load(path);
@@ -30,23 +30,22 @@ namespace JbImage
             CvInvoke.PyrDown(pyrDown, _grayedUmat);
             multiple *= 2;
 
-            Image<Gray, Byte> _bin = EmguIntfs.Binarize(Int32.Parse(EmguParameters.Item["BinThreshold"]),
-                _grayedUmat);
+            Parameters param = EmguParameters.Params[0];
+            Image<Gray, Byte> _bin = EmguIntfs.Binarize(param.BinThreshold, _grayedUmat);
 
             Image<Gray, Byte> _edged = EmguIntfs.Canny(_bin,
-                double.Parse(EmguParameters.Item["Canny1Threshold1"]),
-                double.Parse(EmguParameters.Item["Canny1Threshold2"]),
-                Int32.Parse(EmguParameters.Item["Canny1ApertureSize"]),
-                bool.Parse(EmguParameters.Item["Canny1I2Gradient"]));
+                param.Canny1Threshold1,
+                param.Canny1Threshold2,
+                param.Canny1ApertureSize,
+                param.Canny1I2Gradient);
             _edged.Save(Utils.String.FilePostfix(Path, "-1-edge"));
 
-            Circles = CvInvoke.HoughCircles(_edged, HoughType.Gradient,
-                double.Parse(EmguParameters.Item["Hough1Dp"]),
-                Int32.Parse(EmguParameters.Item["Hough1MinDist"]),
-                double.Parse(EmguParameters.Item["Hough1Param1"]),
-                Int32.Parse(EmguParameters.Item["Hough1Param2"]),
-                Int32.Parse(EmguParameters.Item["Hough1MinRadius"]),
-                Int32.Parse(EmguParameters.Item["Hough1MaxRadius"]));
+            Circles = CvInvoke.HoughCircles(_edged, HoughType.Gradient, 
+                param.Hough1Dp,
+                param.Hough1MinDist,
+                param.Hough1Param1,
+                param.Hough1Param2,
+                param.Hough1MinRadius, param.Hough1MaxRadius);
             Circles = Sort(Circles);
 
             #region skip
