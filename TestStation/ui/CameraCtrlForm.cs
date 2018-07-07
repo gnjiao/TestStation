@@ -8,12 +8,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TestStation.core;
 using TestStation.ui;
+using Utils;
 
 namespace TestStation
 {
     public partial class CameraCtrlForm : Form
     {
+        private Logger _log = new Logger("CameraCtrlForm");
         public CameraCtrlForm()
         {
             InitializeComponent();
@@ -39,6 +42,43 @@ namespace TestStation
             double xoffset = (rect.Location.X > start.X) ? (double)(rect.Location.X - start.X) / pb.Width : 0;
             double yoffset = (rect.Location.Y > start.Y) ? (double)(rect.Location.Y - start.Y) / pb.Height : 0;
             //UC_CameraCtrl.SetRoi(xoffset, yoffset, (double)rect.Width/pb.Width, (double)rect.Height/pb.Height);
+        }
+        private void CameraCtrlForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            MotorCtrlUC.OnClose();
+        }
+        private void BTN_StartTest_Click(object sender, EventArgs e)
+        {
+            CameraController camera = UC_CameraCtrl.Device;
+            Result ret = camera.Open(UC_CameraCtrl.TestType);
+            if (ret.Id != "OK")
+            {
+                MessageBox.Show($"Failed to open camera for {UC_CameraCtrl.TestType}");
+                //return;
+            }
+
+            DS102 motor = MotorCtrlUC.Device;
+            if (motor == null)
+            {
+                MessageBox.Show($"Failed to open motor for {UC_CameraCtrl.TestType}");
+                //return;
+            }
+
+            int[] positions = { 0,1,2 };
+            foreach (var position in positions)
+            {
+                MoveTo(position);
+
+                camera.Read(position.ToString());
+                camera.Analyze(UC_CameraCtrl.TestType, position);
+            }
+
+            ret = camera.Calculate();
+            UC_Result.Update(ret.Param as Dictionary<string, string>);
+        }
+        private void MoveTo(int position)
+        {
+            _log.Debug($"MoveTo {position}");
         }
         #region ROI DRAW
         private Rectangle m_MouseRect = Rectangle.Empty;
@@ -86,10 +126,5 @@ namespace TestStation
             ControlPaint.DrawReversibleFrame(m_MouseRect, Color.White, FrameStyle.Dashed);
         }
         #endregion
-
-        private void CameraCtrlForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            MotorCtrlUC.OnClose();
-        }
     }
 }

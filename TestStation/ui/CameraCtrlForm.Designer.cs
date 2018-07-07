@@ -32,6 +32,7 @@
             this.TBL_2Left = new System.Windows.Forms.TableLayoutPanel();
             this.TBL_2Right = new System.Windows.Forms.TableLayoutPanel();
             this.PB_Preview = new System.Windows.Forms.PictureBox();
+            this.BTN_StartTest = new System.Windows.Forms.Button();
             this.UC_CameraCtrl = new TestStation.CameraCtrlUC();
             this.UC_MotorCtrl = new TestStation.ui.MotorCtrlUC();
             this.UC_Result = new TestStation.ui.ResultUC();
@@ -60,15 +61,17 @@
             // TBL_2Left
             // 
             this.TBL_2Left.ColumnCount = 1;
-            this.TBL_2Left.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.TBL_2Left.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.TBL_2Left.Controls.Add(this.UC_CameraCtrl, 0, 0);
             this.TBL_2Left.Controls.Add(this.UC_MotorCtrl, 0, 1);
+            this.TBL_2Left.Controls.Add(this.BTN_StartTest, 0, 2);
             this.TBL_2Left.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TBL_2Left.Location = new System.Drawing.Point(3, 3);
             this.TBL_2Left.Name = "TBL_2Left";
-            this.TBL_2Left.RowCount = 2;
-            this.TBL_2Left.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 58.65546F));
-            this.TBL_2Left.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 41.34454F));
+            this.TBL_2Left.RowCount = 3;
+            this.TBL_2Left.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TBL_2Left.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TBL_2Left.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TBL_2Left.Size = new System.Drawing.Size(142, 929);
             this.TBL_2Left.TabIndex = 7;
             // 
@@ -100,20 +103,31 @@
             this.PB_Preview.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PB_Preview_MouseMove);
             this.PB_Preview.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PB_Preview_MouseUp);
             // 
+            // BTN_StartTest
+            // 
+            this.BTN_StartTest.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.BTN_StartTest.Location = new System.Drawing.Point(3, 876);
+            this.BTN_StartTest.Name = "BTN_StartTest";
+            this.BTN_StartTest.Size = new System.Drawing.Size(136, 50);
+            this.BTN_StartTest.TabIndex = 2;
+            this.BTN_StartTest.Text = "Start Test";
+            this.BTN_StartTest.UseVisualStyleBackColor = true;
+            this.BTN_StartTest.Click += new System.EventHandler(this.BTN_StartTest_Click);
+            // 
             // UC_CameraCtrl
             // 
             this.UC_CameraCtrl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.UC_CameraCtrl.Location = new System.Drawing.Point(3, 3);
             this.UC_CameraCtrl.Name = "UC_CameraCtrl";
-            this.UC_CameraCtrl.Size = new System.Drawing.Size(136, 538);
+            this.UC_CameraCtrl.Size = new System.Drawing.Size(136, 370);
             this.UC_CameraCtrl.TabIndex = 0;
             // 
             // UC_MotorCtrl
             // 
-            this.UC_MotorCtrl.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.UC_MotorCtrl.Location = new System.Drawing.Point(3, 673);
+            this.UC_MotorCtrl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.UC_MotorCtrl.Location = new System.Drawing.Point(3, 379);
             this.UC_MotorCtrl.Name = "UC_MotorCtrl";
-            this.UC_MotorCtrl.Size = new System.Drawing.Size(136, 253);
+            this.UC_MotorCtrl.Size = new System.Drawing.Size(136, 279);
             this.UC_MotorCtrl.TabIndex = 1;
             // 
             // UC_Result
@@ -151,5 +165,6 @@
         private ui.MotorCtrlUC UC_MotorCtrl;
         private System.Windows.Forms.TableLayoutPanel TBL_2Right;
         private ui.ResultUC UC_Result;
+        private System.Windows.Forms.Button BTN_StartTest;
     }
 }

@@ -29,12 +29,16 @@ namespace TestStation
         public EventHandler TypeChanged;
         public EventHandler UpdateResult;
 
+        public string TestType
+        {
+            get { return CMB_CameraType.Text; }
+        }
         private Timer _updateTimer;
         private object _updateLock = new object();
 
         private Logger _log = new Logger(typeof(CameraCtrlUC));
         DatabaseSrv _database;
-        private CameraController _cameraCtrl;
+        public CameraController Device;
         public CameraCtrlUC()
         {
             InitializeComponent();
@@ -44,7 +48,7 @@ namespace TestStation
             Logger log = new Logger("TestStation");
             log.Debug(string.Format("TestStation(V{0}) Started", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString()));
 
-            _cameraCtrl = new CameraController();
+            Device = new CameraController();
             _database = DatabaseSrv.GetInstance();
 
             _updateTimer = new Timer(200);
@@ -62,9 +66,9 @@ namespace TestStation
 #if false
                 image = dbgRefreshedImage();
 #else
-                if (_cameraCtrl.mCamera != null)
+                if (Device.mCamera != null)
                 {
-                    Result ret = _cameraCtrl.mCamera.Execute(new Command("Read", new Dictionary<string, string> { { "Type", "Bmp" } }));
+                    Result ret = Device.mCamera.Execute(new Command("Read", new Dictionary<string, string> { { "Type", "Bmp" } }));
                     if (ret.Id == "Ok")
                     {
                         image = ret.Param as Bitmap;
@@ -85,16 +89,8 @@ namespace TestStation
             {
                 _updateTimer.Stop();
 
-                Parameters param = EmguParameters.Params.Find(x => x.Tag == TB_Distance.Text);
-                if (param == null)
-                {
-                    param = EmguParameters.Params.Find(x => x.Tag == "Default");
-                }
-                _cameraCtrl.SetGain(param.Gain);
-                _cameraCtrl.SetExposure(param.ExposureTime);
-
-                _cameraCtrl.Read(Distance).ShowMessageBox();
-                UpdateImage?.Invoke(_cameraCtrl.LatestImage);
+                Device.Read(TB_Distance.Text).ShowMessageBox();
+                UpdateImage?.Invoke(Device.LatestImage);
 
                 _updateTimer.Start();
             }
@@ -112,8 +108,8 @@ namespace TestStation
                     }
                 }
 
-                _cameraCtrl.Analyze(CMB_CameraType.Text, Distance).ShowMessageBox();
-                UpdateImage?.Invoke(_cameraCtrl.AnalyzedImage);
+                Device.Analyze(CMB_CameraType.Text, Distance).ShowMessageBox();
+                UpdateImage?.Invoke(Device.AnalyzedImage);
             }
             else
             {
@@ -126,15 +122,15 @@ namespace TestStation
 #if DEBUG
             //dbgAutoLoad();
 #endif
-            Result ret = _cameraCtrl.Calculate();
+            Result ret = Device.Calculate();
             ret.ShowMessageBox();
 
             UpdateResult?.Invoke(ret.Param as Dictionary<string, string>);
         }
         private void BTN_Open_Click(object sender, EventArgs e)
         {
-            _cameraCtrl.Open(CMB_CameraType.Text).ShowMessageBox();
-            if (_cameraCtrl.mCamera != null)
+            Device.Open(CMB_CameraType.Text).ShowMessageBox();
+            if (Device.mCamera != null)
             {
                 _updateTimer.Start();
             }
@@ -146,14 +142,14 @@ namespace TestStation
             {
                 lock (_updateLock)
                 {
-                    _cameraCtrl.Load(d.FileName, Distance).ShowMessageBox();
-                    UpdateImage?.Invoke(_cameraCtrl.LatestImage);
+                    Device.Load(d.FileName, Distance).ShowMessageBox();
+                    UpdateImage?.Invoke(Device.LatestImage);
                 }
             }
         }
         private void BTN_Close_Click(object sender, EventArgs e)
         {
-            _cameraCtrl.Close().ShowMessageBox();
+            Device.Close().ShowMessageBox();
         }
         private void InitializeHelpInfo()
         {
@@ -215,8 +211,8 @@ namespace TestStation
                 TB_Distance.Text = i.ToString();
                 i += 2;
 
-                _cameraCtrl.Load(file, Distance);
-                _cameraCtrl.Analyze("NFT", Distance);
+                Device.Load(file, Distance);
+                Device.Analyze("NFT", Distance);
             }
         }
         private int dbgImageCount = 0;
@@ -242,24 +238,24 @@ namespace TestStation
         //    }
         //    else
         //    {
-        //        _cameraCtrl.mCamera.Execute(new Command("Config",
+        //        Device.mCamera.Execute(new Command("Config",
         //            new Dictionary<string, string> { { "RoiOriginX", "0" }, { "RoiOriginY", "0" },
         //            { "RoiWidth", "1" }, { "RoiHeight", "1" } }));
         //    }
         //}
         //private void BTN_SetBin_Click(object sender, EventArgs e)
         //{
-        //    _cameraCtrl.mCamera.Execute(new Command("Config",
+        //    Device.mCamera.Execute(new Command("Config",
         //        new Dictionary<string, string> { { "BinX", "2" }, { "BinY", "2" } }));
         //}
         //private void CB_Color_CheckedChanged(object sender, EventArgs e)
         //{
-        //    _cameraCtrl.mCamera.Execute(new Command("Config",
+        //    Device.mCamera.Execute(new Command("Config",
         //        new Dictionary<string, string> { { "IsColorOperationEnabled", CB_Color.Checked.ToString() } }));
         //}
         //public void SetRoi(double xoffset, double yoffset, double width, double height)/* all parameters are determined via percentage */
         //{
-        //    _cameraCtrl.mCamera.Execute(new Command("Config",
+        //    Device.mCamera.Execute(new Command("Config",
         //        new Dictionary<string, string> { { "RoiOriginX", xoffset.ToString("F2") }, { "RoiOriginY", yoffset.ToString("F2") },
         //            { "RoiWidth", width.ToString("F2") }, { "RoiHeight", height.ToString("F2") } }));
         //}

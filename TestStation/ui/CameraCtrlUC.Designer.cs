@@ -38,7 +38,7 @@
             this.BTN_Close = new System.Windows.Forms.Button();
             this.TB_Distance = new System.Windows.Forms.TextBox();
             this.BTN_Calculate = new System.Windows.Forms.Button();
-            this.TB_Parameters = new System.Windows.Forms.Button();
+            this.BTN_Parameters = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // CMB_CameraType
@@ -132,22 +132,22 @@
             this.BTN_Calculate.UseVisualStyleBackColor = true;
             this.BTN_Calculate.Click += new System.EventHandler(this.BTN_Calculate_Click);
             // 
-            // TB_Parameters
+            // BTN_Parameters
             // 
-            this.TB_Parameters.Dock = System.Windows.Forms.DockStyle.Top;
-            this.TB_Parameters.Location = new System.Drawing.Point(0, 277);
-            this.TB_Parameters.Name = "TB_Parameters";
-            this.TB_Parameters.Size = new System.Drawing.Size(149, 32);
-            this.TB_Parameters.TabIndex = 26;
-            this.TB_Parameters.Text = "Parameters";
-            this.TB_Parameters.UseVisualStyleBackColor = true;
-            this.TB_Parameters.Click += new System.EventHandler(this.TB_Parameters_Click);
+            this.BTN_Parameters.Dock = System.Windows.Forms.DockStyle.Top;
+            this.BTN_Parameters.Location = new System.Drawing.Point(0, 277);
+            this.BTN_Parameters.Name = "BTN_Parameters";
+            this.BTN_Parameters.Size = new System.Drawing.Size(149, 32);
+            this.BTN_Parameters.TabIndex = 26;
+            this.BTN_Parameters.Text = "Parameters";
+            this.BTN_Parameters.UseVisualStyleBackColor = true;
+            this.BTN_Parameters.Click += new System.EventHandler(this.TB_Parameters_Click);
             // 
             // CameraCtrlUC
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.TB_Parameters);
+            this.Controls.Add(this.BTN_Parameters);
             this.Controls.Add(this.TB_Distance);
             this.Controls.Add(this.BTN_Close);
             this.Controls.Add(this.BTN_Calculate);
@@ -157,7 +157,7 @@
             this.Controls.Add(this.BTN_Open);
             this.Controls.Add(this.CMB_CameraType);
             this.Name = "CameraCtrlUC";
-            this.Size = new System.Drawing.Size(149, 319);
+            this.Size = new System.Drawing.Size(149, 327);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -173,6 +173,6 @@
         private System.Windows.Forms.Button BTN_Close;
         private System.Windows.Forms.TextBox TB_Distance;
         private System.Windows.Forms.Button BTN_Calculate;
-        private System.Windows.Forms.Button TB_Parameters;
+        private System.Windows.Forms.Button BTN_Parameters;
     }
 }

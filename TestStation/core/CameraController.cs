@@ -75,6 +75,25 @@ namespace TestStation.core
                 return new Result("Dummy", $"Camera({mCamera.Name}) is already opened");
             }
         }
+        public Result Read(string tag)
+        {
+            double distance;
+            if (!double.TryParse(tag, out distance))
+            {
+                distance = double.NaN;
+            }
+
+            Parameters param = EmguParameters.Params.Find(x => x.Tag == tag);
+            if (param == null)
+            {
+                param = EmguParameters.Params.Find(x => x.Tag == "Default");
+            }
+
+            SetGain(param.Gain);
+            SetExposure(param.ExposureTime);
+
+            return Read(distance);
+        }
         public Result Read(double distance = double.NaN)
         {
             if (mCamera != null)

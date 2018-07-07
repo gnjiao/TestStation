@@ -7,47 +7,47 @@ namespace TestStation.ui
 {
     public partial class MotorCtrlUC : UserControl
     {
-        private static DS102 ds102;
+        public static DS102 Device;
         public MotorCtrlUC()
         {
             InitializeComponent();
 
-            ds102 = new DS102();
+            Device = new DS102();
             try
             {
-                ds102.Port = Int32.Parse(ConfigurationManager.AppSettings["DS102Port"]);
-                if (!ds102.OpenDS102())
+                Device.Port = Int32.Parse(ConfigurationManager.AppSettings["DS102Port"]);
+                if (!Device.OpenDS102())
                 {
-                    MessageBox.Show($"Failed to open DS102, please make sure the COM{ds102.Port} is available");
-                    ds102 = null;
+                    MessageBox.Show($"Failed to open DS102, please make sure the COM{Device.Port} is available");
+                    Device = null;
                 }
             }
             catch (Exception)
             {
-                ds102 = null;
+                Device = null;
             }
         }
         private void BTN_Z1MoveUp_Click(object sender, EventArgs e)
         {
-            ds102?.ZAxisGoPositive(DS102.AXIS_Z1, Z1Distance);
+            Device?.ZAxisGoPositive(DS102.AXIS_Z1, Z1Distance);
             Z1Position += Z1Distance;
             LB_Z1Position.Text = $"{Z1Position:F2} mm";
         }
         private void BTN_Z1MoveDown_Click(object sender, EventArgs e)
         {
-            ds102?.ZAxisGoNegative(DS102.AXIS_Z1, Z1Distance);
+            Device?.ZAxisGoNegative(DS102.AXIS_Z1, Z1Distance);
             Z1Position -= Z1Distance;
             LB_Z1Position.Text = $"{Z1Position:F2} mm";
         }
         private void BTN_Z2MoveUp_Click(object sender, EventArgs e)
         {
-            ds102?.ZAxisGoNegative(DS102.AXIS_Z2, Z2Distance);
+            Device?.ZAxisGoNegative(DS102.AXIS_Z2, Z2Distance);
             Z2Position -= Z2Distance;
             LB_Z2Position.Text = $"{Z2Position:F2} mm";
         }
         private void BTN_Z2MoveDown_Click(object sender, EventArgs e)
         {
-            ds102?.ZAxisGoPositive(DS102.AXIS_Z2, Z2Distance);
+            Device?.ZAxisGoPositive(DS102.AXIS_Z2, Z2Distance);
             Z2Position += Z2Distance;
             LB_Z2Position.Text = $"{Z2Position:F2} mm";
         }
@@ -56,7 +56,7 @@ namespace TestStation.ui
             BTN_Z1GoHome.Enabled = false;
             BTN_Z1GoHome.Refresh();
 
-            ds102?.GoOrigin(DS102.AXIS_Z1);
+            Device?.GoOrigin(DS102.AXIS_Z1);
             LB_Z1Position.Text = $"0 mm";
 
             BTN_Z1GoHome.Enabled = true;
@@ -66,14 +66,14 @@ namespace TestStation.ui
             BTN_Z2GoHome.Enabled = false;
             BTN_Z2GoHome.Refresh();
 
-            ds102?.GoOrigin(DS102.AXIS_Z2);
+            Device?.GoOrigin(DS102.AXIS_Z2);
             LB_Z2Position.Text = $"0 mm";
 
             BTN_Z2GoHome.Enabled = true;
         }
         public static void OnClose()
         {
-            ds102?.CloseDS102();
+            Device?.CloseDS102();
         }
         private double Z1Distance
         {
