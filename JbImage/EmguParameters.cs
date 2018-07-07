@@ -24,6 +24,15 @@ namespace JbImage
         [XmlAttribute("Tag")]
         public string Tag
         { get; set; }
+
+
+        [XmlAttribute("Gain")]
+        public int Gain
+        { get; set; }
+        [XmlAttribute("ExposureTime")]/*ms*/
+        public int ExposureTime
+        { get; set; }
+
         [XmlAttribute("UseCanny")]
         public bool UseCanny
         { get; set; }
@@ -108,6 +117,9 @@ namespace JbImage
         public Parameters()
         {
             Tag = "Default";
+
+            Gain = 90;
+            ExposureTime = 500;
 
             UseCanny = false;
             SaveFile = false;

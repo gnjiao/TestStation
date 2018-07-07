@@ -84,6 +84,10 @@
             this.CB_ShowFirstResult = new System.Windows.Forms.CheckBox();
             this.label20 = new System.Windows.Forms.Label();
             this.tbTag = new System.Windows.Forms.TextBox();
+            this.label21 = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
+            this.tbGain = new System.Windows.Forms.TextBox();
+            this.tbExpo = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -211,7 +215,7 @@
             this.groupBox1.Controls.Add(this.label10);
             this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Controls.Add(this.label8);
-            this.groupBox1.Location = new System.Drawing.Point(7, 117);
+            this.groupBox1.Location = new System.Drawing.Point(7, 206);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(317, 535);
             this.groupBox1.TabIndex = 17;
@@ -320,7 +324,7 @@
             this.groupBox2.Controls.Add(this.label17);
             this.groupBox2.Controls.Add(this.textBox22);
             this.groupBox2.Controls.Add(this.label18);
-            this.groupBox2.Location = new System.Drawing.Point(372, 117);
+            this.groupBox2.Location = new System.Drawing.Point(372, 206);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(317, 535);
             this.groupBox2.TabIndex = 18;
@@ -522,7 +526,7 @@
             // 
             // BTN_Load
             // 
-            this.BTN_Load.Location = new System.Drawing.Point(190, 665);
+            this.BTN_Load.Location = new System.Drawing.Point(190, 754);
             this.BTN_Load.Name = "BTN_Load";
             this.BTN_Load.Size = new System.Drawing.Size(75, 37);
             this.BTN_Load.TabIndex = 19;
@@ -532,7 +536,7 @@
             // 
             // BTN_Set
             // 
-            this.BTN_Set.Location = new System.Drawing.Point(315, 665);
+            this.BTN_Set.Location = new System.Drawing.Point(315, 754);
             this.BTN_Set.Name = "BTN_Set";
             this.BTN_Set.Size = new System.Drawing.Size(75, 37);
             this.BTN_Set.TabIndex = 20;
@@ -542,7 +546,7 @@
             // 
             // BTN_Save
             // 
-            this.BTN_Save.Location = new System.Drawing.Point(440, 665);
+            this.BTN_Save.Location = new System.Drawing.Point(440, 754);
             this.BTN_Save.Name = "BTN_Save";
             this.BTN_Save.Size = new System.Drawing.Size(75, 37);
             this.BTN_Save.TabIndex = 21;
@@ -553,7 +557,7 @@
             // CB_Save
             // 
             this.CB_Save.AutoSize = true;
-            this.CB_Save.Location = new System.Drawing.Point(239, 89);
+            this.CB_Save.Location = new System.Drawing.Point(239, 178);
             this.CB_Save.Name = "CB_Save";
             this.CB_Save.Size = new System.Drawing.Size(196, 22);
             this.CB_Save.TabIndex = 22;
@@ -563,7 +567,7 @@
             // CB_UseCanny
             // 
             this.CB_UseCanny.AutoSize = true;
-            this.CB_UseCanny.Location = new System.Drawing.Point(21, 89);
+            this.CB_UseCanny.Location = new System.Drawing.Point(21, 178);
             this.CB_UseCanny.Name = "CB_UseCanny";
             this.CB_UseCanny.Size = new System.Drawing.Size(160, 22);
             this.CB_UseCanny.TabIndex = 23;
@@ -573,7 +577,7 @@
             // CB_ShowFirstResult
             // 
             this.CB_ShowFirstResult.AutoSize = true;
-            this.CB_ShowFirstResult.Location = new System.Drawing.Point(486, 89);
+            this.CB_ShowFirstResult.Location = new System.Drawing.Point(486, 178);
             this.CB_ShowFirstResult.Name = "CB_ShowFirstResult";
             this.CB_ShowFirstResult.Size = new System.Drawing.Size(187, 22);
             this.CB_ShowFirstResult.TabIndex = 24;
@@ -597,11 +601,47 @@
             this.tbTag.Size = new System.Drawing.Size(100, 28);
             this.tbTag.TabIndex = 26;
             // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(55, 85);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(44, 18);
+            this.label21.TabIndex = 27;
+            this.label21.Text = "Gain";
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(55, 118);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(125, 18);
+            this.label22.TabIndex = 28;
+            this.label22.Text = "Exposure Time";
+            // 
+            // tbGain
+            // 
+            this.tbGain.Location = new System.Drawing.Point(218, 81);
+            this.tbGain.Name = "tbGain";
+            this.tbGain.Size = new System.Drawing.Size(100, 28);
+            this.tbGain.TabIndex = 29;
+            // 
+            // tbExpo
+            // 
+            this.tbExpo.Location = new System.Drawing.Point(218, 115);
+            this.tbExpo.Name = "tbExpo";
+            this.tbExpo.Size = new System.Drawing.Size(100, 28);
+            this.tbExpo.TabIndex = 30;
+            // 
             // ParameterForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(707, 717);
+            this.ClientSize = new System.Drawing.Size(707, 808);
+            this.Controls.Add(this.tbExpo);
+            this.Controls.Add(this.tbGain);
+            this.Controls.Add(this.label22);
+            this.Controls.Add(this.label21);
             this.Controls.Add(this.tbTag);
             this.Controls.Add(this.label20);
             this.Controls.Add(this.CB_ShowFirstResult);
@@ -681,5 +721,9 @@
         private System.Windows.Forms.TextBox tbFilterSizeExtra;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.TextBox tbTag;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.TextBox tbGain;
+        private System.Windows.Forms.TextBox tbExpo;
     }
 }

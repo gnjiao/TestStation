@@ -38,11 +38,6 @@
             this.BTN_Close = new System.Windows.Forms.Button();
             this.TB_Distance = new System.Windows.Forms.TextBox();
             this.BTN_Calculate = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.TB_ExpoMs = new System.Windows.Forms.TextBox();
-            this.TB_Gain = new System.Windows.Forms.TextBox();
-            this.BTN_SetCamera = new System.Windows.Forms.Button();
             this.TB_Parameters = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -137,53 +132,9 @@
             this.BTN_Calculate.UseVisualStyleBackColor = true;
             this.BTN_Calculate.Click += new System.EventHandler(this.BTN_Calculate_Click);
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(5, 325);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(44, 18);
-            this.label3.TabIndex = 24;
-            this.label3.Text = "Expo";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(5, 295);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(44, 18);
-            this.label4.TabIndex = 23;
-            this.label4.Text = "Gain";
-            // 
-            // TB_ExpoMs
-            // 
-            this.TB_ExpoMs.Location = new System.Drawing.Point(64, 320);
-            this.TB_ExpoMs.Name = "TB_ExpoMs";
-            this.TB_ExpoMs.Size = new System.Drawing.Size(72, 28);
-            this.TB_ExpoMs.TabIndex = 22;
-            this.TB_ExpoMs.Text = "ms";
-            // 
-            // TB_Gain
-            // 
-            this.TB_Gain.Location = new System.Drawing.Point(64, 290);
-            this.TB_Gain.Name = "TB_Gain";
-            this.TB_Gain.Size = new System.Drawing.Size(72, 28);
-            this.TB_Gain.TabIndex = 21;
-            this.TB_Gain.Text = "90";
-            // 
-            // BTN_SetCamera
-            // 
-            this.BTN_SetCamera.Location = new System.Drawing.Point(8, 354);
-            this.BTN_SetCamera.Name = "BTN_SetCamera";
-            this.BTN_SetCamera.Size = new System.Drawing.Size(128, 32);
-            this.BTN_SetCamera.TabIndex = 25;
-            this.BTN_SetCamera.Text = "Set";
-            this.BTN_SetCamera.UseVisualStyleBackColor = true;
-            this.BTN_SetCamera.Click += new System.EventHandler(this.BTN_SetCamera_Click);
-            // 
             // TB_Parameters
             // 
-            this.TB_Parameters.Location = new System.Drawing.Point(8, 409);
+            this.TB_Parameters.Location = new System.Drawing.Point(7, 283);
             this.TB_Parameters.Name = "TB_Parameters";
             this.TB_Parameters.Size = new System.Drawing.Size(128, 32);
             this.TB_Parameters.TabIndex = 26;
@@ -196,11 +147,6 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.TB_Parameters);
-            this.Controls.Add(this.BTN_SetCamera);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.TB_ExpoMs);
-            this.Controls.Add(this.TB_Gain);
             this.Controls.Add(this.TB_Distance);
             this.Controls.Add(this.BTN_Close);
             this.Controls.Add(this.BTN_Calculate);
@@ -210,7 +156,7 @@
             this.Controls.Add(this.BTN_Open);
             this.Controls.Add(this.CMB_CameraType);
             this.Name = "CameraCtrlUC";
-            this.Size = new System.Drawing.Size(149, 448);
+            this.Size = new System.Drawing.Size(149, 319);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -226,11 +172,6 @@
         private System.Windows.Forms.Button BTN_Close;
         private System.Windows.Forms.TextBox TB_Distance;
         private System.Windows.Forms.Button BTN_Calculate;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox TB_ExpoMs;
-        private System.Windows.Forms.TextBox TB_Gain;
-        private System.Windows.Forms.Button BTN_SetCamera;
         private System.Windows.Forms.Button TB_Parameters;
     }
 }

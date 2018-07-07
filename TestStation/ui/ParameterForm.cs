@@ -26,6 +26,9 @@ namespace TestStation.ui
                 EmguParameters.Params.Add(param);
             }
 
+            param.Gain = Int32.Parse(tbGain.Text);
+            param.ExposureTime = Int32.Parse(tbExpo.Text);
+
             param.BinThreshold = Int32.Parse(tbBinThreshold.Text);
             param.FilterSquareExtra = Int32.Parse(tbFilterSizeExtra.Text);
 
@@ -75,6 +78,9 @@ namespace TestStation.ui
                 MessageBox.Show($"Failed to find parameters for {distance}, load default parameters instead");
                 param = EmguParameters.Params.Find(x => x.Tag == "Default");
             }
+
+            tbGain.Text = param.Gain.ToString();
+            tbExpo.Text = param.ExposureTime.ToString();
 
             tbBinThreshold.Text = param.BinThreshold.ToString();
             tbFilterSizeExtra.Text = param.FilterSquareExtra.ToString();

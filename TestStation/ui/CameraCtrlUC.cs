@@ -85,6 +85,14 @@ namespace TestStation
             {
                 _updateTimer.Stop();
 
+                Parameters param = EmguParameters.Params.Find(x => x.Tag == TB_Distance.Text);
+                if (param == null)
+                {
+                    param = EmguParameters.Params.Find(x => x.Tag == "Default");
+                }
+                _cameraCtrl.SetGain(param.Gain);
+                _cameraCtrl.SetExposure(param.ExposureTime);
+
                 _cameraCtrl.Read(Distance).ShowMessageBox();
                 UpdateImage?.Invoke(_cameraCtrl.LatestImage);
 
@@ -304,22 +312,6 @@ namespace TestStation
                 TypeChanged?.Invoke(CMB_CameraType.Text);
             }
         }
-
-        private void BTN_SetCamera_Click(object sender, EventArgs e)
-        {
-            double gain = ReadDouble(TB_Gain);
-            if (double.IsNaN(gain))
-            {
-                _cameraCtrl.SetGain((int)gain);
-            }
-
-            double exposure = ReadDouble(TB_Gain);
-            if (double.IsNaN(exposure))
-            {
-                _cameraCtrl.SetExposure((int)exposure);
-            }
-        }
-
         private void TB_Parameters_Click(object sender, EventArgs e)
         {
             ParameterForm form = new ParameterForm(TB_Distance.Text);
