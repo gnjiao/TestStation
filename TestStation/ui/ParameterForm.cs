@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Windows.Forms;
 using JbImage;
 using Utils;
@@ -10,10 +11,44 @@ namespace TestStation.ui
         public ParameterForm(string distance)
         {
             InitializeComponent();
+
+            try
+            {
+                if (bool.Parse(Properties.Settings.Default.HideParameterName))
+                {
+                    HideParameterName();
+                }
+            }
+            catch (Exception ex)
+            {
+                HideParameterName();
+            }
+
             tbTag.Text = distance;
             LoadEmguParameters(distance);
         }
+        private void HideParameterName()
+        {
+            int count = 1;
 
+            foreach (Control c in Controls)
+            {
+                if (c is Label || c is CheckBox)
+                {
+                    c.Text = $"Param.{count}";
+                    count++;
+                }
+                else if (c is GroupBox)
+                {
+                    GroupBox g = c as GroupBox;
+                    foreach (Control cs in g.Controls)
+                    {
+                        cs.Text = $"Param.{count}";
+                        count++;
+                    }
+                }
+            }
+        }
         private void BTN_Set_Click(object sender, EventArgs e)
         {
             Parameters param = EmguParameters.Params.Find(x => x.Tag == tbTag.Text);

@@ -322,5 +322,17 @@ namespace TestStation.Properties {
                 this["FilterSizeExtra"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public string HideParameterName {
+            get {
+                return ((string)(this["HideParameterName"]));
+            }
+            set {
+                this["HideParameterName"] = value;
+            }
+        }
     }
 }

@@ -134,9 +134,10 @@
             // 
             // TB_Parameters
             // 
-            this.TB_Parameters.Location = new System.Drawing.Point(7, 283);
+            this.TB_Parameters.Dock = System.Windows.Forms.DockStyle.Top;
+            this.TB_Parameters.Location = new System.Drawing.Point(0, 277);
             this.TB_Parameters.Name = "TB_Parameters";
-            this.TB_Parameters.Size = new System.Drawing.Size(128, 32);
+            this.TB_Parameters.Size = new System.Drawing.Size(149, 32);
             this.TB_Parameters.TabIndex = 26;
             this.TB_Parameters.Text = "Parameters";
             this.TB_Parameters.UseVisualStyleBackColor = true;
