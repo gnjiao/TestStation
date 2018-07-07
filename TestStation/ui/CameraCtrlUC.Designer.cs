@@ -38,10 +38,6 @@
             this.BTN_Close = new System.Windows.Forms.Button();
             this.TB_Distance = new System.Windows.Forms.TextBox();
             this.BTN_Calculate = new System.Windows.Forms.Button();
-            this.TB_DbgMinRadius = new System.Windows.Forms.TextBox();
-            this.TB_DbgMaxRadius = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.TB_ExpoMs = new System.Windows.Forms.TextBox();
@@ -141,42 +137,10 @@
             this.BTN_Calculate.UseVisualStyleBackColor = true;
             this.BTN_Calculate.Click += new System.EventHandler(this.BTN_Calculate_Click);
             // 
-            // TB_DbgMinRadius
-            // 
-            this.TB_DbgMinRadius.Location = new System.Drawing.Point(44, 303);
-            this.TB_DbgMinRadius.Name = "TB_DbgMinRadius";
-            this.TB_DbgMinRadius.Size = new System.Drawing.Size(92, 28);
-            this.TB_DbgMinRadius.TabIndex = 17;
-            // 
-            // TB_DbgMaxRadius
-            // 
-            this.TB_DbgMaxRadius.Location = new System.Drawing.Point(44, 333);
-            this.TB_DbgMaxRadius.Name = "TB_DbgMaxRadius";
-            this.TB_DbgMaxRadius.Size = new System.Drawing.Size(92, 28);
-            this.TB_DbgMaxRadius.TabIndex = 18;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(5, 308);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 18);
-            this.label1.TabIndex = 19;
-            this.label1.Text = "Min";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(5, 338);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(35, 18);
-            this.label2.TabIndex = 20;
-            this.label2.Text = "Max";
-            // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(5, 416);
+            this.label3.Location = new System.Drawing.Point(5, 325);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(44, 18);
             this.label3.TabIndex = 24;
@@ -185,7 +149,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(5, 386);
+            this.label4.Location = new System.Drawing.Point(5, 295);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(44, 18);
             this.label4.TabIndex = 23;
@@ -193,7 +157,7 @@
             // 
             // TB_ExpoMs
             // 
-            this.TB_ExpoMs.Location = new System.Drawing.Point(64, 411);
+            this.TB_ExpoMs.Location = new System.Drawing.Point(64, 320);
             this.TB_ExpoMs.Name = "TB_ExpoMs";
             this.TB_ExpoMs.Size = new System.Drawing.Size(72, 28);
             this.TB_ExpoMs.TabIndex = 22;
@@ -201,7 +165,7 @@
             // 
             // TB_Gain
             // 
-            this.TB_Gain.Location = new System.Drawing.Point(64, 381);
+            this.TB_Gain.Location = new System.Drawing.Point(64, 290);
             this.TB_Gain.Name = "TB_Gain";
             this.TB_Gain.Size = new System.Drawing.Size(72, 28);
             this.TB_Gain.TabIndex = 21;
@@ -209,7 +173,7 @@
             // 
             // BTN_SetCamera
             // 
-            this.BTN_SetCamera.Location = new System.Drawing.Point(8, 445);
+            this.BTN_SetCamera.Location = new System.Drawing.Point(8, 354);
             this.BTN_SetCamera.Name = "BTN_SetCamera";
             this.BTN_SetCamera.Size = new System.Drawing.Size(128, 32);
             this.BTN_SetCamera.TabIndex = 25;
@@ -219,7 +183,7 @@
             // 
             // TB_Parameters
             // 
-            this.TB_Parameters.Location = new System.Drawing.Point(8, 500);
+            this.TB_Parameters.Location = new System.Drawing.Point(8, 409);
             this.TB_Parameters.Name = "TB_Parameters";
             this.TB_Parameters.Size = new System.Drawing.Size(128, 32);
             this.TB_Parameters.TabIndex = 26;
@@ -237,10 +201,6 @@
             this.Controls.Add(this.label4);
             this.Controls.Add(this.TB_ExpoMs);
             this.Controls.Add(this.TB_Gain);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.TB_DbgMaxRadius);
-            this.Controls.Add(this.TB_DbgMinRadius);
             this.Controls.Add(this.TB_Distance);
             this.Controls.Add(this.BTN_Close);
             this.Controls.Add(this.BTN_Calculate);
@@ -250,7 +210,7 @@
             this.Controls.Add(this.BTN_Open);
             this.Controls.Add(this.CMB_CameraType);
             this.Name = "CameraCtrlUC";
-            this.Size = new System.Drawing.Size(149, 535);
+            this.Size = new System.Drawing.Size(149, 448);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -266,10 +226,6 @@
         private System.Windows.Forms.Button BTN_Close;
         private System.Windows.Forms.TextBox TB_Distance;
         private System.Windows.Forms.Button BTN_Calculate;
-        private System.Windows.Forms.TextBox TB_DbgMinRadius;
-        private System.Windows.Forms.TextBox TB_DbgMaxRadius;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox TB_ExpoMs;

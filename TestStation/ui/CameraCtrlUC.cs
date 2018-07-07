@@ -180,20 +180,6 @@ namespace TestStation
                 return ReadDouble(TB_Distance);
             }
         }
-        private double DbgMinRadius
-        {
-            get
-            {
-                return ReadDouble(TB_DbgMinRadius);
-            }
-        }
-        private double DbgMaxRadius
-        {
-            get
-            {
-                return ReadDouble(TB_DbgMaxRadius);
-            }
-        }
         private double ReadDouble(TextBox tb)
         {
             double value = double.NaN;
