@@ -104,14 +104,7 @@ namespace TestStation
                     }
                 }
 
-                if (!double.IsNaN(DbgMinRadius) && !double.IsNaN(DbgMaxRadius))
-                {
-                    _cameraCtrl.Analyze(CMB_CameraType.Text, new int[] { (int)DbgMinRadius, (int)DbgMaxRadius }).ShowMessageBox();
-                }
-                else
-                {
-                    _cameraCtrl.Analyze(CMB_CameraType.Text, Distance).ShowMessageBox();
-                }
+                _cameraCtrl.Analyze(CMB_CameraType.Text, Distance).ShowMessageBox();
                 UpdateImage?.Invoke(_cameraCtrl.AnalyzedImage);
             }
             else

@@ -24,7 +24,7 @@ namespace JbImage
             return null;
         }
 
-        public abstract CircleImage FindCircle(string path);
+        public abstract CircleImage FindCircle(string path, Parameters param = null);
         public abstract Result Calculate(List<CircleImage> img, List<double> distance);
 
         protected Logger _log = new Logger("Analyzer");

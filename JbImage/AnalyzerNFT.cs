@@ -14,13 +14,13 @@ namespace JbImage
 {
     public class AnalyzerNFT : AnalyzerIntf
     {
-        public override CircleImage FindCircle(string path)
+        public override CircleImage FindCircle(string path, Parameters param = null)
         {
-            //_log.Debug(Utils.String.Flatten(EmguParameters.Item));
+            _log.Debug(param.ToString());
 
             Path = path;
             RawImg = EmguIntfs.Load(path);
-            Parameters param = EmguParameters.Params[0];
+
             bool saveFile = param.SaveFile;
             bool useCanny = param.UseCanny;
 
@@ -143,7 +143,7 @@ namespace JbImage
             ret.Path = Path;
             ret.Circles = FilteredCircles2nd;
             ret.Brightness = brightness;
-            ret.RetImg = DrawCircle();
+            ret.RetImg = DrawCircle(param);
 
             return ret;
         }
@@ -204,9 +204,9 @@ namespace JbImage
             return new Result("Ok", null, ret);
         }
 
-        private Bitmap DrawCircle()
+        private Bitmap DrawCircle(Parameters param)
         {
-            bool showFirstResult = EmguParameters.Params[0].ShowFirstResult;
+            bool showFirstResult = param.ShowFirstResult;
 
             _log.Debug("Start DrawCircles");
             Mat circleImage = RawImg.Mat;

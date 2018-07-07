@@ -100,12 +100,8 @@ namespace TestStation.core
         }
         public Result Analyze(string testType, double distance)
         {
-            return Analyze(testType, Config.RadiusLimit(distance));
-        }
-        public Result Analyze(string testType, int[] radiusLimit)
-        {
             AnalyzerIntf analyzer = AnalyzerIntf.GetAnalyzer(testType);
-            CircleImage i = analyzer.FindCircle(_filePath);
+            CircleImage i = analyzer.FindCircle(_filePath, HoughParams(distance.ToString()));
             _imgs.Add(i);
             AnalyzedImage = i.RetImg;
 
@@ -215,7 +211,16 @@ namespace TestStation.core
 
             return ret;
         }
+        private Parameters HoughParams(string distance)
+        {
+            Parameters param = EmguParameters.Params.Find(x => x.Tag == distance);
+            if (param == null)
+            {
+                param = EmguParameters.Params.Find(x => x.Tag == "Default");
+            }
 
+            return param;
+        }
         /* to be obsoleted */
         private void ProcessWithCircleFinder()
         {

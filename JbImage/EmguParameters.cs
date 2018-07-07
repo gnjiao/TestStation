@@ -12,7 +12,11 @@ namespace JbImage
         public static List<Parameters> Params = new List<Parameters>();
         static EmguParameters()
         {
-            Params.Add(new Parameters());
+            Utils.XmlSerializer.Load(@"EmguParameters.xml", out Params);
+            if (Params.Count == 0)
+            {
+                Params.Add(new Parameters());
+            }
         }
     };
     public class Parameters
@@ -135,6 +139,10 @@ namespace JbImage
             Hough2Param2 = 13;
             Hough2MinRadius = 18;
             Hough2MaxRadius = 25;
+        }
+        public override string ToString()
+        {
+            return base.ToString();
         }
     }
 }

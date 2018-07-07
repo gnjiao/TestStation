@@ -14,9 +14,9 @@ namespace JbImage
 {
     public class AnalyzerFFT : AnalyzerIntf
     {
-        public override CircleImage FindCircle(string path)
+        public override CircleImage FindCircle(string path, Parameters param = null)
         {
-            //_log.Debug(Utils.String.Flatten(EmguParameters.Item));
+            _log.Debug(param.ToString());
 
             Path = path;
             RawImg = EmguIntfs.Load(path);
@@ -30,9 +30,7 @@ namespace JbImage
             CvInvoke.PyrDown(pyrDown, _grayedUmat);
             multiple *= 2;
 
-            Parameters param = EmguParameters.Params[0];
             Image<Gray, Byte> _bin = EmguIntfs.Binarize(param.BinThreshold, _grayedUmat);
-
             Image<Gray, Byte> _edged = EmguIntfs.Canny(_bin,
                 param.Canny1Threshold1,
                 param.Canny1Threshold2,
