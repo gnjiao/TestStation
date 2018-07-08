@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="core\CameraController.cs" />
     <Compile Include="core\DS102.cs" />
+    <Compile Include="core\MotorController.cs" />
     <Compile Include="Testcase.cs" />
     <Compile Include="ui\CameraCtrlForm.cs">
       <SubType>Form</SubType>

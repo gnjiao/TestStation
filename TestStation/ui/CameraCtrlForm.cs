@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TestStation.core;
@@ -49,6 +50,31 @@ namespace TestStation
         }
         private void BTN_StartTest_Click(object sender, EventArgs e)
         {
+            /*parameter initialize*/
+            double z1Initial = 11.61;
+            List<double> z2Positions = new List<double>();
+            try
+            {
+                z1Initial = double.Parse(Properties.Settings.Default.MotorInitialPosition);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Failed to retrieve Initial position, use default value instead");
+            }
+            try
+            {/* first value should be negative, each value should less than its following value*/
+                string[] values = Properties.Settings.Default.MotorZ2Positions.Split(',');
+                foreach (var v in values)
+                {
+                    z2Positions.Add(double.Parse(v));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Failed to retrieve test positions, use default value instead");
+            }
+
+            /*device initialize*/
             CameraController camera = UC_CameraCtrl.Device;
             Result ret = camera.Open(UC_CameraCtrl.TestType);
             if (ret.Id != "OK")
@@ -57,28 +83,40 @@ namespace TestStation
                 //return;
             }
 
-            DS102 motor = MotorCtrlUC.Device;
+            MotorController motor = MotorCtrlUC.Device;
             if (motor == null)
             {
                 MessageBox.Show($"Failed to open motor for {UC_CameraCtrl.TestType}");
                 //return;
             }
 
-            int[] positions = { 0,1,2 };
-            foreach (var position in positions)
-            {
-                MoveTo(position);
+            /*test start*/
+            motor.Reset();
+            motor.MoveZ1(z1Initial);
 
-                camera.Read(position.ToString());
-                camera.Analyze(UC_CameraCtrl.TestType, position);
+            for (int i = 0; i<z2Positions.Count; i++)
+            {
+                double offset = 0;
+                if (i == 0)
+                {
+                    offset = z2Positions[0];
+                }
+                else
+                {
+                    offset = z2Positions[i] - z2Positions[i - 1];
+                }
+                motor.MoveZ2(offset);
+
+                camera.Read(z2Positions[i].ToString());
+                camera.Analyze(UC_CameraCtrl.TestType, z2Positions[i]);
             }
 
             ret = camera.Calculate();
             UC_Result.Update(ret.Param as Dictionary<string, string>);
         }
-        private void MoveTo(int position)
+        private void MoveTo(int z2Position)
         {
-            _log.Debug($"MoveTo {position}");
+            _log.Debug($"MoveTo {z2Position}");
         }
         #region ROI DRAW
         private Rectangle m_MouseRect = Rectangle.Empty;

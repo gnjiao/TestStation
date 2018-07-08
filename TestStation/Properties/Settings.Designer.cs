@@ -34,5 +34,29 @@ namespace TestStation.Properties {
                 this["HideParameterName"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("11.61")]
+        public string MotorInitialPosition {
+            get {
+                return ((string)(this["MotorInitialPosition"]));
+            }
+            set {
+                this["MotorInitialPosition"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-5,-4.5,-4,-2,0,2,4,6,6.5,7")]
+        public string MotorZ2Positions {
+            get {
+                return ((string)(this["MotorZ2Positions"]));
+            }
+            set {
+                this["MotorZ2Positions"] = value;
+            }
+        }
     }
 }

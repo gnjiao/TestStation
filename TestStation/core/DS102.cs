@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.IO.Ports;
+using System.Threading;
 
 namespace TestStation.core
 {
@@ -63,6 +64,7 @@ namespace TestStation.core
         {
             //Console.WriteLine("Send out command: " + cmd);
             _ds102.Write(cmd + "\r");
+            Thread.Sleep(1000);
         }
 
         public void GoOrigin(int axisId)
