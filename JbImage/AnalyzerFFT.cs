@@ -85,13 +85,17 @@ namespace JbImage
         private double CalcDivergenceAngle(List<CircleImage> img)
         {
             /* arctan(光斑半径 / 芯片到透镜的距离) */
-            return double.NaN;
+            double[] angles = new double[img[0].Circles.Count];
+            for (int i = 0; i < angles.Length; i++)
+            {
+                angles[i] = Utils.Math.Atan(((double)img[0].Circles[i].Radius * 5.5 / 1000) / 30);
+            }
+            return angles.ToList().Average();
         }
         private double CalcPowerDensity(List<CircleImage> img)
         {
             /* 激光器发光功率 / 光斑面积 */
-            CircleImage i = img[0];
-            double result = i.Circles[0].Area;
+            double result = img[0].Circles[0].Area;
             return double.NaN;
         }
         public override Result Calculate(List<CircleImage> img, List<double> distance)

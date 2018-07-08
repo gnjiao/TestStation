@@ -124,6 +124,8 @@ namespace JbImage
             Circles2nd = Sort(Circles2nd);
             FilteredCircles2nd = new List<CircleF>();
             List<int> brightness = new List<int>();
+
+            _log.Info($"Circles Information");
             int i = 0;
             foreach (var circle in Circles2nd)
             {
@@ -133,7 +135,7 @@ namespace JbImage
                     FilteredCircles2nd.Add(circle);
                     int b = CountPixels(_grayedUmat, circle);
                     brightness.Add(b);
-                    _log.Debug($"Circle{i:D3}: ({circle.Center.X},{circle.Center.Y}) {circle.Radius} {b}");
+                    _log.Info($"Circle{i:D3}: ({circle.Center.X},{circle.Center.Y}) {circle.Radius} {b}");
 
                     i++;
                 }
@@ -172,7 +174,6 @@ namespace JbImage
                     _log.Debug($"Circle{circleId} radius: {output}");
 
                     result[circleId] = Matlab.CalcWeist2(radius, distance.ToArray());
-                    _log.Info($"{circleId}: {result[circleId]}" + Environment.NewLine);
                 }
                 catch (Exception ex)
                 {
@@ -183,23 +184,46 @@ namespace JbImage
 
             return result;
         }
-        private double CalcDivergenceAngle(List<CircleImage> img)
-        {
-            return double.NaN;
+        private double CalcDivergenceAngle(List<CircleImage> img, double[] weists)
+        {/* weist * sita = lambda / pi */
+            _log.Info($"DivergenceAngle");
+
+            double[] angles = new double[weists.Length];
+            for (int i = 0; i<angles.Length; i++)
+            {
+                try
+                {
+                    angles[i] = (double)940 / System.Math.PI / weists[i];
+                }
+                catch (Exception ex)
+                {
+                    angles[i] = double.NaN;
+                }
+                _log.Info($"Circle{i:D3}: {angles[i]:F3}");
+            }
+
+            return angles.ToList().FindAll(x => !double.IsNaN(x)).ToList().Average();
         }
         private double CalcUniformity(List<CircleImage> img)
         {
-            return double.NaN;
+            return Utils.Math.StdEv(img[0].Brightness.Select(x => (double)x).ToList());
         }
         public override Result Calculate(List<CircleImage> img, List<double> distance)
         {
             Dictionary<string, string> ret = new Dictionary<string, string>();
 
+            double[] weists = CalcWeist(img, distance);
+            _log.Info($"Weist");
+            for (int i = 0; i < weists.Length; i++)
+            {
+                _log.Info($"Circle{i:D3}: {weists[i]:F3}");
+            }
+
             ret["Dead Emitter Count"] = img[0].Circles.Count.ToString();
             ret["Dead Cluster Count"] = img[0].Circles.Count.ToString();
-            ret["Emitter Divergence Angle"] = CalcDivergenceAngle(img).ToString("F3");
-            ret["Beam Waist Diameter"] = CalcWeist(img, distance).ToList().FindAll(x => x < 30 && x > 15).ToList().Average().ToString("F3");
-            ret["Emission Uniformity"] = CalcDivergenceAngle(img).ToString("F3");
+            ret["Emitter Divergence Angle"] = CalcDivergenceAngle(img, weists).ToString("F3");
+            ret["Beam Waist Diameter(um)"] = (5.5 * weists.ToList().FindAll(x => x < 30 && x > 15).ToList().Average()).ToString("F3");
+            ret["Emission Uniformity"] = CalcUniformity(img).ToString("F3");
 
             return new Result("Ok", null, ret);
         }
