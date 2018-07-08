@@ -46,6 +46,11 @@ namespace TestStation
         }
         private void CameraCtrlForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (UC_CameraCtrl.Device.mCamera != null)
+            {
+                UC_CameraCtrl.Device.Close();
+            }
+
             MotorCtrlUC.OnClose();
         }
         private void BTN_StartTest_Click(object sender, EventArgs e)

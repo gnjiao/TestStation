@@ -85,6 +85,8 @@ namespace TestStation
         }
         private void BTN_Read_Click(object sender, EventArgs e)
         {
+            Enabled = false;
+
             lock (_updateLock)
             {
                 _updateTimer.Stop();
@@ -94,14 +96,18 @@ namespace TestStation
 
                 _updateTimer.Start();
             }
+
+            Enabled = true;
         }
         private void BTN_ImgAnalyze_Click(object sender, EventArgs e)
         {
+            Enabled = false;
+
             if (BTN_ImgAnalyze.Text == "Image Analyze")
             {
-                if (_updateTimer.Enabled)
+                lock (_updateLock)
                 {
-                    lock (_updateLock)
+                    if (_updateTimer.Enabled)
                     {
                         _updateTimer.Stop();
                         BTN_ImgAnalyze.Text = "Resume";
@@ -116,9 +122,14 @@ namespace TestStation
                 BTN_ImgAnalyze.Text = "Image Analyze";
                 _updateTimer.Start();
             }
+
+            Enabled = true;
+
         }
         private void BTN_Calculate_Click(object sender, EventArgs e)
         {
+            Enabled = false;
+
 #if DEBUG
             //dbgAutoLoad();
 #endif
@@ -126,17 +137,26 @@ namespace TestStation
             ret.ShowMessageBox();
 
             UpdateResult?.Invoke(ret.Param as Dictionary<string, string>);
+            Enabled = true;
+
         }
         private void BTN_Open_Click(object sender, EventArgs e)
         {
+            Enabled = false;
+
             Device.Open(CMB_CameraType.Text).ShowMessageBox();
             if (Device.mCamera != null)
             {
                 _updateTimer.Start();
             }
+
+
+            Enabled = true;
         }
         private void BTN_Load_Click(object sender, EventArgs e)
         {
+            Enabled = false;
+
             OpenFileDialog d = new OpenFileDialog();
             if (d.ShowDialog() == DialogResult.OK)
             {
@@ -146,6 +166,8 @@ namespace TestStation
                     UpdateImage?.Invoke(Device.LatestImage);
                 }
             }
+
+            Enabled = true;
         }
         private void BTN_Close_Click(object sender, EventArgs e)
         {
