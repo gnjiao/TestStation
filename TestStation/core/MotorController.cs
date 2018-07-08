@@ -34,7 +34,7 @@ namespace TestStation.core
         }
         public void Close()
         {
-            Device.CloseDS102();
+            Device?.CloseDS102();
             Device = null;
         }
 
