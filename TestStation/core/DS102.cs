@@ -64,7 +64,7 @@ namespace TestStation.core
         {
             //Console.WriteLine("Send out command: " + cmd);
             _ds102.Write(cmd + "\r");
-            Thread.Sleep(1000);
+            Thread.Sleep(500);
         }
 
         public void GoOrigin(int axisId)
@@ -78,6 +78,7 @@ namespace TestStation.core
                     SendCommandToDS102("AXIS2:GO ORG");
                     break;
             }
+            Thread.Sleep(2000);
         }
 
         public void ZAxisGoPositive(int axisId, double dist)
