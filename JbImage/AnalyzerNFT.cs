@@ -38,10 +38,10 @@ namespace JbImage
                         _grayedUmat.Data[y, x, 0] = (byte)(value > 255 ? 255 : value);
                     }
                 }
-            }
-            if (saveFile)
-            {
-                _grayedUmat.Save(Utils.String.FilePostfix(Path, "-0-strength"));
+                if (saveFile)
+                {
+                    _grayedUmat.Save(Utils.String.FilePostfix(Path, "-0-strength"));
+                }
             }
 
             Image<Gray, Byte> _edged;
