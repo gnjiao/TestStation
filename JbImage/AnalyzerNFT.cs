@@ -21,11 +21,29 @@ namespace JbImage
             Path = path;
             RawImg = EmguIntfs.Load(path);
 
+            bool strengthen = param.ExtraStrengthen;
             bool saveFile = param.SaveFile;
             bool useCanny = param.UseCanny;
 
             #region 1st with constant filter and find circles
             Image <Gray, Byte> _grayedUmat = EmguIntfs.ToImage(EmguIntfs.Grayed(RawImg));
+
+            if (strengthen)
+            {
+                for (int x = 0; x < _grayedUmat.Width; x++)
+                {
+                    for (int y = 0; y < _grayedUmat.Height; y++)
+                    {
+                        int value = _grayedUmat.Data[y, x, 0] * 2;
+                        _grayedUmat.Data[y, x, 0] = (byte)(value > 255 ? 255 : value);
+                    }
+                }
+            }
+            if (saveFile)
+            {
+                _grayedUmat.Save(Utils.String.FilePostfix(Path, "-0-strength"));
+            }
+
             Image<Gray, Byte> _edged;
             if (useCanny)
             {

@@ -33,6 +33,9 @@ namespace JbImage
         public int ExposureTime
         { get; set; }
 
+        [XmlAttribute("ExtraStrengthen")]
+        public bool ExtraStrengthen
+        { get; set; }
         [XmlAttribute("UseCanny")]
         public bool UseCanny
         { get; set; }
@@ -121,9 +124,10 @@ namespace JbImage
             Gain = 90;
             ExposureTime = 500;
 
-            UseCanny = false;
-            SaveFile = false;
-            ShowFirstResult = false;
+            ExtraStrengthen = true;
+            UseCanny = true;
+            SaveFile = true;
+            ShowFirstResult = true;
 
             BinThreshold = 50;
             FilterSquareExtra = 10;

@@ -88,6 +88,7 @@
             this.label22 = new System.Windows.Forms.Label();
             this.tbGain = new System.Windows.Forms.TextBox();
             this.tbExpo = new System.Windows.Forms.TextBox();
+            this.CB_ExtraStrengthen = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -557,27 +558,27 @@
             // CB_Save
             // 
             this.CB_Save.AutoSize = true;
-            this.CB_Save.Location = new System.Drawing.Point(239, 178);
+            this.CB_Save.Location = new System.Drawing.Point(328, 178);
             this.CB_Save.Name = "CB_Save";
-            this.CB_Save.Size = new System.Drawing.Size(196, 22);
+            this.CB_Save.Size = new System.Drawing.Size(133, 22);
             this.CB_Save.TabIndex = 22;
-            this.CB_Save.Text = "Save intermit pics";
+            this.CB_Save.Text = "Save Images";
             this.CB_Save.UseVisualStyleBackColor = true;
             // 
             // CB_UseCanny
             // 
             this.CB_UseCanny.AutoSize = true;
-            this.CB_UseCanny.Location = new System.Drawing.Point(21, 178);
+            this.CB_UseCanny.Location = new System.Drawing.Point(170, 178);
             this.CB_UseCanny.Name = "CB_UseCanny";
-            this.CB_UseCanny.Size = new System.Drawing.Size(160, 22);
+            this.CB_UseCanny.Size = new System.Drawing.Size(124, 22);
             this.CB_UseCanny.TabIndex = 23;
-            this.CB_UseCanny.Text = "Use Canny Edge";
+            this.CB_UseCanny.Text = "Canny Edge";
             this.CB_UseCanny.UseVisualStyleBackColor = true;
             // 
             // CB_ShowFirstResult
             // 
             this.CB_ShowFirstResult.AutoSize = true;
-            this.CB_ShowFirstResult.Location = new System.Drawing.Point(486, 178);
+            this.CB_ShowFirstResult.Location = new System.Drawing.Point(495, 178);
             this.CB_ShowFirstResult.Name = "CB_ShowFirstResult";
             this.CB_ShowFirstResult.Size = new System.Drawing.Size(187, 22);
             this.CB_ShowFirstResult.TabIndex = 24;
@@ -633,11 +634,22 @@
             this.tbExpo.Size = new System.Drawing.Size(100, 28);
             this.tbExpo.TabIndex = 30;
             // 
+            // CB_ExtraStrengthen
+            // 
+            this.CB_ExtraStrengthen.AutoSize = true;
+            this.CB_ExtraStrengthen.Location = new System.Drawing.Point(12, 178);
+            this.CB_ExtraStrengthen.Name = "CB_ExtraStrengthen";
+            this.CB_ExtraStrengthen.Size = new System.Drawing.Size(124, 22);
+            this.CB_ExtraStrengthen.TabIndex = 31;
+            this.CB_ExtraStrengthen.Text = "Strengthen";
+            this.CB_ExtraStrengthen.UseVisualStyleBackColor = true;
+            // 
             // ParameterForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(707, 808);
+            this.Controls.Add(this.CB_ExtraStrengthen);
             this.Controls.Add(this.tbExpo);
             this.Controls.Add(this.tbGain);
             this.Controls.Add(this.label22);
@@ -725,5 +737,6 @@
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.TextBox tbGain;
         private System.Windows.Forms.TextBox tbExpo;
+        private System.Windows.Forms.CheckBox CB_ExtraStrengthen;
     }
 }

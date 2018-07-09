@@ -91,13 +91,15 @@ namespace TestStation.ui
             param.Hough2MinRadius = Int32.Parse(tbHough2MinRadius.Text);
             param.Hough2MaxRadius = Int32.Parse(tbHough2MaxRadius.Text);
 
-            param.SaveFile = CB_Save.Checked;
+            param.ExtraStrengthen = CB_ExtraStrengthen.Checked;
             param.UseCanny = CB_UseCanny.Checked;
+            param.SaveFile = CB_Save.Checked;
             param.ShowFirstResult = CB_ShowFirstResult.Checked;
         }
 
         private void BTN_Save_Click(object sender, EventArgs e)
         {
+            BTN_Set_Click(null, null);
             XmlSerializer.Save("EmguParameters.xml", EmguParameters.Params);
             Close();
         }
@@ -144,6 +146,7 @@ namespace TestStation.ui
             tbHough2MinRadius.Text = param.Hough2MinRadius.ToString();
             tbHough2MaxRadius.Text = param.Hough2MaxRadius.ToString();
 
+            CB_ExtraStrengthen.Checked = param.ExtraStrengthen;
             CB_UseCanny.Checked = param.UseCanny;
             CB_Save.Checked = param.SaveFile;
             CB_ShowFirstResult.Checked = param.ShowFirstResult;

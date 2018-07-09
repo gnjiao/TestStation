@@ -137,57 +137,20 @@ namespace JbImage
             StringBuilder msgBuilder = new StringBuilder("Performance: ");
             Stopwatch watch = Stopwatch.StartNew();
 
-            string _imgPath = @"D:\work\TestStation\ImageTest\Test\FFT.bmp";
+            string _imgPath = @"D:\work\TestStation\TestStation\SingleSample\NFT-200-110-8mm.bmp";
             Image<Bgr, byte>_rawImg = EmguIntfs.Load(_imgPath);
-            UMat _grayedUmat = EmguIntfs.Grayed(_rawImg);
+            Image<Gray, byte> _grayedUmat = EmguIntfs.ToImage(EmguIntfs.Grayed(_rawImg));
 
-            int multiple = 1;
-            UMat pyrDown = new UMat();
-            CvInvoke.PyrDown(_grayedUmat, pyrDown);
-            multiple *= 2;
-            CvInvoke.PyrDown(pyrDown, _grayedUmat);
-            multiple *= 2;
-
-            Parameters param = EmguParameters.Params[0];
-
-            Image<Gray, Byte> _bin = EmguIntfs.Binarize(param.BinThreshold,
-                EmguIntfs.ToImage(_grayedUmat));
-
-            Image<Gray, Byte> _edged = EmguIntfs.Canny(_bin,
-                    param.Canny1Threshold1,
-                    param.Canny1Threshold2,
-                    param.Canny1ApertureSize,
-                    param.Canny1I2Gradient);
-            _edged.Save(Utils.String.FilePostfix(_imgPath, "-1-edge"));
-
-            CircleF[] Circles = CvInvoke.HoughCircles(_edged, HoughType.Gradient,
-                param.Hough1Dp,
-                param.Hough1MinDist,
-                param.Hough1Param1,
-                param.Hough1Param2,
-                param.Hough1MinRadius, param.Hough1MaxRadius);
-
-            #region draw
-            Mat _result = _edged.Mat;
-
-            for (int i = 0; i < Circles.Length; i++)
+            for (int x = 0; x < _grayedUmat.Width; x++)
             {
-                Point center = Point.Round(Circles[i].Center);
-                center.X *= 1;
-                center.Y *= 1;
-                int radius = (int)Circles[i].Radius * 1;
-
-                //if (2 * radius < _result.Size.Height && 2 * radius < _result.Size.Width)
+                for (int y = 0; y < _grayedUmat.Height; y++)
                 {
-                    CvInvoke.Circle(_result, center, radius, new Bgr(Color.White).MCvScalar, 1);
-                    CvInvoke.PutText(_result, i.ToString("D3"), new Point((int)Circles[i].Center.X, (int)Circles[i].Center.Y), Emgu.CV.CvEnum.FontFace.HersheyScriptComplex, 1, new MCvScalar(255, 255, 0), 1);
+                    int value = _grayedUmat.Data[y, x, 0] * 2;
+                    _grayedUmat.Data[y, x, 0] = (byte)(value > 255 ? 255 : value);
                 }
             }
-            _result.Save(Utils.String.FilePostfix(_imgPath, "-result"));
-            #endregion
 
-            watch.Stop();
-            msgBuilder.Append(string.Format("{0} Hough circles - {1} ms; ", "FFT", watch.ElapsedMilliseconds));
+            _grayedUmat.Save(Utils.String.FilePostfix(_imgPath, "-Result"));
         }
     }
 }
