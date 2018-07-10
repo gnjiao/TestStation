@@ -239,9 +239,30 @@ namespace JbImage
 
             ret["Dead Emitter Count"] = img[0].Circles.Count.ToString();
             ret["Dead Cluster Count"] = img[0].Circles.Count.ToString();
-            ret["Emitter Divergence Angle"] = CalcDivergenceAngle(img, weists).ToString("F3");
-            ret["Beam Waist Diameter(um)"] = (5.5 * weists.ToList().FindAll(x => x < 30 && x > 15).ToList().Average()).ToString("F3");
-            ret["Emission Uniformity"] = CalcUniformity(img).ToString("F3");
+            try
+            {
+                ret["Emitter Divergence Angle"] = CalcDivergenceAngle(img, weists).ToString("F3");
+            }
+            catch (Exception ex)
+            {
+                ret["Emitter Divergence Angle"] = "N/A";
+            }
+            try
+            {
+                ret["Beam Waist Diameter(um)"] = (5.5 * weists.ToList().FindAll(x => x < 30 && x > 15).ToList().Average()).ToString("F3");
+            }
+            catch (Exception ex)
+            {
+                ret["Beam Waist Diameter(um)"] = "N/A";
+            }
+            try
+            {
+                ret["Emission Uniformity"] = CalcUniformity(img).ToString("F3");
+            }
+            catch (Exception ex)
+            {
+                ret["Emission Uniformity"] = "N/A";
+            }
 
             return new Result("Ok", null, ret);
         }

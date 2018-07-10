@@ -60,10 +60,10 @@ namespace Hardware
         {
             if (this._tlCamera != null)
             {
-                if (this._tlCamera.NumberOfQueuedFrames > 0)
+                while (this._tlCamera.NumberOfQueuedFrames > 0)
                 {
                     var frame = this._tlCamera.GetPendingFrameOrNull();
-                    if (frame != null && _latestFrame == null)
+                    if (frame != null)
                     {
                         _latestFrame = frame;
                     }

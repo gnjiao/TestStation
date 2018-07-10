@@ -6,6 +6,7 @@ using System.Configuration;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
+using System.Threading;
 using Utils;
 
 namespace TestStation.core
@@ -25,7 +26,7 @@ namespace TestStation.core
 
         string _filePath;
         private List<double> _distances = new List<double>();
-        private List<CircleImage> _imgs = new List<CircleImage>();
+        public List<CircleImage> Imgs = new List<CircleImage>();
         private string _testType = "";
         public Result Open(string cameraType)
         {
@@ -91,6 +92,7 @@ namespace TestStation.core
 
             SetGain(param.Gain);
             SetExposure(param.ExposureTime);
+            Thread.Sleep(2000);
 
             return Read(distance);
         }
@@ -121,17 +123,17 @@ namespace TestStation.core
         {
             AnalyzerIntf analyzer = AnalyzerIntf.GetAnalyzer(testType);
             CircleImage i = analyzer.FindCircle(_filePath, HoughParams(distance.ToString()));
-            _imgs.Add(i);
+            Imgs.Add(i);
             AnalyzedImage = i.RetImg;
 
-            return new Result("Ok");
+            return new Result("Ok", "", AnalyzedImage);
         }
         public Result Calculate()
         {
-            Result ret = AnalyzerIntf.GetAnalyzer("NFT").Calculate(_imgs, _distances);
+            Result ret = AnalyzerIntf.GetAnalyzer("NFT").Calculate(Imgs, _distances);
 
             _distances.Clear();
-            _imgs.Clear();
+            Imgs.Clear();
 
             return ret;
         }

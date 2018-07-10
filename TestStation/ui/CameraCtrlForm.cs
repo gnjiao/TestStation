@@ -53,8 +53,16 @@ namespace TestStation
 
             MotorCtrlUC.OnClose();
         }
+        private void UpdateImg(Bitmap img)
+        {
+            UC_CameraCtrl.UpdateImage?.Invoke(img);
+            UC_CameraCtrl.Refresh();
+            Application.DoEvents();
+        }
         private void BTN_StartTest_Click(object sender, EventArgs e)
         {
+            BTN_StartTest.Enabled = false;
+
             /*parameter initialize*/
             double z1Initial = 11.61;
             List<double> z2Positions = new List<double>();
@@ -82,9 +90,9 @@ namespace TestStation
             /*device initialize*/
             CameraController camera = UC_CameraCtrl.Device;
             Result ret = camera.Open(UC_CameraCtrl.TestType);
-            if (ret.Id != "OK")
+            if (ret.Id != "Ok" && ret.Id != "Dummy")
             {
-                MessageBox.Show($"Failed to open camera for {UC_CameraCtrl.TestType}");
+                MessageBox.Show($"Failed to open camera for {UC_CameraCtrl.TestType}({ret.Id})");
                 //return;
             }
 
@@ -92,12 +100,12 @@ namespace TestStation
             if (motor == null)
             {
                 MessageBox.Show($"Failed to open motor for {UC_CameraCtrl.TestType}");
-                //return;
             }
 
             /*test start*/
             motor.Reset();
             motor.MoveZ1(z1Initial);
+            Thread.Sleep(10000);
 
             for (int i = 0; i<z2Positions.Count; i++)
             {
@@ -112,16 +120,27 @@ namespace TestStation
                 }
                 motor.MoveZ2(offset);
 
-                camera.Read(z2Positions[i].ToString());
-                camera.Analyze(UC_CameraCtrl.TestType, z2Positions[i]);
+                Thread.Sleep(2000);
+
+                ret = camera.Read(z2Positions[i].ToString());
+                UpdateImg(ret.Param as Bitmap);
+
+                ret = camera.Analyze(UC_CameraCtrl.TestType, z2Positions[i]);
+                UpdateImg(ret.Param as Bitmap);
+
+                if (camera.Imgs.Last().Circles.Count == 0)
+                {
+                    MessageBox.Show("Failed to find any circles in recent images");
+                    break;
+                }
+
+                Thread.Sleep(1000);
             }
 
             ret = camera.Calculate();
             UC_Result.Update(ret.Param as Dictionary<string, string>);
-        }
-        private void MoveTo(int z2Position)
-        {
-            _log.Debug($"MoveTo {z2Position}");
+
+            BTN_StartTest.Enabled = true;
         }
         #region ROI DRAW
         private Rectangle m_MouseRect = Rectangle.Empty;
