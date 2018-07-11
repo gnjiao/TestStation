@@ -103,9 +103,9 @@ namespace TestStation
             }
 
             /*test start*/
-            motor.Reset();
-            motor.MoveZ1(z1Initial);
-            Thread.Sleep(10000);
+            //motor.Reset();
+            //motor.MoveZ1(z1Initial);
+            //Thread.Sleep(10000);
 
             for (int i = 0; i<z2Positions.Count; i++)
             {

@@ -158,7 +158,43 @@ namespace JbImage
         }
         public override string ToString()
         {
-            return base.ToString();
+            return
+                $"Tag:{Tag}," +
+
+                $"Gain:{Gain}," +
+                $"ExposureTime:{ExposureTime}," +
+
+                $"ExtraStrengthen:{ExtraStrengthen}," +
+                $"UseCanny:{UseCanny}," +
+                $"SaveFile:{SaveFile}," +
+                $"ShowFirstResult:{ShowFirstResult}," +
+
+                $"BinThreshold:{BinThreshold}," +
+                $"FilterSquareExtra:{FilterSquareExtra}," +
+
+                $"Canny1Threshold1:{Canny1Threshold1}," +
+                $"Canny1Threshold2:{Canny1Threshold2}," +
+                $"Canny1ApertureSize:{Canny1ApertureSize}," +
+                $"Canny1I2Gradient:{Canny1I2Gradient}," +
+
+                $"Hough1Dp:{Hough1Dp}," +
+                $"Hough1MinDist:{Hough1MinDist}," +
+                $"Hough1Param1:{Hough1Param1}," +
+                $"Hough1Param2:{Hough1Param2}," +
+                $"Hough1MinRadius:{Hough1MinRadius}," +
+                $"Hough1MaxRadius:{Hough1MaxRadius}," +
+
+                $"Canny2Threshold1:{Canny2Threshold1}," +
+                $"Canny2Threshold2:{Canny2Threshold2}," +
+                $"Canny2ApertureSize:{Canny2ApertureSize}," +
+                $"Canny2I2Gradient:{Canny2I2Gradient}," +
+
+                $"Hough2Dp:{Hough2Dp}," +
+                $"Hough2MinDist:{Hough2MinDist}," +
+                $"Hough2Param1:{Hough2Param1}," +
+                $"Hough2Param2:{Hough2Param2}," +
+                $"Hough2MinRadius:{Hough2MinRadius}," +
+                $"Hough2MaxRadius:{Hough2MaxRadius}";
         }
     }
 }

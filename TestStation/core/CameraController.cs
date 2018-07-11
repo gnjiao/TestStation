@@ -145,13 +145,13 @@ namespace TestStation.core
         }
         public Result SetGain(int gain)
         {
-            return mCamera.Execute(new Command("Config", new Dictionary<string, string>() {
+            return mCamera?.Execute(new Command("Config", new Dictionary<string, string>() {
                 { "Gain", gain.ToString() }
             }));
         }
         public Result SetExposure(int ms)
         {
-            return mCamera.Execute(new Command("Config", new Dictionary<string, string>() {
+            return mCamera?.Execute(new Command("Config", new Dictionary<string, string>() {
                 { "Exposure", ms.ToString() }
             }));
         }
