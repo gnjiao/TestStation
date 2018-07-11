@@ -178,7 +178,7 @@ namespace JbImage
 
                     for (int imgId = 0; imgId < radius.Length; imgId++)
                     {
-                        radius[imgId] = img[imgId].Circles[circleId].Radius;
+                        radius[imgId] = img[imgId].Circles[circleId].Radius * 5.5;
                     }
                     string output = "";
                     for (int i = 0; i < radius.Length; i++)
@@ -200,7 +200,7 @@ namespace JbImage
                 }
             }
 
-            return result;
+            return result.ToList().Select(x => x/10).ToArray();
         }
         private double CalcDivergenceAngle(List<CircleImage> img, double[] weists)
         {/* weist * sita = lambda / pi */
@@ -211,7 +211,7 @@ namespace JbImage
             {
                 try
                 {
-                    angles[i] = (double)940 / System.Math.PI / weists[i];
+                    angles[i] = (0.94 / System.Math.PI / weists[i]) * 180 / System.Math.PI * 2;
                 }
                 catch (Exception ex)
                 {
@@ -237,8 +237,8 @@ namespace JbImage
                 _log.Info($"Circle{i:D3}: {weists[i]:F3}");
             }
 
-            ret["Dead Emitter Count"] = img[0].Circles.Count.ToString();
-            ret["Dead Cluster Count"] = img[0].Circles.Count.ToString();
+            ret["Emitter Count"] = img[0].Circles.Count.ToString();
+            //ret["Dead Cluster Count"] = img[0].Circles.Count.ToString();
             try
             {
                 ret["Emitter Divergence Angle"] = CalcDivergenceAngle(img, weists).ToString("F3");
@@ -249,7 +249,7 @@ namespace JbImage
             }
             try
             {
-                ret["Beam Waist Diameter(um)"] = (5.5 * weists.ToList().FindAll(x => x < 30 && x > 15).ToList().Average()).ToString("F3");
+                ret["Beam Waist Diameter(um)"] = weists.ToList().FindAll(x => 0 < x && x < 100).ToList().Average().ToString("F3");
             }
             catch (Exception ex)
             {
