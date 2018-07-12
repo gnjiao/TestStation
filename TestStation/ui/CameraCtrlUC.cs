@@ -43,7 +43,8 @@ namespace TestStation
         {
             InitializeComponent();
             InitializeHelpInfo();
-            CMB_CameraType.SelectedIndex = 1;
+            CMB_CameraType.SelectedIndex = 2;
+            TB_Distance.Text = "999";
 
             Logger log = new Logger("TestStation");
             log.Debug(string.Format("TestStation(V{0}) Started", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString()));
@@ -133,7 +134,7 @@ namespace TestStation
 #if DEBUG
             //dbgAutoLoad();
 #endif
-            Result ret = Device.Calculate();
+            Result ret = Device.Calculate(TestType);
             ret.ShowMessageBox();
 
             UpdateResult?.Invoke(ret.Param as Dictionary<string, string>);

@@ -18,6 +18,9 @@ namespace JbImage
         {
             _log.Debug(param.ToString());
 
+            bool saveFile = param.SaveFile;
+            bool useCanny = param.UseCanny;
+
             Path = path;
             RawImg = EmguIntfs.Load(path);
 
@@ -31,6 +34,8 @@ namespace JbImage
             multiple *= 2;
 
             Image<Gray, Byte> _bin = EmguIntfs.Binarize(param.BinThreshold, _grayedUmat);
+            _bin.Save(Utils.String.FilePostfix(Path, "-0-bin"));
+
             Image<Gray, Byte> _edged = EmguIntfs.Canny(_bin,
                 param.Canny1Threshold1,
                 param.Canny1Threshold2,
@@ -85,17 +90,17 @@ namespace JbImage
         private double CalcDivergenceAngle(List<CircleImage> img)
         {
             /* arctan(光斑半径 / 芯片到透镜的距离) */
-            double[] angles = new double[img[0].Circles.Count];
+            double[] angles = new double[img[img.Count - 1].Circles.Count];
             for (int i = 0; i < angles.Length; i++)
             {
-                angles[i] = Utils.Math.Atan(((double)img[0].Circles[i].Radius * 5.5 / 1000) / 30);
+                angles[i] = Utils.Math.Atan(((double)img[img.Count - 1].Circles[i].Radius * 5.5 / 1000) / 30);
             }
             return angles.ToList().Average();
         }
         private double CalcPowerDensity(List<CircleImage> img)
         {
             /* 激光器发光功率 / 光斑面积 */
-            double result = img[0].Circles[0].Area;
+            double result = img[img.Count - 1].Circles[0].Area;
             return double.NaN;
         }
         public override Result Calculate(List<CircleImage> img, List<double> distance)
@@ -103,7 +108,7 @@ namespace JbImage
             Dictionary<string, string> ret = new Dictionary<string, string>();
 
             ret["Emitter Divergence Angle"] = CalcDivergenceAngle(img).ToString("F3");
-            ret["Power Density"] = CalcDivergenceAngle(img).ToString("F3");
+            ret["Power Density"] = CalcPowerDensity(img).ToString("F3");
 
             return new Result("Ok", null, ret);
         }

@@ -128,9 +128,9 @@ namespace TestStation.core
 
             return new Result("Ok", "", AnalyzedImage);
         }
-        public Result Calculate()
+        public Result Calculate(string testType)
         {
-            Result ret = AnalyzerIntf.GetAnalyzer("NFT").Calculate(Imgs, _distances);
+            Result ret = AnalyzerIntf.GetAnalyzer(testType).Calculate(Imgs, _distances);
 
             _distances.Clear();
             Imgs.Clear();

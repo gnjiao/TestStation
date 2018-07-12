@@ -137,7 +137,7 @@ namespace TestStation
                 Thread.Sleep(1000);
             }
 
-            ret = camera.Calculate();
+            ret = camera.Calculate(UC_CameraCtrl.TestType);
             UC_Result.Update(ret.Param as Dictionary<string, string>);
 
             BTN_StartTest.Enabled = true;
