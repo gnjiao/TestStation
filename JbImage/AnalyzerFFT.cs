@@ -175,7 +175,6 @@ namespace JbImage
 #endregion
 
             CircleImage ret = new CircleImage();
-            ret.Path = Path;
             ret.Circles = FilteredCircles2nd;
             ret.Brightness = brightness;
             ret.RetImg = _result.Bitmap;

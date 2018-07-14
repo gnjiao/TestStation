@@ -17,6 +17,19 @@ namespace JbImage
     public class EmguIntfs
     {
         //basic transform
+        public static Image<Gray, ushort> ToImage(ushort[] data)
+        {
+            ushort[,,] raw = new ushort[2472, 3296, 1];
+            for (int height = 0; height < 2472; height++)
+            {
+                for (int width = 0; width < 3296; width++)
+                {
+                    raw[height, width, 0] = data[height * 3296 + width];
+                }
+            }
+
+            return new Image<Gray, ushort>(raw);
+        }
         public static UMat ToUMat(Image<Gray, Byte> image)
         {
             return image.ToUMat();
@@ -53,6 +66,13 @@ namespace JbImage
             CvInvoke.PyrUp(pyrDown, uimage);
             return uimage;
         }
+        public static Image<Gray, ushort> PyrRemoveNoise(Image<Gray, ushort> uimage)
+        {
+            UMat pyrDown = new UMat();
+            CvInvoke.PyrDown(uimage, pyrDown);
+            CvInvoke.PyrUp(pyrDown, uimage);
+            return uimage;
+        }
         public static Image<Gray, float> Sharpen(Image<Gray, Byte> image)
         {
             float[,] k = { {0, 1, 0},
@@ -76,6 +96,12 @@ namespace JbImage
         {
             var threshImage = grayImage.CopyBlank();
             CvInvoke.Threshold(grayImage, threshImage, threshold, 255, ThresholdType.Binary);
+            return threshImage;
+        }
+        public static Image<Gray, ushort> Binarize(int threshold, Image<Gray, ushort> grayImage)
+        {
+            var threshImage = grayImage.CopyBlank();
+            CvInvoke.Threshold(grayImage, threshImage, threshold, 0x3fff, ThresholdType.Binary);
             return threshImage;
         }
         /*jiangbo : bug here, may count pixel outside the circle*/
@@ -132,7 +158,7 @@ namespace JbImage
             }
             (new Logger()).Debug(msgBuilder.ToString());
         }
-        public static void Test()
+        public static void TestFFT()
         {
             string Path = @"D:\work\TestStation\TestStation\Samples\2017.7.11\fft.bmp";
             Image<Bgr, byte> RawImg = EmguIntfs.Load(Path);
@@ -153,7 +179,7 @@ namespace JbImage
             Image<Gray, byte> d = new Image<Gray, byte>(_bin.Width, _bin.Height);
             VectorOfVectorOfPoint con = new VectorOfVectorOfPoint();
 
-            CvInvoke.FindContours(_bin, con, tempc, RetrType.Tree, ChainApproxMethod.ChainApproxSimple, new Point(0,0));
+            CvInvoke.FindContours(_bin, con, tempc, RetrType.Tree, ChainApproxMethod.ChainApproxSimple, new Point(0, 0));
             for (int conId = 0; conId < con.Size; conId++)
                 CvInvoke.DrawContours(d, con, conId, new MCvScalar(255, 0, 255, 255), 2);
             d.Save(Utils.String.FilePostfix(Path, "-1-contour"));
@@ -172,6 +198,23 @@ namespace JbImage
                 CvInvoke.Ellipse(d, rect, new Bgr(Color.White).MCvScalar, 2);
             }
             d.Save(Utils.String.FilePostfix(Path, "-1-rects"));
+        }
+
+        public static void Test()
+        {
+            string Path = @"D:\work\TestStation\TestStation\SingleSample\8.tif";
+            Image<Gray, ushort> img = new Image<Gray, ushort>(Path);
+            Mat mat = new Mat(Path);
+
+            int max = 0;
+            for (int width = 0; width < img.Width; width++)
+            {
+                for (int height = 0; height < img.Height; height++)
+                {
+                    max = max > img.Data[height, width, 0] ? max : img.Data[height, width, 0];
+                }
+            }
+            img.Save(Utils.String.FilePostfix(Path.Replace("tif","bmp"), "-raw"));
         }
     }
 }

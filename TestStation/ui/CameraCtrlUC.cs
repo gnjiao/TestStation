@@ -152,7 +152,6 @@ namespace TestStation
                 _updateTimer.Start();
             }
 
-
             Enabled = true;
         }
         private void BTN_Load_Click(object sender, EventArgs e)
@@ -336,6 +335,11 @@ namespace TestStation
         {
             ParameterForm form = new ParameterForm(TB_Distance.Text);
             form.Show();
+        }
+
+        private void CB_Bit16_CheckedChanged(object sender, EventArgs e)
+        {
+            Device.ImageBits = CB_Bit16.Checked ? 16 : 8;
         }
     }
 }

@@ -39,6 +39,7 @@
             this.TB_Distance = new System.Windows.Forms.TextBox();
             this.BTN_Calculate = new System.Windows.Forms.Button();
             this.BTN_Parameters = new System.Windows.Forms.Button();
+            this.CB_Bit16 = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // CMB_CameraType
@@ -143,10 +144,23 @@
             this.BTN_Parameters.UseVisualStyleBackColor = true;
             this.BTN_Parameters.Click += new System.EventHandler(this.TB_Parameters_Click);
             // 
+            // CB_Bit16
+            // 
+            this.CB_Bit16.AutoSize = true;
+            this.CB_Bit16.Dock = System.Windows.Forms.DockStyle.Top;
+            this.CB_Bit16.Location = new System.Drawing.Point(0, 309);
+            this.CB_Bit16.Name = "CB_Bit16";
+            this.CB_Bit16.Size = new System.Drawing.Size(149, 22);
+            this.CB_Bit16.TabIndex = 27;
+            this.CB_Bit16.Text = "16Bit Image";
+            this.CB_Bit16.UseVisualStyleBackColor = true;
+            this.CB_Bit16.CheckedChanged += new System.EventHandler(this.CB_Bit16_CheckedChanged);
+            // 
             // CameraCtrlUC
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.CB_Bit16);
             this.Controls.Add(this.BTN_Parameters);
             this.Controls.Add(this.TB_Distance);
             this.Controls.Add(this.BTN_Close);
@@ -157,7 +171,7 @@
             this.Controls.Add(this.BTN_Open);
             this.Controls.Add(this.CMB_CameraType);
             this.Name = "CameraCtrlUC";
-            this.Size = new System.Drawing.Size(149, 327);
+            this.Size = new System.Drawing.Size(149, 348);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -174,5 +188,6 @@
         private System.Windows.Forms.TextBox TB_Distance;
         private System.Windows.Forms.Button BTN_Calculate;
         private System.Windows.Forms.Button BTN_Parameters;
+        private System.Windows.Forms.CheckBox CB_Bit16;
     }
 }

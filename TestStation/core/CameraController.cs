@@ -8,6 +8,8 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Threading;
 using Utils;
+using Emgu.CV;
+using Emgu.CV.Structure;
 
 namespace TestStation.core
 {
@@ -15,6 +17,7 @@ namespace TestStation.core
     {
         private Logger _log = new Logger(typeof(CameraController));
         public Camera mCamera;
+        public int ImageBits = 8;
 
         public Bitmap LatestImage;
         public Bitmap AnalyzedImage;
@@ -96,14 +99,30 @@ namespace TestStation.core
 
             return Read(distance);
         }
+        private Image<Gray, ushort> CurImage;
         public Result Read(double distance = double.NaN)
         {
             if (mCamera != null)
             {
-                Result ret = mCamera.Execute(new Command("Read", new Dictionary<string, string> { { "Type", "Bmp" } }));
-                if (ret.Id == "Ok")
+                Result ret;
+
+                if (ImageBits == 8)
                 {
-                    InsertImg(ret.Param as Bitmap, distance, true);
+                    ret = mCamera.Execute(new Command("Read", new Dictionary<string, string> { { "Type", "Bmp" } }));
+                    if (ret.Id == "Ok")
+                    {
+                        CurImage = null;
+                        InsertImg(ret.Param as Bitmap, distance, true);
+                    }
+                }
+                else
+                {
+                    ret = mCamera.Execute(new Command("Read", new Dictionary<string, string> { { "Type", "Raw" } }));
+                    if (ret.Id == "Ok")
+                    {
+                        CurImage = EmguIntfs.ToImage(ret.Param as ushort[]);
+                        InsertImg(CurImage.Bitmap, distance, true);
+                    }
                 }
 
                 return ret;
@@ -115,6 +134,8 @@ namespace TestStation.core
         }
         public Result Load(string filename, double distance = double.NaN)
         {
+            CurImage = null;
+
             LatestImage = new Bitmap(filename);
             InsertImg(LatestImage, distance, false);
             return new Result("Ok");
@@ -122,10 +143,23 @@ namespace TestStation.core
         public Result Analyze(string testType, double distance)
         {
             AnalyzerIntf analyzer = AnalyzerIntf.GetAnalyzer(testType);
-            CircleImage i = analyzer.FindCircle(_filePath, HoughParams(distance.ToString()));
+
+            CircleImage i;
+
+            if (CurImage != null)
+            {
+                i = analyzer.FindCircle(CurImage, HoughParams(distance.ToString()));
+            }
+            else
+            {
+                i = analyzer.FindCircle(_filePath, HoughParams(distance.ToString()));
+            }
+
+            analyzer.FindCircle(_filePath, HoughParams(distance.ToString()));
             Imgs.Add(i);
             AnalyzedImage = i.RetImg;
 
+            CurImage = null;
             return new Result("Ok", "", AnalyzedImage);
         }
         public Result Calculate(string testType)

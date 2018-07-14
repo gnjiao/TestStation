@@ -8,7 +8,6 @@ namespace JbImage
 {
     public class CircleImage
     {
-        public string Path;
         public List<CircleF> Circles;
         public List<int> Brightness;
         public Bitmap RetImg;

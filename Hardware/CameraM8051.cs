@@ -39,6 +39,7 @@ namespace Hardware
                 {
                     this._tlCamera.BlackLevel = 48;
                 }
+                _tlCamera.IsColorOperationEnabled = false;
 
                 this._tlCamera.OperationMode = OperationMode.SoftwareTriggered;
                 this._tlCamera.Arm();
