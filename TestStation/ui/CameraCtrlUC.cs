@@ -43,9 +43,10 @@ namespace TestStation
         {
             InitializeComponent();
             InitializeHelpInfo();
-            CMB_CameraType.SelectedIndex = 2;
-            TB_Distance.Text = "999";
-
+#if DEBUG
+            CMB_CameraType.SelectedIndex = 1;
+            TB_Distance.Text = "-7";
+#endif
             Logger log = new Logger("TestStation");
             log.Debug(string.Format("TestStation(V{0}) Started", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString()));
 

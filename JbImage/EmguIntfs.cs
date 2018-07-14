@@ -134,23 +134,44 @@ namespace JbImage
         }
         public static void Test()
         {
-            StringBuilder msgBuilder = new StringBuilder("Performance: ");
-            Stopwatch watch = Stopwatch.StartNew();
+            string Path = @"D:\work\TestStation\TestStation\Samples\2017.7.11\fft.bmp";
+            Image<Bgr, byte> RawImg = EmguIntfs.Load(Path);
 
-            string _imgPath = @"D:\work\TestStation\TestStation\SingleSample\NFT-200-110-8mm.bmp";
-            Image<Bgr, byte>_rawImg = EmguIntfs.Load(_imgPath);
-            Image<Gray, byte> _grayedUmat = EmguIntfs.ToImage(EmguIntfs.Grayed(_rawImg));
+            Image<Gray, Byte> _grayedUmat = EmguIntfs.ToImage(EmguIntfs.Grayed(RawImg));
 
-            for (int x = 0; x < _grayedUmat.Width; x++)
+            Image<Gray, Byte> _bin = EmguIntfs.Binarize(30, _grayedUmat);
+            _bin.Save(Utils.String.FilePostfix(Path, "-0-bin"));
+
+            //Image<Gray, Byte> _edged = EmguIntfs.Canny(_bin,
+            //    30,
+            //    60,
+            //    3,
+            //    false);
+            //_edged.Save(Utils.String.FilePostfix(Path, "-1-edge"));
+
+            Image<Gray, byte> tempc = new Image<Gray, byte>(_bin.Width, _bin.Height);
+            Image<Gray, byte> d = new Image<Gray, byte>(_bin.Width, _bin.Height);
+            VectorOfVectorOfPoint con = new VectorOfVectorOfPoint();
+
+            CvInvoke.FindContours(_bin, con, tempc, RetrType.Tree, ChainApproxMethod.ChainApproxSimple, new Point(0,0));
+            for (int conId = 0; conId < con.Size; conId++)
+                CvInvoke.DrawContours(d, con, conId, new MCvScalar(255, 0, 255, 255), 2);
+            d.Save(Utils.String.FilePostfix(Path, "-1-contour"));
+
+            List<RotatedRect> rects = new List<RotatedRect>();
+            for (int conId = 0; conId < con.Size; conId++)
             {
-                for (int y = 0; y < _grayedUmat.Height; y++)
+                if (con[conId].Size > 5)
                 {
-                    int value = _grayedUmat.Data[y, x, 0] * 2;
-                    _grayedUmat.Data[y, x, 0] = (byte)(value > 255 ? 255 : value);
+                    rects.Add(CvInvoke.FitEllipse(con[conId]));
                 }
             }
 
-            _grayedUmat.Save(Utils.String.FilePostfix(_imgPath, "-Result"));
+            foreach (var rect in rects)
+            {
+                CvInvoke.Ellipse(d, rect, new Bgr(Color.White).MCvScalar, 2);
+            }
+            d.Save(Utils.String.FilePostfix(Path, "-1-rects"));
         }
     }
 }

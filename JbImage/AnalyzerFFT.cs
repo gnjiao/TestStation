@@ -2,6 +2,7 @@
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
+using Emgu.CV.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -29,12 +30,35 @@ namespace JbImage
             Image<Gray, Byte> _bin = EmguIntfs.Binarize(param.BinThreshold, _grayedUmat);
             _bin.Save(Utils.String.FilePostfix(Path, "-0-bin"));
 
-            Image<Gray, Byte> _edged = EmguIntfs.Canny(_bin,
+            Image<Gray, byte> _edged = EmguIntfs.Canny(_bin,
                 param.Canny1Threshold1,
                 param.Canny1Threshold2,
                 param.Canny1ApertureSize,
                 param.Canny1I2Gradient);
             _edged.Save(Utils.String.FilePostfix(Path, "-1-edge"));
+
+            Image<Gray, byte> tempc = new Image<Gray, byte>(_bin.Width, _bin.Height);
+            Image<Gray, byte> d = new Image<Gray, byte>(_bin.Width, _bin.Height);
+            VectorOfVectorOfPoint con = new VectorOfVectorOfPoint();
+            CvInvoke.FindContours(_edged, con, tempc, RetrType.Ccomp, ChainApproxMethod.ChainApproxSimple);
+            for (int conId = 0; conId < con.Size; conId++)
+                CvInvoke.DrawContours(d, con, conId, new MCvScalar(255, 0, 255, 255), 2);
+            d.Save(Utils.String.FilePostfix(Path, "-1-contour"));
+
+            List<RotatedRect> rects = new List<RotatedRect>();
+            for (int conId = 0; conId < con.Size; conId++)
+            {
+                if (con[conId].Size > 5)
+                {
+                    rects.Add(CvInvoke.FitEllipse(con[conId]));
+                }
+            }
+
+            foreach (var rect in rects)
+            {
+                CvInvoke.Ellipse(d, rect, new Bgr(Color.White).MCvScalar, 2);
+            }
+            d.Save(Utils.String.FilePostfix(Path, "-1-rects"));
 
             Circles = CvInvoke.HoughCircles(_edged, HoughType.Gradient, 
                 param.Hough1Dp,
@@ -43,8 +67,7 @@ namespace JbImage
                 param.Hough1Param2,
                 param.Hough1MinRadius, param.Hough1MaxRadius);
             Circles = Sort(Circles);
-
-            #region filter 86.3%
+#region filter 86.3%
             FilteredCircles = new List<CircleF>();
             FilteredLights = new List<int>();
             FilteredCircles2nd = new List<CircleF>();
@@ -87,7 +110,7 @@ namespace JbImage
             {
                 raw.Save(Utils.String.FilePostfix(Path, "-2-filter"));
             }
-            #endregion
+#endregion
 
             if (useCanny)
             {
@@ -132,7 +155,7 @@ namespace JbImage
                 }
             }
 
-            #region draw
+#region draw
             Mat _result = RawImg.Mat;
 
             for (int c = 0; c < FilteredCircles2nd.Count; c++)
@@ -149,7 +172,7 @@ namespace JbImage
                 }
             }
             _result.Save(Utils.String.FilePostfix(Path, "-result"));
-            #endregion
+#endregion
 
             CircleImage ret = new CircleImage();
             ret.Path = Path;

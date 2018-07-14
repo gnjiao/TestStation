@@ -18,6 +18,8 @@ namespace JbImage
         {
             _log.Debug(param.ToString());
 
+            int picId = 0;
+
             Path = path;
             RawImg = EmguIntfs.Load(path);
 
@@ -44,17 +46,24 @@ namespace JbImage
                 }
             }
 
+            Image<Gray, Byte> image = EmguIntfs.Binarize(param.BinThreshold, _grayedUmat);
+            image = EmguIntfs.PyrRemoveNoise(_grayedUmat);
+            if (saveFile)
+            {
+                image.Save(Utils.String.FilePostfix(Path, $"-{picId++}-filter"));
+            }
+
             Image<Gray, Byte> _edged;
             if (useCanny)
             {
-                _edged = EmguIntfs.Canny(_grayedUmat,
+                _edged = EmguIntfs.Canny(image,
                     param.Canny1Threshold1,
                     param.Canny1Threshold2,
                     param.Canny1ApertureSize,
                     param.Canny1I2Gradient);
                 if (saveFile)
                 {
-                    _edged.Save(Utils.String.FilePostfix(Path, "-1-edge"));
+                    _edged.Save(Utils.String.FilePostfix(Path, $"-{picId++}-edge"));
                 }
             }
             else
@@ -62,7 +71,6 @@ namespace JbImage
                 _edged = _grayedUmat;
             }
 
-            Image<Gray, Byte> image = EmguIntfs.Binarize(param.BinThreshold, _edged);
 
             Circles = CvInvoke.HoughCircles(image, HoughType.Gradient,
                 param.Hough1Dp,
@@ -72,6 +80,16 @@ namespace JbImage
                 param.Hough1MinRadius, param.Hough1MaxRadius);
             Circles = Sort(Circles);
             #endregion
+
+            if (saveFile)
+            {
+                Bitmap circleOnFilter = DrawCircle(new Image<Bgr, byte>(image.Bitmap), Circles.ToList());
+                circleOnFilter.Save(Utils.String.FilePostfix(Path, $"-{picId++}-circleOnFilter"));
+
+                Bitmap circleOnEdge = DrawCircle(new Image<Bgr, byte>(_edged.Bitmap), Circles.ToList());
+                circleOnEdge.Save(Utils.String.FilePostfix(Path, $"-{picId++}-circleOnEdge"));
+            }
+
 
             #region filter 86.3%
             FilteredCircles = new List<CircleF>();
@@ -159,11 +177,21 @@ namespace JbImage
                 }
             }
 
+            if (saveFile)
+            {
+                Bitmap circleOnFilter = DrawCircle(new Image<Bgr, byte>(raw.Bitmap), FilteredCircles2nd,  param.ShowFirstResult ? FilteredCircles : null);
+                circleOnFilter.Save(Utils.String.FilePostfix(Path, $"-{picId++}-circleOnFilter"));
+
+                Bitmap circleOnEdge = DrawCircle(new Image<Bgr, byte>(_edged.Bitmap), FilteredCircles2nd, param.ShowFirstResult ? FilteredCircles : null);
+                circleOnEdge.Save(Utils.String.FilePostfix(Path, $"-{picId++}-circleOnEdge"));
+            }
+
             CircleImage ret = new CircleImage();
             ret.Path = Path;
             ret.Circles = FilteredCircles2nd;
             ret.Brightness = brightness;
-            ret.RetImg = DrawCircle(param);
+            ret.RetImg = DrawCircle(RawImg, FilteredCircles2nd, param.ShowFirstResult ? FilteredCircles : null);
+            ret.RetImg.Save(Utils.String.FilePostfix(Path, $"-{picId++}-result"));
 
             return ret;
         }
@@ -267,27 +295,27 @@ namespace JbImage
             return new Result("Ok", null, ret);
         }
 
-        private Bitmap DrawCircle(Parameters param)
+        private Bitmap DrawCircle(Image<Bgr, byte> raw, List<CircleF> mainCircle, List<CircleF> auxCircle = null)
         {
-            bool showFirstResult = param.ShowFirstResult;
-
             _log.Debug("Start DrawCircles");
-            Mat circleImage = RawImg.Mat;
+            Mat circleImage = raw.Mat;
 
-            if (showFirstResult)
+            if (mainCircle != null)
+            {
+                for (int i = 0; i < mainCircle.Count; i++)
+                {
+                    CvInvoke.Circle(circleImage, Point.Round(mainCircle[i].Center), (int)mainCircle[i].Radius, new Bgr(Color.Red).MCvScalar, 1);
+                    CvInvoke.PutText(circleImage, i.ToString("D3"), new Point((int)mainCircle[i].Center.X, (int)mainCircle[i].Center.Y), Emgu.CV.CvEnum.FontFace.HersheyScriptComplex, 1, new MCvScalar(255, 255, 0), 1);
+                }
+            }
+
+            if (auxCircle != null)
             {
                 for (int i = 0; i < FilteredCircles.Count; i++)
                 {
                     CvInvoke.Circle(circleImage, Point.Round(FilteredCircles[i].Center), (int)FilteredCircles[i].Radius, new Bgr(Color.Yellow).MCvScalar, 1);
                 }
             }
-
-            for (int i = 0; i < FilteredCircles2nd.Count; i++)
-            {
-                CvInvoke.Circle(circleImage, Point.Round(FilteredCircles2nd[i].Center), (int)FilteredCircles2nd[i].Radius, new Bgr(Color.Red).MCvScalar, 1);
-                CvInvoke.PutText(circleImage, i.ToString("D3"), new Point((int)FilteredCircles2nd[i].Center.X, (int)FilteredCircles2nd[i].Center.Y), Emgu.CV.CvEnum.FontFace.HersheyScriptComplex, 1, new MCvScalar(255, 255, 0), 1);
-            }
-            circleImage.Save(Utils.String.FilePostfix(Path, "-result"));
 
             return circleImage.Bitmap;
         }
