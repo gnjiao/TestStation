@@ -10,7 +10,7 @@ namespace ImageTest
         [TestMethod]
         public void Example()
         {
-            EmguIntfs.Test();
+            EmguIntfs.TestFFT();
         }
     }
 }

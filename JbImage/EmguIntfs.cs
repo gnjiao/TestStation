@@ -162,59 +162,50 @@ namespace JbImage
         {
             string Path = @"D:\work\TestStation\TestStation\Samples\2017.7.11\fft.bmp";
             Image<Bgr, byte> RawImg = EmguIntfs.Load(Path);
-
             Image<Gray, Byte> _grayedUmat = EmguIntfs.ToImage(EmguIntfs.Grayed(RawImg));
 
-            Image<Gray, Byte> _bin = EmguIntfs.Binarize(30, _grayedUmat);
+            Image<Gray, Byte> _bin = EmguIntfs.Binarize(100, _grayedUmat);
             _bin.Save(Utils.String.FilePostfix(Path, "-0-bin"));
-
-            //Image<Gray, Byte> _edged = EmguIntfs.Canny(_bin,
-            //    30,
-            //    60,
-            //    3,
-            //    false);
-            //_edged.Save(Utils.String.FilePostfix(Path, "-1-edge"));
 
             Image<Gray, byte> tempc = new Image<Gray, byte>(_bin.Width, _bin.Height);
             Image<Gray, byte> d = new Image<Gray, byte>(_bin.Width, _bin.Height);
-            VectorOfVectorOfPoint con = new VectorOfVectorOfPoint();
 
-            CvInvoke.FindContours(_bin, con, tempc, RetrType.Tree, ChainApproxMethod.ChainApproxSimple, new Point(0, 0));
+            VectorOfVectorOfPoint con = new VectorOfVectorOfPoint();
+            CvInvoke.FindContours(_bin, con, tempc, RetrType.Ccomp, ChainApproxMethod.ChainApproxSimple);
             for (int conId = 0; conId < con.Size; conId++)
+            {
                 CvInvoke.DrawContours(d, con, conId, new MCvScalar(255, 0, 255, 255), 2);
+            }
             d.Save(Utils.String.FilePostfix(Path, "-1-contour"));
 
-            List<RotatedRect> rects = new List<RotatedRect>();
+            List<RotatedRect> ellipses = new List<RotatedRect>();
+            List<List<Point>> rects = new List<List<Point>>();
             for (int conId = 0; conId < con.Size; conId++)
             {
-                if (con[conId].Size > 5)
+                if (con[conId].Size > 50)
                 {
-                    rects.Add(CvInvoke.FitEllipse(con[conId]));
+                    var ellipse = CvInvoke.FitEllipse(con[conId]);
+
+                    PointF[] points = new PointF[4];
+                    points = ellipse.GetVertices();
+                    rects.Add(points.Select(x => Point.Truncate(x)).ToList());
+
+                    ellipse.Angle = ellipse.Angle - 90;
+                    ellipses.Add(ellipse);
                 }
             }
 
-            foreach (var rect in rects)
+            for (int i = 0; i<ellipses.Count; i++)
             {
-                CvInvoke.Ellipse(d, rect, new Bgr(Color.White).MCvScalar, 2);
-            }
-            d.Save(Utils.String.FilePostfix(Path, "-1-rects"));
-        }
+                CvInvoke.Ellipse(RawImg, ellipses[i], new Bgr(Color.Red).MCvScalar, 2);
 
-        public static void Test()
-        {
-            string Path = @"D:\work\TestStation\TestStation\SingleSample\8.tif";
-            Image<Gray, ushort> img = new Image<Gray, ushort>(Path);
-            Mat mat = new Mat(Path);
-
-            int max = 0;
-            for (int width = 0; width < img.Width; width++)
-            {
-                for (int height = 0; height < img.Height; height++)
+                for (int j = 0; j < 4; j++)
                 {
-                    max = max > img.Data[height, width, 0] ? max : img.Data[height, width, 0];
+                    CvInvoke.Line(RawImg, rects[i][j], rects[i][(j+1)%4], new Bgr(Color.Green).MCvScalar, 2);
                 }
             }
-            img.Save(Utils.String.FilePostfix(Path.Replace("tif","bmp"), "-raw"));
+
+            RawImg.Save(Utils.String.FilePostfix(Path, "-1-rects"));
         }
     }
 }

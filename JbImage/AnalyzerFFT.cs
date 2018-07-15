@@ -26,7 +26,108 @@ namespace JbImage
             RawImg = EmguIntfs.Load(path);
 
             Image<Gray, Byte> _grayedUmat = EmguIntfs.ToImage(EmguIntfs.Grayed(RawImg));
-            
+            Image<Gray, Byte> _bin = EmguIntfs.Binarize(param.BinThreshold, _grayedUmat);
+            if (saveFile)
+            {
+                _bin.Save(Utils.String.FilePostfix(Path, "-0-bin"));
+            }
+
+            Image<Gray, byte> tempc = new Image<Gray, byte>(_bin.Width, _bin.Height);
+            Image<Gray, byte> d = new Image<Gray, byte>(_bin.Width, _bin.Height);
+
+            VectorOfVectorOfPoint con = new VectorOfVectorOfPoint();
+            CvInvoke.FindContours(_bin, con, tempc, RetrType.Ccomp, ChainApproxMethod.ChainApproxSimple);
+            for (int conId = 0; conId < con.Size; conId++)
+            {
+                CvInvoke.DrawContours(d, con, conId, new MCvScalar(255, 0, 255, 255), 2);
+            }
+            if (saveFile)
+            {
+                d.Save(Utils.String.FilePostfix(Path, "-1-contour"));
+            }
+
+            List<RotatedRect> ellipses = new List<RotatedRect>();
+            List<List<Point>> rects = new List<List<Point>>();
+            for (int conId = 0; conId < con.Size; conId++)
+            {
+                if (con[conId].Size > 100)
+                {
+                    var ellipse = CvInvoke.FitEllipse(con[conId]);
+
+                    PointF[] points = new PointF[4];
+                    points = ellipse.GetVertices();
+                    rects.Add(points.Select(x => Point.Truncate(x)).ToList());
+
+                    ellipse.Angle = ellipse.Angle - 90;
+                    ellipses.Add(ellipse);
+                }
+            }
+            if (ellipses.Count > 1)
+            {
+                _log.Warn("More than 1 ellipse found, please check the image");
+            }
+
+            CircleImage ret = new CircleImage();
+            ret.Ellipse = ellipses[0];
+            ret.Rect = rects[0];
+            ret.RetImg = Draw(RawImg, ellipses, rects);
+            if (saveFile)
+            {
+                ret.RetImg.Save(Utils.String.FilePostfix(Path, "-2-ellipse"));
+            }
+
+            _log.Debug($"Ellipse X: {ret.Ellipse.Size.Height}, Y: {ret.Ellipse.Size.Width}");
+
+            return ret;
+        }
+        private double CalcDivergenceAngle(List<CircleImage> img)
+        {
+            /* arctan(光斑半径 / 芯片到透镜的距离) */
+            return double.NaN;
+        }
+        private double CalcPowerDensity(List<CircleImage> img)
+        {
+            /* 激光器发光功率 / 光斑面积 */
+            double area = System.Math.PI * img[0].Ellipse.Size.Width * img[0].Ellipse.Size.Height / 4;
+            return area;
+        }
+        public override Result Calculate(List<CircleImage> img, List<double> distance)
+        {
+            Dictionary<string, string> ret = new Dictionary<string, string>();
+
+            ret["Emitter Divergence Angle"] = CalcDivergenceAngle(img).ToString("F3");
+            ret["Power Density"] = CalcPowerDensity(img).ToString("F3");
+
+            return new Result("Ok", null, ret);
+        }
+
+        private Bitmap Draw(Image<Bgr, byte> raw, List<RotatedRect> ellipses, List<List<Point>> rects)
+        {
+            for (int i = 0; i < ellipses.Count; i++)
+            {
+                CvInvoke.Ellipse(raw, ellipses[i], new Bgr(Color.Red).MCvScalar, 2);
+
+                for (int j = 0; j < 4; j++)
+                {
+                    CvInvoke.Line(raw, rects[i][j], rects[i][(j + 1) % 4], new Bgr(Color.Green).MCvScalar, 2);
+                }
+            }
+
+            return raw.Bitmap;
+        }
+        #region obsolete
+        private CircleImage FindRegularCircle(string path, Parameters param = null)
+        {
+            _log.Debug(param.ToString());
+
+            bool saveFile = param.SaveFile;
+            bool useCanny = param.UseCanny;
+
+            Path = path;
+            RawImg = EmguIntfs.Load(path);
+
+            Image<Gray, Byte> _grayedUmat = EmguIntfs.ToImage(EmguIntfs.Grayed(RawImg));
+
             Image<Gray, Byte> _bin = EmguIntfs.Binarize(param.BinThreshold, _grayedUmat);
             _bin.Save(Utils.String.FilePostfix(Path, "-0-bin"));
 
@@ -60,14 +161,14 @@ namespace JbImage
             }
             d.Save(Utils.String.FilePostfix(Path, "-1-rects"));
 
-            Circles = CvInvoke.HoughCircles(_edged, HoughType.Gradient, 
+            Circles = CvInvoke.HoughCircles(_edged, HoughType.Gradient,
                 param.Hough1Dp,
                 param.Hough1MinDist,
                 param.Hough1Param1,
                 param.Hough1Param2,
                 param.Hough1MinRadius, param.Hough1MaxRadius);
             Circles = Sort(Circles);
-#region filter 86.3%
+            #region filter 86.3%
             FilteredCircles = new List<CircleF>();
             FilteredLights = new List<int>();
             FilteredCircles2nd = new List<CircleF>();
@@ -110,7 +211,7 @@ namespace JbImage
             {
                 raw.Save(Utils.String.FilePostfix(Path, "-2-filter"));
             }
-#endregion
+            #endregion
 
             if (useCanny)
             {
@@ -155,7 +256,7 @@ namespace JbImage
                 }
             }
 
-#region draw
+            #region draw
             Mat _result = RawImg.Mat;
 
             for (int c = 0; c < FilteredCircles2nd.Count; c++)
@@ -172,7 +273,7 @@ namespace JbImage
                 }
             }
             _result.Save(Utils.String.FilePostfix(Path, "-result"));
-#endregion
+            #endregion
 
             CircleImage ret = new CircleImage();
             ret.Circles = FilteredCircles2nd;
@@ -181,30 +282,6 @@ namespace JbImage
 
             return ret;
         }
-        private double CalcDivergenceAngle(List<CircleImage> img)
-        {
-            /* arctan(光斑半径 / 芯片到透镜的距离) */
-            double[] angles = new double[img[img.Count - 1].Circles.Count];
-            for (int i = 0; i < angles.Length; i++)
-            {
-                angles[i] = Utils.Math.Atan(((double)img[img.Count - 1].Circles[i].Radius * 5.5 / 1000) / 30);
-            }
-            return angles.ToList().Average();
-        }
-        private double CalcPowerDensity(List<CircleImage> img)
-        {
-            /* 激光器发光功率 / 光斑面积 */
-            double result = img[img.Count - 1].Circles[0].Area;
-            return double.NaN;
-        }
-        public override Result Calculate(List<CircleImage> img, List<double> distance)
-        {
-            Dictionary<string, string> ret = new Dictionary<string, string>();
-
-            ret["Emitter Divergence Angle"] = CalcDivergenceAngle(img).ToString("F3");
-            ret["Power Density"] = CalcPowerDensity(img).ToString("F3");
-
-            return new Result("Ok", null, ret);
-        }
+        #endregion
     }
 }

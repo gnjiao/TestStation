@@ -155,7 +155,6 @@ namespace TestStation.core
                 i = analyzer.FindCircle(_filePath, HoughParams(distance.ToString()));
             }
 
-            analyzer.FindCircle(_filePath, HoughParams(distance.ToString()));
             Imgs.Add(i);
             AnalyzedImage = i.RetImg;
 
