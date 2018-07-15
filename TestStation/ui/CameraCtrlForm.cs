@@ -64,27 +64,16 @@ namespace TestStation
             BTN_StartTest.Enabled = false;
 
             /*parameter initialize*/
-            double z1Initial = 11.61;
-            List<double> z2Positions = new List<double>();
+            List<double> z2Positions;
             try
             {
-                z1Initial = double.Parse(Properties.Settings.Default.MotorInitialPosition);
+                z2Positions = Properties.Settings.Default.MotorZ2Positions.Split(',').ToList().Select(x => double.Parse(x)).ToList();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Failed to retrieve Initial position, use default value instead");
-            }
-            try
-            {/* first value should be negative, each value should less than its following value*/
-                string[] values = Properties.Settings.Default.MotorZ2Positions.Split(',');
-                foreach (var v in values)
-                {
-                    z2Positions.Add(double.Parse(v));
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Failed to retrieve test positions, use default value instead");
+                MessageBox.Show("Failed to retrieve test positions, please check the configuration file");
+                BTN_StartTest.Enabled = true;
+                return;
             }
 
             /*device initialize*/
@@ -101,11 +90,6 @@ namespace TestStation
             {
                 MessageBox.Show($"Failed to open motor for {UC_CameraCtrl.TestType}");
             }
-
-            /*test start*/
-            //motor.Reset();
-            //motor.MoveZ1(z1Initial);
-            //Thread.Sleep(10000);
 
             for (int i = 0; i<z2Positions.Count; i++)
             {
