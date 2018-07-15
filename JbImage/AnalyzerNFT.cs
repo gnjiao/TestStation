@@ -260,22 +260,29 @@ namespace JbImage
 
             List<CircleF> FilteredCircles = new List<CircleF>();
             List<int> brightness = new List<int>();
-            int i = 0;
-            foreach (var circle in Circles)
+
+            for(int i = 0; i<Circles.Length; i++)
             {
+                CircleF circle = Circles[i];
+
                 int strength = image.Data[(int)circle.Center.Y, (int)circle.Center.X, 0];
                 if (strength >= 30)/* filter fake circles */
                 {
-                    FilteredCircles.Add(circle);
-
-                    int b = CountPixels(_grayedUmat, circle);
+                    int b = CountPixels(_grayedUmat,ref circle);
                     brightness.Add(b);
+#if false
+                    /*this value is used to compare with CountPixels*/
+                    int s = CountPixelsSquare(_grayedUmat, circle);
+                    if(System.Math.Abs((double)(b - s) / b) > 0.001)
+                    {
+                        _log.Warn($"CountPixels({b}) CountPixelsSquare({s}) diff too much");
+                    }
+#endif
                     _log.Info($"Circle{i:D3}: ({circle.Center.X},{circle.Center.Y}) {circle.Radius} {b}");
-
-                    i++;
+                    FilteredCircles.Add(circle);
                 }
             }
-            #endregion
+#endregion
 
             if (saveFile)
             {
@@ -286,7 +293,7 @@ namespace JbImage
                 circleOnEdge.Save(Utils.String.FilePostfix(Path, $"-{picId++}-circleOnEdge"));
             }
 
-            #region 2nd find circle
+#region 2nd find circle
             //#region filter 86.3%
             //FilteredCircles = new List<CircleF>();
             //FilteredLights = new List<int>();
@@ -381,12 +388,12 @@ namespace JbImage
             //    Bitmap circleOnEdge = DrawCircle(new Image<Bgr, byte>(_edged.Bitmap), FilteredCircles2nd, param.ShowFirstResult ? FilteredCircles : null);
             //    circleOnEdge.Save(Utils.String.FilePostfix(Path, $"-{picId++}-circleOnEdge"));
             //}
-            #endregion
+#endregion
 
             CircleImage ret = new CircleImage();
             ret.Circles = FilteredCircles;
             ret.Brightness = brightness;
-            ret.RetImg = DrawCircle(RawImg, FilteredCircles, null);
+            ret.RetImg = DrawCircle(RawImg, FilteredCircles, Circles.ToList());
             ret.RetImg.Save(Utils.String.FilePostfix(Path, $"-{picId++}-result"));
 
             return ret;
@@ -507,9 +514,9 @@ namespace JbImage
 
             if (auxCircle != null)
             {
-                for (int i = 0; i < FilteredCircles.Count; i++)
+                for (int i = 0; i < auxCircle.Count; i++)
                 {
-                    CvInvoke.Circle(circleImage, Point.Round(FilteredCircles[i].Center), (int)FilteredCircles[i].Radius, new Bgr(Color.Yellow).MCvScalar, 1);
+                    CvInvoke.Circle(circleImage, Point.Round(auxCircle[i].Center), (int)auxCircle[i].Radius, new Bgr(Color.Yellow).MCvScalar, 1);
                 }
             }
 

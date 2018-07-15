@@ -241,18 +241,18 @@ namespace JbImage
             List<int> brightness = new List<int>();
 
             _log.Info($"Circles Information");
-            int i = 0;
-            foreach (var circle in Circles2nd)
+            for(int i = 0; i<Circles2nd.Length; i++)
             {
+                CircleF circle = Circles2nd[i];
+
                 int strength = raw.Data[(int)circle.Center.Y, (int)circle.Center.X, 0];
                 if (strength > 30)
                 {
-                    FilteredCircles2nd.Add(circle);
-                    int b = CountPixels(_grayedUmat, circle);
+                    int b = CountPixels(_grayedUmat, ref circle);
                     brightness.Add(b);
                     _log.Info($"Circle{i:D3}: ({circle.Center.X},{circle.Center.Y}) {circle.Radius} {b}");
 
-                    i++;
+                    FilteredCircles2nd.Add(circle);
                 }
             }
 
