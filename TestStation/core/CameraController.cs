@@ -31,7 +31,7 @@ namespace TestStation.core
         private List<double> _distances = new List<double>();
         public List<CircleImage> Imgs = new List<CircleImage>();
         private string _testType = "";
-        public Result Open(string cameraType)
+        public Result Open(string cameraType, string triggerType = "SoftwareTrigger")
         {
             _testType = cameraType;
 
@@ -39,14 +39,14 @@ namespace TestStation.core
             {
                 if (!string.IsNullOrEmpty(Config.ForceCameraType))
                 {
-                    HardwareSrv.GetInstance().Add(new M8051("Camera"));
+                    HardwareSrv.GetInstance().Add(new M8051(triggerType));
                 }
                 else
                 {
                     switch (cameraType)
                     {
                         case "NFT":
-                            HardwareSrv.GetInstance().Add(new M8051("Camera"));
+                            HardwareSrv.GetInstance().Add(new M8051(triggerType));
                             break;
                         case "FFT":
                             HardwareSrv.GetInstance().Add(new Vcxu("Camera"));

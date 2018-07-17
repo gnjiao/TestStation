@@ -12,9 +12,12 @@ namespace Hardware
 {
     public class M8051 : Camera
     {
+        public static string TriggerType = "SoftwareTrigger";
+
         public M8051(object param) : base(param)
         {
             Type = "Camera";
+            TriggerType = param as string;
             AssignLogger();
         }
 
@@ -41,9 +44,18 @@ namespace Hardware
                 }
                 _tlCamera.IsColorOperationEnabled = false;
 
-                this._tlCamera.OperationMode = OperationMode.SoftwareTriggered;
-                this._tlCamera.Arm();
-                this._tlCamera.IssueSoftwareTrigger();
+                if (TriggerType == "SoftwareTrigger")
+                {
+                    this._tlCamera.OperationMode = OperationMode.SoftwareTriggered;
+                    this._tlCamera.Arm();
+                    this._tlCamera.IssueSoftwareTrigger();
+                }
+                else
+                {
+                    this._tlCamera.OperationMode = OperationMode.HardwareTriggered;
+                    this._tlCamera.TriggerPolarity = TriggerPolarity.ActiveHigh;
+                    this._tlCamera.Arm();
+                }
 
                 this._timer.Interval = 50;
                 this._timer.AutoReset = true;

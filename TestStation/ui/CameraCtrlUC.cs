@@ -146,7 +146,7 @@ namespace TestStation
         {
             Enabled = false;
 
-            Device.Open(CMB_CameraType.Text).ShowMessageBox();
+            Device.Open(CMB_CameraType.Text, CB_HardwareTrigger.Checked ? "HardwareTrigger" : "SoftwareTrigger").ShowMessageBox();
             if (Device.mCamera != null)
             {
                 _updateTimer.Start();
