@@ -58,5 +58,17 @@ namespace TestStation.Properties {
                 this["MotorZ2Positions"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public string MinRadiusFor863 {
+            get {
+                return ((string)(this["MinRadiusFor863"]));
+            }
+            set {
+                this["MinRadiusFor863"] = value;
+            }
+        }
     }
 }

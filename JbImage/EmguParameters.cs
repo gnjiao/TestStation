@@ -124,10 +124,10 @@ namespace JbImage
             Gain = 90;
             ExposureTime = 500;
 
-            ExtraStrengthen = true;
+            ExtraStrengthen = false;
             UseCanny = true;
             SaveFile = true;
-            ShowFirstResult = true;
+            ShowFirstResult = false;
 
             BinThreshold = 50;
             FilterSquareExtra = 10;

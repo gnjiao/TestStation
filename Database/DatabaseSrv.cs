@@ -27,10 +27,13 @@ namespace Database
         }
         #endregion
 
-        public void Save(Dictionary<string, string> kvs)
+        public void Save(string table, Dictionary<string, string> kvs)
         {
         }
-        public DataTable Load()
+        public void Upload(string table)
+        {
+        }
+        public DataTable Download()
         {
             return new DataTable();
         }

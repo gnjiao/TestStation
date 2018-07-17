@@ -11,6 +11,7 @@ namespace JbImage
 {
     public abstract class AnalyzerIntf
     {
+        public static int CfgMinRadiusFor863 = 10;
         public static AnalyzerIntf GetAnalyzer(string testType)
         {
             switch (testType)
@@ -79,7 +80,7 @@ namespace JbImage
             }
 
             double prevRatio = 0;
-            for (int radius = 10; radius < circle.Radius; radius++)
+            for (int radius = CfgMinRadiusFor863; radius < circle.Radius; radius++)
             {
                 int rsum = 0;
 
