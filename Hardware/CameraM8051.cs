@@ -85,9 +85,12 @@ namespace Hardware
         }
         protected override Result Read(Dictionary<string, string> param)
         {
-            string type = param["Type"];
-
             _latestFrame = null;
+            if (TriggerType == "HardwareTrigger")
+            {
+                //power on the product
+            }
+
             int maxWait = 30;
             while (_latestFrame==null)
             {
@@ -98,6 +101,7 @@ namespace Hardware
                 Thread.Sleep(1000);
             }
 
+            string type = param["Type"];
             switch (type)
             {
                 case "Bmp":

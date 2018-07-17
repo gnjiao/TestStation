@@ -96,7 +96,10 @@ namespace TestStation
                 Device.Read(TB_Distance.Text).ShowMessageBox();
                 UpdateImage?.Invoke(Device.LatestImage);
 
-                _updateTimer.Start();
+                if (!CB_HardwareTrigger.Checked)
+                {
+                    _updateTimer.Start();
+                }
             }
 
             Enabled = true;
@@ -105,24 +108,28 @@ namespace TestStation
         {
             Enabled = false;
 
-            if (BTN_ImgAnalyze.Text == "Image Analyze")
+            switch (BTN_ImgAnalyze.Text)
             {
-                lock (_updateLock)
-                {
-                    if (_updateTimer.Enabled)
+                case "Image Analyze":
+                    lock (_updateLock)
                     {
-                        _updateTimer.Stop();
-                        BTN_ImgAnalyze.Text = "Resume";
+                        if (_updateTimer.Enabled)
+                        {
+                            _updateTimer.Stop();
+                            BTN_ImgAnalyze.Text = "Resume";
+                        }
                     }
-                }
 
-                Device.Analyze(CMB_CameraType.Text, Distance).ShowMessageBox();
-                UpdateImage?.Invoke(Device.AnalyzedImage);
-            }
-            else
-            {
-                BTN_ImgAnalyze.Text = "Image Analyze";
-                _updateTimer.Start();
+                    Device.Analyze(CMB_CameraType.Text, Distance).ShowMessageBox();
+                    UpdateImage?.Invoke(Device.AnalyzedImage);
+                    break;
+                case "Resume":
+                    BTN_ImgAnalyze.Text = "Image Analyze";
+                    _updateTimer.Start();
+                    break;
+                default:
+                    MessageBox.Show("Error Status");
+                    break;
             }
 
             Enabled = true;
@@ -147,7 +154,7 @@ namespace TestStation
             Enabled = false;
 
             Device.Open(CMB_CameraType.Text, CB_HardwareTrigger.Checked ? "HardwareTrigger" : "SoftwareTrigger").ShowMessageBox();
-            if (Device.mCamera != null)
+            if (Device.mCamera != null && !CB_HardwareTrigger.Checked)
             {
                 _updateTimer.Start();
             }
