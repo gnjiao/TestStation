@@ -396,6 +396,8 @@ namespace JbImage
             ret.RetImg = DrawCircle(RawImg, FilteredCircles, Circles.ToList());
             ret.RetImg.Save(Utils.String.FilePostfix(Path, $"-{picId++}-result"));
 
+            _log.Info($"Uniformity:{CalcUniformity(ret)}");
+
             return ret;
         }
         private double[] CalcWeist(List<CircleImage> img, List<double> distance)
@@ -453,9 +455,9 @@ namespace JbImage
 
             return angles.ToList().FindAll(x => !double.IsNaN(x)).ToList().Average();
         }
-        private double CalcUniformity(List<CircleImage> img)
+        private double CalcUniformity(CircleImage img)
         {
-            return Utils.Math.StdEv(img[0].Brightness.Select(x => (double)x).ToList());
+            return Utils.Math.StdEv(img.Brightness.Select(x => (double)x).ToList());
         }
         public override Result Calculate(List<CircleImage> img, List<double> distance)
         {
@@ -488,7 +490,7 @@ namespace JbImage
             }
             try
             {
-                ret["Emission Uniformity"] = CalcUniformity(img).ToString("F3");
+                ret["Emission Uniformity"] = CalcUniformity(img[0]).ToString("F3");
             }
             catch (Exception ex)
             {

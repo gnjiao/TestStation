@@ -117,7 +117,7 @@ namespace JbImage
 
                 double ratio = (double)dsum / sum;
                 _log.Debug($"radius({i}) dsum({dsum}) sum({sum}) ratio {ratio:F3}");
-                if (ratio >= 0.863)
+                if (ratio > 0.865)
                 {
                     info.X863 = i;
                     break;
