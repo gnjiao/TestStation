@@ -78,12 +78,57 @@ namespace JbImage
 
             _log.Debug($"Ellipse X: {ret.Ellipse.Size.Height}, Y: {ret.Ellipse.Size.Width}");
 
+            Find863(_grayedUmat, ret);
+
             return ret;
         }
-        private double CalcDivergenceAngle(List<CircleImage> img)
+        private void Find863(Image<Gray, byte> img, CircleImage info)
+        {
+            int centerX = (info.Rect[0].X + info.Rect[2].X) / 2;
+            int centerY = (info.Rect[0].Y + info.Rect[2].Y) / 2;
+
+            int leftX = (info.Rect[2].X + info.Rect[3].X) / 2;
+            int leftY = (info.Rect[2].Y + info.Rect[3].Y) / 2;
+            int rightX = (info.Rect[0].X + info.Rect[1].X) / 2;
+            int rightY = (info.Rect[0].Y + info.Rect[1].Y) / 2;
+
+            int minX = leftX < centerX ? leftX : centerX;
+            int maxX = leftX > centerX ? leftX : centerX;
+            int distance = System.Math.Abs(maxX - minX);
+            if (distance > centerX)
+            {
+                _log.Warn("The picture locates too left");
+            }
+
+            int sum = 0;
+            for (int x = 0; x <= distance; x++)
+            {
+                sum += img.Data[centerY, centerX - x, 0];
+            }
+            _log.Debug($"Total distance {distance:F3}");
+
+            for (int i = distance / 2; i <= distance; i++)
+            {
+                int dsum = 0;
+                for (int x = 0; x <= i; x++)
+                {
+                    dsum += img.Data[centerY, centerX - x, 0];
+                }
+
+                double ratio = (double)dsum / sum;
+                _log.Debug($"radius({i}) dsum({dsum}) sum({sum}) ratio {ratio:F3}");
+                if (ratio >= 0.863)
+                {
+                    info.X863 = i;
+                    break;
+                }
+            }
+
+        }
+        private double CalcDivergenceAngle1(List<CircleImage> img)
         {
             /* arctan(光斑半径 / 芯片到透镜的距离) */
-            return double.NaN;
+            return Utils.Math.Atan(img[0].X863 * 5.5 * 0.001 / 34);
         }
         private double CalcPowerDensity(List<CircleImage> img)
         {
@@ -95,7 +140,7 @@ namespace JbImage
         {
             Dictionary<string, string> ret = new Dictionary<string, string>();
 
-            ret["Emitter Divergence Angle"] = CalcDivergenceAngle(img).ToString("F3");
+            ret["Emitter Divergence Angle"] = CalcDivergenceAngle1(img).ToString("F3");
             ret["Power Density"] = CalcPowerDensity(img).ToString("F3");
 
             return new Result("Ok", null, ret);

@@ -15,7 +15,7 @@ namespace JbImage
         /* FFT */
         public RotatedRect Ellipse;
         public List<Point> Rect;
-
+        public int X863;
         /* Common */
         public Bitmap RetImg;
     }
