@@ -11,7 +11,21 @@ namespace JbImage
 {
     public abstract class AnalyzerIntf
     {
-        public static int CfgMinRadiusFor863 = 10;
+        public static int CfgMinRadiusFor865 = 10;
+        public static double ValidRatio
+        {
+            get
+            {
+                if (CfgMinRadiusFor865 == 1)
+                {
+                    return 1;
+                }
+                else
+                {
+                    return 0.865;
+                }
+            }
+        }
         public static AnalyzerIntf GetAnalyzer(string testType)
         {
             switch (testType)
@@ -61,9 +75,9 @@ namespace JbImage
             });
             return temp.ToArray();
         }
-        public static int CountPixels(Image<Gray, Byte> img, ref CircleF circle)
+        public static int CountPixels(Image<Gray, Byte> img, ref CircleF circle, double targetRatio)
         {
-            CountXPixels(img, circle);
+            CountXPixels(img, circle, targetRatio);
 
             double centerX = circle.Center.X;
             double centerY = circle.Center.Y;
@@ -79,12 +93,13 @@ namespace JbImage
                 }
             }
 
+            List<int> SumOnRadius = new List<int>();
             double prevRatio = 0;
-            for (int radius = CfgMinRadiusFor863; radius < circle.Radius; radius++)
+            for (int radius = CfgMinRadiusFor865 - 1; radius <= circle.Radius; radius++)
             {
                 int rsum = 0;
 
-                for (int x = (int)System.Math.Floor(centerX - radius); x < (int)System.Math.Ceiling(centerX + radius); x++)
+                for (int x = (int)System.Math.Floor(centerX - radius); x <= (int)System.Math.Ceiling(centerX + radius); x++)
                 {
                     int[] rangeY = RangeY(circle, x);
                     for (int y = rangeY[0]; y <= rangeY[1]; y++)
@@ -92,11 +107,12 @@ namespace JbImage
                         rsum += img.Data[y, x, 0];
                     }
                 }
+                SumOnRadius.Add(rsum);
 
                 double ratio = (double)rsum / sum;
-                new Logger("Analyzer").Debug($"radius({radius}) rsum({rsum}) sum({sum}) ratio {(double)rsum / sum:F3}");
+                //new Logger("Analyzer").Debug($"radius({radius}) rsum({rsum}) sum({sum}) ratio {(double)rsum / sum:F3}");
 
-                if (ratio < 0.863)
+                if (ratio <= targetRatio)
                 {
                     prevRatio = ratio;
                 }
@@ -108,22 +124,43 @@ namespace JbImage
                 }
             }
 
+            string output = "";
+            foreach (var s in SumOnRadius)
+            {
+                output += s.ToString() + ",";
+            }
+            new Logger("Analyzer").Debug($"CountPixels(AreaSum): {output}");
+
             return sum;
         }
 
-        public static void CountXPixels(Image<Gray, byte> img, CircleF circle)
+        public static void CountXPixels(Image<Gray, byte> img, CircleF circle, double targetRatio)
         {
             double centerX = circle.Center.X;
             double centerY = circle.Center.Y;
             double r = circle.Radius;
             int sum = 0;
 
+            #region point values(center -> left)
+            List<int> values = new List<int>();
+            for (int x = (int)System.Math.Ceiling(centerX); x >= (int)System.Math.Floor(centerX - r); x--)
+            {
+                values.Add( img.Data[(int)System.Math.Ceiling(centerY), x, 0] );
+            }
+            string output = "";
+            foreach (var s in values)
+            {
+                output += s.ToString() + ",";
+            }
+            new Logger("Analyzer").Debug($"CountPixels(point): {output}");
+            #endregion
             for (int x = (int)System.Math.Floor(centerX - r); x <= (int)System.Math.Ceiling(centerX); x++)
             {
                 sum += img.Data[(int)System.Math.Ceiling(centerY), x, 0];
             }
 
-            for (int radius = 10; radius <= circle.Radius; radius++)
+            List<int> SumOnRadius = new List<int>();
+            for (int radius = CfgMinRadiusFor865 - 1; radius <= circle.Radius; radius++)
             {
                 int rsum = 0;
 
@@ -131,13 +168,21 @@ namespace JbImage
                 {
                     rsum += img.Data[(int)System.Math.Ceiling(centerY), x, 0];
                 }
+                SumOnRadius.Add(rsum);
 
-                new Logger("Analyzer").Debug($"r {radius} rXsum {rsum} Xsum {sum} ratio {(double)rsum / sum:F3}");
-                if ((double)rsum / sum > 0.863)
+                //new Logger("Analyzer").Debug($"r {radius} rXsum {rsum} Xsum {sum} ratio {(double)rsum / sum:F3}");
+                if ((double)rsum / sum > targetRatio)
                 {
                     break;
                 }
             }
+
+            output = "";
+            foreach (var s in SumOnRadius)
+            {
+                output += s.ToString() + ",";
+            }
+            new Logger("Analyzer").Debug($"CountPixels(Xsum): {output}");
         }
         public static int CountPixelsSquare(Image<Gray, Byte> img, CircleF circle)
         {

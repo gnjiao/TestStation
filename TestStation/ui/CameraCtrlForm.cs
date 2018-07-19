@@ -22,7 +22,7 @@ namespace TestStation
         {
             InitializeComponent();
 
-            AnalyzerIntf.CfgMinRadiusFor863 = Int32.Parse(Properties.Settings.Default.MinRadiusFor863);
+            AnalyzerIntf.CfgMinRadiusFor865 = Int32.Parse(Properties.Settings.Default.MinRadiusFor865);
 
             UC_CameraCtrl.UpdateImage += LoadImg;
             UC_CameraCtrl.TypeChanged += UC_Result.SetType;

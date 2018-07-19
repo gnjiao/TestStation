@@ -268,7 +268,7 @@ namespace JbImage
                 int strength = image.Data[(int)circle.Center.Y, (int)circle.Center.X, 0];
                 if (strength >= 30)/* filter fake circles */
                 {
-                    int b = CountPixels(_grayedUmat,ref circle);
+                    int b = CountPixels(_grayedUmat,ref circle, ValidRatio);
                     brightness.Add(b);
 #if false
                     /*this value is used to compare with CountPixels*/
@@ -278,7 +278,7 @@ namespace JbImage
                         _log.Warn($"CountPixels({b}) CountPixelsSquare({s}) diff too much");
                     }
 #endif
-                    _log.Info($"Circle{i:D3}: ({circle.Center.X},{circle.Center.Y}) {circle.Radius} {b}");
+                    //_log.Info($"Circle{i:D3}: ({circle.Center.X},{circle.Center.Y}) {circle.Radius} {b}");
                     FilteredCircles.Add(circle);
                 }
             }
@@ -502,7 +502,6 @@ namespace JbImage
 
         private Bitmap DrawCircle(Image<Bgr, byte> raw, List<CircleF> mainCircle, List<CircleF> auxCircle = null)
         {
-            _log.Debug("Start DrawCircles");
             Mat circleImage = raw.Mat;
 
             if (mainCircle != null)

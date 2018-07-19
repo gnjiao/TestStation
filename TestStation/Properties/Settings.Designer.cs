@@ -61,13 +61,13 @@ namespace TestStation.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("10")]
-        public string MinRadiusFor863 {
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public string MinRadiusFor865 {
             get {
-                return ((string)(this["MinRadiusFor863"]));
+                return ((string)(this["MinRadiusFor865"]));
             }
             set {
-                this["MinRadiusFor863"] = value;
+                this["MinRadiusFor865"] = value;
             }
         }
     }

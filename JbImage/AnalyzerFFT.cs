@@ -293,7 +293,7 @@ namespace JbImage
                 int strength = raw.Data[(int)circle.Center.Y, (int)circle.Center.X, 0];
                 if (strength > 30)
                 {
-                    int b = CountPixels(_grayedUmat, ref circle);
+                    int b = CountPixels(_grayedUmat, ref circle, ValidRatio);
                     brightness.Add(b);
                     _log.Info($"Circle{i:D3}: ({circle.Center.X},{circle.Center.Y}) {circle.Radius} {b}");
 

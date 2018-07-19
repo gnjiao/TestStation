@@ -11,8 +11,8 @@
     <Setting Name="MotorZ2Positions" Type="System.String" Scope="User">
       <Value Profile="(Default)">-5,-4.5,-4,-2,0,2,4,6,6.5,7</Value>
     </Setting>
-    <Setting Name="MinRadiusFor863" Type="System.String" Scope="User">
-      <Value Profile="(Default)">10</Value>
+    <Setting Name="MinRadiusFor865" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1</Value>
     </Setting>
   </Settings>
 </SettingsFile>
