@@ -127,9 +127,9 @@ namespace JbImage
             string output = "";
             foreach (var s in SumOnRadius)
             {
-                output += s.ToString() + ",";
+                output += s.ToString() + " ";
             }
-            new Logger("Analyzer").Debug($"CountPixels(AreaSum): {output}");
+            new Logger("Analyzer").Debug($"CountPixels(AreaSum):  [{output}]';");
 
             return sum;
         }
@@ -150,9 +150,9 @@ namespace JbImage
             string output = "";
             foreach (var s in values)
             {
-                output += s.ToString() + ",";
+                output += s.ToString() + " ";
             }
-            new Logger("Analyzer").Debug($"CountPixels(point): {output}");
+            new Logger("Analyzer").Debug($"CountPixels(point):  [{output}]';");
             #endregion
             for (int x = (int)System.Math.Floor(centerX - r); x <= (int)System.Math.Ceiling(centerX); x++)
             {
@@ -180,9 +180,9 @@ namespace JbImage
             output = "";
             foreach (var s in SumOnRadius)
             {
-                output += s.ToString() + ",";
+                output += s.ToString() + " ";
             }
-            new Logger("Analyzer").Debug($"CountPixels(Xsum): {output}");
+            new Logger("Analyzer").Debug($"CountPixels(Xsum): [{output}]';");
         }
         public static int CountPixelsSquare(Image<Gray, Byte> img, CircleF circle)
         {
