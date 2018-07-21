@@ -37,8 +37,11 @@ namespace TestStation.ui
         }
         public void Update(object data)
         {
-            DGV_Result.DataSource = (data as Dictionary<string, string>).ToArray();
-            Format();
+            if (data != null)
+            {
+                DGV_Result.DataSource = (data as Dictionary<string, string>).ToArray();
+                Format();
+            }
         }
         private void Format()
         {

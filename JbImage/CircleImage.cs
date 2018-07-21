@@ -11,6 +11,7 @@ namespace JbImage
         /* NFT */
         public List<CircleF> Circles;
         public List<int> Brightness;
+        public Dictionary<string, string> Data;
 
         /* FFT */
         public RotatedRect Ellipse;

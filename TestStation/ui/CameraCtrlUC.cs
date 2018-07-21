@@ -121,6 +121,7 @@ namespace TestStation
                     }
 
                     Device.Analyze(CMB_CameraType.Text, Distance).ShowMessageBox();
+                    UpdateResult?.Invoke(Device.Imgs.Last().Data);
                     UpdateImage?.Invoke(Device.AnalyzedImage);
                     break;
                 case "Resume":

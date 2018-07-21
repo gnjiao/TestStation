@@ -398,6 +398,25 @@ namespace JbImage
 
             _log.Info($"Uniformity:{CalcUniformity(ret)}");
 
+            if (saveFile)
+            {
+                Dictionary<string, string> data = new Dictionary<string, string>();
+
+                data["Emitter Count"] = ret.Circles.Count.ToString();
+                try
+                {
+                    data["Emission Uniformity"] = CalcUniformity(ret).ToString("F3");
+                }
+                catch (Exception ex)
+                {
+                    data["Emission Uniformity"] = "N/A";
+                }
+                data["Max Radius"] = ret.Circles.Max(c => c.Radius).ToString("F3");
+                data["Min Radius"] = ret.Circles.Min(c => c.Radius).ToString("F3");
+
+                ret.Data = data;
+            }
+
             return ret;
         }
         private double[] CalcWeist(List<CircleImage> img, List<double> distance)
