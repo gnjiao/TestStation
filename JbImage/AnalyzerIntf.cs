@@ -75,16 +75,14 @@ namespace JbImage
             });
             return temp.ToArray();
         }
-        public static int CountPixels(Image<Gray, Byte> img, ref CircleF circle, double targetRatio)
+        private static int SumCircelPixel(Image<Gray, Byte> img, CircleF circle)
         {
-            //CountXPixels(img, circle, targetRatio);
-
             double centerX = circle.Center.X;
             double centerY = circle.Center.Y;
             double r = circle.Radius;
             int sum = 0;
 
-            for (int x = (int)System.Math.Floor(centerX - r); x < (int)System.Math.Ceiling(centerX + r); x++)
+            for (int x = (int)System.Math.Floor(centerX - r); x <= (int)System.Math.Ceiling(centerX + r); x++)
             {
                 int[] rangeY = RangeY(circle, x);
                 for (int y = rangeY[0]; y <= rangeY[1]; y++)
@@ -93,40 +91,40 @@ namespace JbImage
                 }
             }
 
+            return sum;
+        }
+        public static int CountPixels(Image<Gray, Byte> img, ref CircleF circle, double targetRatio)
+        {
+            //CountXPixels(img, circle, targetRatio);
+
             List<int> Radius = new List<int>();
             List<int> SumOnRadius = new List<int>();
-            double prevRatio = 0;
-            for (int radius = CfgMinRadiusFor865 - 1; radius <= circle.Radius; radius++)
-            {
-                int rsum = 0;
 
-                for (int x = (int)System.Math.Floor(centerX - radius); x <= (int)System.Math.Ceiling(centerX + radius); x++)
-                {
-                    int[] rangeY = RangeY(circle, x);
-                    for (int y = rangeY[0]; y <= rangeY[1]; y++)
-                    {
-                        rsum += img.Data[y, x, 0];
-                    }
-                }
+            int sum = SumCircelPixel(img, circle);
+
+            double prevRatio = 0;
+            int prevSum = 0;
+            for (int radius = CfgMinRadiusFor865 - 1; radius <= System.Math.Ceiling(circle.Radius); radius++)
+            {
+                int rsum = SumCircelPixel(img, new CircleF(circle.Center, radius));
+
                 Radius.Add(radius);
                 SumOnRadius.Add(rsum);
 
                 double ratio = (double)rsum / sum;
-                //new Logger("Analyzer").Debug($"radius({radius}) rsum({rsum}) sum({sum}) ratio {(double)rsum / sum:F3}");
-
-                if (ratio <= targetRatio)
+                if (ratio < targetRatio)
                 {
                     prevRatio = ratio;
+                    prevSum = rsum;
+                    continue;
                 }
-                else
-                {
-                    circle.Radius = radius;
-                    sum = rsum;
-                }
-            }
 
-            double result = Matlab.CalcGaus(Radius.Select(x => (double)x).ToList().ToArray(), SumOnRadius.Select(x => (double)x).ToList().ToArray());
-            new Logger("Analyzer").Debug($"CountPixels(AreaSum) Result({result}):  [{Utils.String.FromList<int>(SumOnRadius)}]';");
+                #region linear calculation
+                circle.Radius = (float)((radius - 1) + (targetRatio - prevRatio)/(ratio - prevRatio));
+                sum = (int)(prevSum + (targetRatio - prevRatio) / (ratio - prevRatio));
+                #endregion
+                break;
+            }
 
             return sum;
         }
@@ -209,11 +207,12 @@ namespace JbImage
 
         private static int[] RangeY(CircleF circle, int x)
         {
-            double h = System.Math.Sqrt(circle.Radius * circle.Radius - (circle.Center.X - x) * (circle.Center.X - x));
-            if (circle.Center.X - x > circle.Radius)
+            double h = 0;
+            if (System.Math.Abs(circle.Center.X - x) < circle.Radius)
             {
-                h = 0;
+                h = System.Math.Sqrt(circle.Radius * circle.Radius - (circle.Center.X - x) * (circle.Center.X - x));
             }
+
             return new int[] {
                 (int)System.Math.Floor(circle.Center.Y - h),
                 (int)System.Math.Ceiling(circle.Center.Y + h)
