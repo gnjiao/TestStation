@@ -93,6 +93,7 @@ namespace JbImage
                 }
             }
 
+            List<int> Radius = new List<int>();
             List<int> SumOnRadius = new List<int>();
             double prevRatio = 0;
             for (int radius = CfgMinRadiusFor865 - 1; radius <= circle.Radius; radius++)
@@ -107,6 +108,7 @@ namespace JbImage
                         rsum += img.Data[y, x, 0];
                     }
                 }
+                Radius.Add(radius);
                 SumOnRadius.Add(rsum);
 
                 double ratio = (double)rsum / sum;
@@ -120,10 +122,11 @@ namespace JbImage
                 {
                     circle.Radius = radius;
                     sum = rsum;
-                    break;
                 }
             }
-            new Logger("Analyzer").Debug($"CountPixels(AreaSum):  [{Utils.String.FromList<int>(SumOnRadius)}]';");
+
+            double result = Matlab.CalcGaus(Radius.Select(x => (double)x).ToList().ToArray(), SumOnRadius.Select(x => (double)x).ToList().ToArray());
+            new Logger("Analyzer").Debug($"CountPixels(AreaSum) Result({result}):  [{Utils.String.FromList<int>(SumOnRadius)}]';");
 
             return sum;
         }

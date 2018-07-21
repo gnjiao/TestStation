@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="gaus, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Matlab\Gaus\Gaus\for_testing\gaus.dll</HintPath>
+    </Reference>
     <Reference Include="log4net">
       <HintPath>..\ExtLibs\log4net\log4net.dll</HintPath>
     </Reference>

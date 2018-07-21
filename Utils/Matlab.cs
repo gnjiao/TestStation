@@ -1,4 +1,5 @@
-﻿using MathWorks.MATLAB.NET.Arrays;
+﻿using gaus;
+using MathWorks.MATLAB.NET.Arrays;
 using weist;
 using weist2;
 
@@ -49,6 +50,28 @@ namespace Utils
                 matlabY[i + 1] = distance[i];
             }
             w.weist2(2, ref agrsOut, agrsIn);
+
+            double o = double.Parse(agrsOut[0].ToString());
+            string info = agrsOut[1].ToString();
+
+            return o;
+        }
+        public static double CalcGaus(double[] radius, double[] pixelSum, double ratio = 0.865)
+        {
+            Logger log = new Logger();
+            Class1 g = new Class1();
+
+            MWNumericArray matlabX = new MWNumericArray(MWArrayComplexity.Real, radius.Length, 1);
+            MWNumericArray matlabY = new MWNumericArray(MWArrayComplexity.Real, pixelSum.Length, 1);
+            MWArray[] agrsOut = new MWArray[2];
+            MWArray[] agrsIn = new MWArray[] { (MWNumericArray)matlabX, (MWNumericArray)matlabY, ratio };
+
+            for (int i = 0; i < pixelSum.Length; i++)
+            {
+                matlabX[i + 1] = radius[i];
+                matlabY[i + 1] = pixelSum[i];
+            }
+            g.Gaus(2, ref agrsOut, agrsIn);
 
             double o = double.Parse(agrsOut[0].ToString());
             string info = agrsOut[1].ToString();
