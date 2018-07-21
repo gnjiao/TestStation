@@ -28,5 +28,14 @@ namespace Utils
             }
             return output;
         }
+        public static string FromList<T>(List<T> list, string seperator = " ")
+        {
+            string ret = "";
+            foreach (var s in list)
+            {
+                ret += s.ToString() + " ";
+            }
+            return ret.Substring(0, ret.Length - 1);
+        }
     }
 }

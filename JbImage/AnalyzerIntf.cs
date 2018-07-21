@@ -77,7 +77,7 @@ namespace JbImage
         }
         public static int CountPixels(Image<Gray, Byte> img, ref CircleF circle, double targetRatio)
         {
-            CountXPixels(img, circle, targetRatio);
+            //CountXPixels(img, circle, targetRatio);
 
             double centerX = circle.Center.X;
             double centerY = circle.Center.Y;
@@ -123,13 +123,7 @@ namespace JbImage
                     break;
                 }
             }
-
-            string output = "";
-            foreach (var s in SumOnRadius)
-            {
-                output += s.ToString() + " ";
-            }
-            new Logger("Analyzer").Debug($"CountPixels(AreaSum):  [{output}]';");
+            new Logger("Analyzer").Debug($"CountPixels(AreaSum):  [{Utils.String.FromList<int>(SumOnRadius)}]';");
 
             return sum;
         }
@@ -147,13 +141,9 @@ namespace JbImage
             {
                 values.Add( img.Data[(int)System.Math.Ceiling(centerY), x, 0] );
             }
-            string output = "";
-            foreach (var s in values)
-            {
-                output += s.ToString() + " ";
-            }
-            new Logger("Analyzer").Debug($"CountPixels(point):  [{output}]';");
+            new Logger("Analyzer").Debug($"CountPixels(point):  [{Utils.String.FromList<int>(values)}]';");
             #endregion
+
             for (int x = (int)System.Math.Floor(centerX - r); x <= (int)System.Math.Ceiling(centerX); x++)
             {
                 sum += img.Data[(int)System.Math.Ceiling(centerY), x, 0];
@@ -176,13 +166,7 @@ namespace JbImage
                     break;
                 }
             }
-
-            output = "";
-            foreach (var s in SumOnRadius)
-            {
-                output += s.ToString() + " ";
-            }
-            new Logger("Analyzer").Debug($"CountPixels(Xsum): [{output}]';");
+            new Logger("Analyzer").Debug($"CountPixels(Xsum): [{Utils.String.FromList<int>(SumOnRadius)}]';");
         }
         public static int CountPixelsSquare(Image<Gray, Byte> img, CircleF circle)
         {
