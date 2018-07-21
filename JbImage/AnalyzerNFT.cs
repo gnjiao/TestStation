@@ -75,7 +75,7 @@ namespace JbImage
                 param.Hough1Param1,
                 param.Hough1Param2,
                 param.Hough1MinRadius, param.Hough1MaxRadius);
-            Circles = Sort(Circles);
+            Circles = Calc.Sort(Circles);
             #endregion
 
             if (saveFile)
@@ -155,7 +155,7 @@ namespace JbImage
                 param.Hough2Param1,
                 param.Hough2Param2,
                 param.Hough2MinRadius, param.Hough2MaxRadius);
-            Circles2nd = Sort(Circles2nd);
+            Circles2nd = Calc.Sort(Circles2nd);
             FilteredCircles2nd = new List<CircleF>();
             List<int> brightness = new List<int>();
 
@@ -256,7 +256,7 @@ namespace JbImage
                 param.Hough1Param1,
                 param.Hough1Param2,
                 param.Hough1MinRadius, param.Hough1MaxRadius);
-            Circles = Sort(Circles);
+            Circles = Calc.Sort(Circles);
 
             List<CircleF> FilteredCircles = new List<CircleF>();
             List<int> brightness = new List<int>();

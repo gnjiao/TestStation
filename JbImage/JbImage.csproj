@@ -59,6 +59,7 @@
     <Compile Include="AnalyzerFFT.cs" />
     <Compile Include="AnalyzerIntf.cs" />
     <Compile Include="AnalyzerNFT.cs" />
+    <Compile Include="Calc.cs" />
     <Compile Include="Circle.cs" />
     <Compile Include="CircleImage.cs" />
     <Compile Include="EmguParameters.cs" />
