@@ -463,11 +463,15 @@ namespace JbImage
         {
             Dictionary<string, string> ret = new Dictionary<string, string>();
 
-            double[] weists = CalcWeist(img, distance);
-            _log.Info($"Weist");
-            for (int i = 0; i < weists.Length; i++)
+            double[] weists = new double[0];
+            if (img.Count > 3)
             {
-                _log.Info($"Circle{i:D3}: {weists[i]:F3}");
+                weists = CalcWeist(img, distance);
+                _log.Info($"Weist");
+                for (int i = 0; i < weists.Length; i++)
+                {
+                    _log.Info($"Circle{i:D3}: {weists[i]:F3}");
+                }
             }
 
             ret["Emitter Count"] = img[0].Circles.Count.ToString();
