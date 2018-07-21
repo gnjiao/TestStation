@@ -396,28 +396,49 @@ namespace JbImage
             ret.RetImg = DrawCircle(RawImg, FilteredCircles, Circles.ToList());
             ret.RetImg.Save(Utils.String.FilePostfix(Path, $"-{picId++}-result"));
 
-            _log.Info($"Uniformity:{CalcUniformity(ret)}");
-
             if (saveFile)
             {
-                Dictionary<string, string> data = new Dictionary<string, string>();
-
-                data["Emitter Count"] = ret.Circles.Count.ToString();
-                try
-                {
-                    data["Emission Uniformity"] = CalcUniformity(ret).ToString("F3");
-                }
-                catch (Exception ex)
-                {
-                    data["Emission Uniformity"] = "N/A";
-                }
-                data["Max Radius"] = ret.Circles.Max(c => c.Radius).ToString("F3");
-                data["Min Radius"] = ret.Circles.Min(c => c.Radius).ToString("F3");
-
-                ret.Data = data;
+                ret.Data = AnalyzeCalc(ret);
             }
 
             return ret;
+        }
+        private Dictionary<string, string> AnalyzeCalc(CircleImage img)
+        {
+            Dictionary<string, string> data = new Dictionary<string, string>();
+
+            data["Emitter Count"] = img.Circles.Count.ToString();
+            try
+            {
+                data["Emission Uniformity"] = CalcUniformity(img).ToString("F3");
+            }
+            catch (Exception ex)
+            {
+                data["Emission Uniformity"] = "N/A";
+            }
+
+            int id = 0;
+            float max = img.Circles.Max(c => c.Radius);
+            for (id = 0; id < img.Circles.Count; id++)
+            {
+                if (img.Circles[id].Radius == max)
+                {
+                    break;
+                }
+            }
+            data["Max Radius"] = $"{max}({id})";
+
+            float min = img.Circles.Min(c => c.Radius);
+            for (id = 0; id < img.Circles.Count; id++)
+            {
+                if (img.Circles[id].Radius == min)
+                {
+                    break;
+                }
+            }
+            data["Min Radius"] = $"{min}({id})";
+
+            return data;
         }
         private double[] CalcWeist(List<CircleImage> img, List<double> distance)
         {
@@ -522,7 +543,6 @@ namespace JbImage
 
             return new Result("Ok", null, ret);
         }
-
         private Bitmap DrawCircle(Image<Bgr, byte> raw, List<CircleF> mainCircle, List<CircleF> auxCircle = null)
         {
             Mat circleImage = raw.Mat;
